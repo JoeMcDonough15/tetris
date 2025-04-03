@@ -376,7 +376,34 @@ class LShape extends Shape {
     this.rotation = "down"; // down, up, left, right
     this.bottomLedge =
       this.initialBlock.yCoordinate + this.initialBlock.height * 3;
+    this.leftLedge = this.initialBlock.xCoordinate;
+    this.rightLedge =
+      this.initialBlock.xCoordinate + this.initialBlock.width * 2;
   }
+
+  resetLeftLedge = () => {
+    if (
+      this.rotation === "down" ||
+      this.rotation === "left" ||
+      this.rotation === "right"
+    ) {
+      this.leftLedge = this.initialBlock.xCoordinate;
+    } else if (this.rotation === "up") {
+      this.leftLedge = this.initialBlock.xCoordinate - this.initialBlock.width;
+    }
+  };
+
+  resetRightLedge = () => {
+    if (this.rotation === "down") {
+      this.rightLedge =
+        this.initialBlock.xCoordinate + this.initialBlock.width * 2;
+    } else if (this.rotation === "left" || this.rotation === "right") {
+      this.rightLedge =
+        this.initialBlock.xCoordinate + this.initialBlock.width * 3;
+    } else if (this.rotation === "up") {
+      this.rightLedge = this.initialBlock.xCoordinate + this.initialBlock.width;
+    }
+  };
 
   resetBottomLedge = () => {
     if (this.rotation === "up" || this.rotation === "down") {
@@ -448,6 +475,8 @@ class LShape extends Shape {
     });
 
     this.resetBottomLedge();
+    this.resetLeftLedge();
+    this.resetRightLedge();
   };
 
   rotate = () => {
@@ -596,4 +625,4 @@ const dropShape = (shapeName) => {
   shape.fall();
 };
 
-dropShape("tShape");
+dropShape("lShape");
