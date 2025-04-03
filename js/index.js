@@ -1,16 +1,52 @@
+const GREEN = "rgb(0 255 0)";
+const BLUE = "rgb(0 100 255)";
+const RED = "rgb(255 0 0)";
+const YELLOW = "rgb(255 255 0)";
+const ORANGE = "rgb(255 127 0)";
 const canvas = document.getElementById("canvas");
 canvas.width = 600;
 canvas.height = 800;
 const ctx = canvas.getContext("2d");
 const gameSpeed = 200;
 
-class Shape {
-  constructor() {
-    this.xCoordinate = 0;
-    this.yCoordinate = 0;
-    this.individualBlockWidth = 20;
+class Block {
+  constructor(xCoordinate, yCoordinate, color) {
+    this.width = 20; // or 3% of the canvas width of 600px
+    this.height = 20; // or 2.5% of the canvas height of 800px
     this.borderColor = "rgb(0 0 0)";
-    this.blocks = [0, 1, 2, 3];
+    this.fillColor = color;
+    this.xCoordinate = xCoordinate;
+    this.yCoordinate = yCoordinate;
+  }
+
+  clearBlock = () => {
+    ctx.clearRect(this.xCoordinate, this.yCoordinate, this.width, this.height);
+  };
+
+  drawBlock = () => {
+    ctx.fillStyle = this.fillColor;
+    ctx.strokeStyle = this.borderColor;
+    ctx.fillRect(this.xCoordinate, this.yCoordinate, this.width, this.height);
+    ctx.strokeRect(this.xCoordinate, this.yCoordinate, this.width, this.height);
+  };
+}
+
+class Shape {
+  constructor(colorString) {
+    // this.xCoordinate = 0;
+    // this.yCoordinate = 0;
+    this.numBlocks = 4;
+    this.shapeColor = colorString;
+    // this.individualBlockWidth = 20;
+    // this.borderColor = "rgb(0 0 0)";
+    // this.blocks = [0, 1, 2, 3];
+    this.blocks = [];
+    for (let i = 0; i < this.numBlocks; i++) {
+      const newBlock = new Block(0, 0, this.shapeColor);
+      this.blocks.push(newBlock);
+    }
+    this.initialBlock = this.blocks[0];
+    console.log("blocks of shape ", this.blocks);
   }
 
   // methods
@@ -22,11 +58,11 @@ class Shape {
 
   fall = () => {
     const fallInterval = setInterval(() => {
-      if (this.yCoordinate >= canvas.height - this.shapeHeight) {
+      if (this.initialBlock.yCoordinate >= canvas.height - this.shapeHeight) {
         this.placePiece(fallInterval);
       }
       this.clearShape();
-      this.yCoordinate += this.individualBlockWidth;
+      this.initialBlock.yCoordinate += this.initialBlock.height;
       this.drawShape();
     }, gameSpeed);
 
@@ -63,182 +99,214 @@ class Shape {
 }
 
 class Line extends Shape {
-  constructor(startingX, startingY) {
-    super(startingX, startingY);
-    this.shapeHeight = this.individualBlockWidth * 2;
-    this.shapeWidth = this.individualBlockWidth * 4;
-    this.fillColor = "rgb(0 255 0)";
-    this.isRotated = false;
+  constructor() {
+    super(GREEN);
+    this.shapeHeight = this.blocks[0].height * 2;
+    this.shapeWidth = this.blocks[0].width * 4;
+    this.rotation = "horizontal"; // horizontal or vertical
   }
 
   clearShape = () => {
     this.blocks.forEach((block) => {
-      if (this.isRotated) {
-        ctx.clearRect(
-          this.xCoordinate,
-          this.yCoordinate + this.individualBlockWidth * block,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
-      } else {
-        ctx.clearRect(
-          this.xCoordinate + this.individualBlockWidth * block,
-          this.yCoordinate,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
-      }
+      block.clearBlock();
+      //   if (this.isRotated) {
+      //     ctx.clearRect(
+      //       this.xCoordinate,
+      //       this.yCoordinate + this.individualBlockWidth * block,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   } else {
+      //     ctx.clearRect(
+      //       this.xCoordinate + this.individualBlockWidth * block,
+      //       this.yCoordinate,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   }
     });
   };
 
   drawShape = () => {
-    this.blocks.forEach((block) => {
-      ctx.fillStyle = this.fillColor;
-      ctx.strokeStyle = this.borderColor;
+    this.blocks.forEach((block, index) => {
+      // ctx.fillStyle = this.fillColor;
+      // ctx.strokeStyle = this.borderColor;
 
-      if (this.isRotated) {
-        ctx.fillRect(
-          this.xCoordinate,
-          this.yCoordinate + this.individualBlockWidth * block,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
-        ctx.strokeRect(
-          this.xCoordinate,
-          this.yCoordinate + this.individualBlockWidth * block,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
-      } else {
-        ctx.fillRect(
-          this.xCoordinate + this.individualBlockWidth * block,
-          this.yCoordinate,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
-        ctx.strokeRect(
-          this.xCoordinate + this.individualBlockWidth * block,
-          this.yCoordinate,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
+      if (this.rotation === "horizontal") {
+        block.xCoordinate = this.initialBlock.xCoordinate + block.width * index;
+        block.yCoordinate = this.initialBlock.yCoordinate;
+      } else if (this.rotation === "vertical") {
+        block.xCoordinate = this.initialBlock.xCoordinate;
+        block.yCoordinate =
+          this.initialBlock.yCoordinate + block.height * index;
       }
+
+      block.drawBlock();
+
+      // if (this.isRotated) {
+      //   ctx.fillRect(
+      //     this.xCoordinate,
+      //     this.yCoordinate + this.individualBlockWidth * block,
+      //     this.individualBlockWidth,
+      //     this.individualBlockWidth
+      //   );
+      //   ctx.strokeRect(
+      //     this.xCoordinate,
+      //     this.yCoordinate + this.individualBlockWidth * block,
+      //     this.individualBlockWidth,
+      //     this.individualBlockWidth
+      //   );
+      // } else {
+      //   ctx.fillRect(
+      //     this.xCoordinate + this.individualBlockWidth * block,
+      //     this.yCoordinate,
+      //     this.individualBlockWidth,
+      //     this.individualBlockWidth
+      //   );
+      //   ctx.strokeRect(
+      //     this.xCoordinate + this.individualBlockWidth * block,
+      //     this.yCoordinate,
+      //     this.individualBlockWidth,
+      //     this.individualBlockWidth
+      //   );
+      // }
     });
   };
 
   rotate = () => {
     this.clearShape();
-    this.isRotated = !this.isRotated;
+    // this.isRotated = !this.isRotated;
+    this.rotation = this.rotation === "horizontal" ? "vertical" : "horizontal";
     this.drawShape();
-    if (this.isRotated) {
-      this.shapeHeight = this.individualBlockWidth * 5; // we seem to need one extra value for height
-      this.shapeWidth = this.individualBlockWidth;
+    if (this.rotation === "vertical") {
+      this.shapeHeight = this.initialBlock.height * 5; // we seem to need one extra value for height
+      this.shapeWidth = this.initialBlock.width;
     } else {
-      this.shapeHeight = this.individualBlockWidth * 2; // we seem to need one extra value for height
-      this.shapeWidth = this.individualBlockWidth * 4;
+      this.shapeHeight = this.initialBlock.height * 2; // we seem to need one extra value for height
+      this.shapeWidth = this.initialBlock.width * 4;
     }
+    // if (this.isRotated) {
+    //   this.shapeHeight = this.individualBlockWidth * 5; // we seem to need one extra value for height
+    //   this.shapeWidth = this.individualBlockWidth;
+    // } else {
+    //   this.shapeHeight = this.individualBlockWidth * 2; // we seem to need one extra value for height
+    //   this.shapeWidth = this.individualBlockWidth * 4;
+    // }
   };
 }
 
 class Square extends Shape {
-  constructor(startingX, startingY) {
-    super(startingX, startingY);
-    this.shapeHeight = this.individualBlockWidth * 3;
-    this.shapeWidth = this.individualBlockWidth * 2;
-    this.fillColor = "rgb(0 100 255)";
+  constructor() {
+    super(BLUE);
+    this.shapeHeight = this.initialBlock.height * 3;
+    this.shapeWidth = this.initialBlock.width * 2;
   }
 
   clearShape = () => {
     this.blocks.forEach((block) => {
-      if (block === 0) {
-        ctx.clearRect(
-          this.xCoordinate,
-          this.yCoordinate,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
-      } else if (block === 1) {
-        ctx.clearRect(
-          this.xCoordinate + this.individualBlockWidth,
-          this.yCoordinate,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
-      } else if (block === 2) {
-        ctx.clearRect(
-          this.xCoordinate,
-          this.yCoordinate + this.individualBlockWidth,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
-      } else {
-        ctx.clearRect(
-          this.xCoordinate + this.individualBlockWidth,
-          this.yCoordinate + this.individualBlockWidth,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
-      }
+      block.clearBlock();
+      // if (block === 0) {
+      //   ctx.clearRect(
+      //     this.xCoordinate,
+      //     this.yCoordinate,
+      //     this.individualBlockWidth,
+      //     this.individualBlockWidth
+      //   );
+      // } else if (block === 1) {
+      //   ctx.clearRect(
+      //     this.xCoordinate + this.individualBlockWidth,
+      //     this.yCoordinate,
+      //     this.individualBlockWidth,
+      //     this.individualBlockWidth
+      //   );
+      // } else if (block === 2) {
+      //   ctx.clearRect(
+      //     this.xCoordinate,
+      //     this.yCoordinate + this.individualBlockWidth,
+      //     this.individualBlockWidth,
+      //     this.individualBlockWidth
+      //   );
+      // } else {
+      //   ctx.clearRect(
+      //     this.xCoordinate + this.individualBlockWidth,
+      //     this.yCoordinate + this.individualBlockWidth,
+      //     this.individualBlockWidth,
+      //     this.individualBlockWidth
+      //   );
+      // }
     });
   };
 
   drawShape = () => {
-    this.blocks.forEach((block) => {
-      ctx.fillStyle = this.fillColor;
-      ctx.strokeStyle = this.borderColor;
-      if (block === 0) {
-        ctx.fillRect(
-          this.xCoordinate,
-          this.yCoordinate,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
-        ctx.strokeRect(
-          this.xCoordinate,
-          this.yCoordinate,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
-      } else if (block === 1) {
-        ctx.fillRect(
-          this.xCoordinate + this.individualBlockWidth,
-          this.yCoordinate,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
-        ctx.strokeRect(
-          this.xCoordinate + this.individualBlockWidth,
-          this.yCoordinate,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
-      } else if (block === 2) {
-        ctx.fillRect(
-          this.xCoordinate,
-          this.yCoordinate + this.individualBlockWidth,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
-        ctx.strokeRect(
-          this.xCoordinate,
-          this.yCoordinate + this.individualBlockWidth,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
-      } else {
-        ctx.fillRect(
-          this.xCoordinate + this.individualBlockWidth,
-          this.yCoordinate + this.individualBlockWidth,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
-        ctx.strokeRect(
-          this.xCoordinate + this.individualBlockWidth,
-          this.yCoordinate + this.individualBlockWidth,
-          this.individualBlockWidth,
-          this.individualBlockWidth
-        );
+    // this.blocks.forEach((block) => {
+    // ctx.fillStyle = this.fillColor;
+    // ctx.strokeStyle = this.borderColor;
+    //   if (block === 0) {
+    //     ctx.fillRect(
+    //       this.xCoordinate,
+    //       this.yCoordinate,
+    //       this.individualBlockWidth,
+    //       this.individualBlockWidth
+    //     );
+    //     ctx.strokeRect(
+    //       this.xCoordinate,
+    //       this.yCoordinate,
+    //       this.individualBlockWidth,
+    //       this.individualBlockWidth
+    //     );
+    //   } else if (block === 1) {
+    //     ctx.fillRect(
+    //       this.xCoordinate + this.individualBlockWidth,
+    //       this.yCoordinate,
+    //       this.individualBlockWidth,
+    //       this.individualBlockWidth
+    //     );
+    //     ctx.strokeRect(
+    //       this.xCoordinate + this.individualBlockWidth,
+    //       this.yCoordinate,
+    //       this.individualBlockWidth,
+    //       this.individualBlockWidth
+    //     );
+    //   } else if (block === 2) {
+    //     ctx.fillRect(
+    //       this.xCoordinate,
+    //       this.yCoordinate + this.individualBlockWidth,
+    //       this.individualBlockWidth,
+    //       this.individualBlockWidth
+    //     );
+    //     ctx.strokeRect(
+    //       this.xCoordinate,
+    //       this.yCoordinate + this.individualBlockWidth,
+    //       this.individualBlockWidth,
+    //       this.individualBlockWidth
+    //     );
+    //   } else {
+    //     ctx.fillRect(
+    //       this.xCoordinate + this.individualBlockWidth,
+    //       this.yCoordinate + this.individualBlockWidth,
+    //       this.individualBlockWidth,
+    //       this.individualBlockWidth
+    //     );
+    //     ctx.strokeRect(
+    //       this.xCoordinate + this.individualBlockWidth,
+    //       this.yCoordinate + this.individualBlockWidth,
+    //       this.individualBlockWidth,
+    //       this.individualBlockWidth
+    //     );
+    //   }
+    // });
+    this.blocks.forEach((block, index) => {
+      if (index === 1) {
+        block.xCoordinate = this.initialBlock.xCoordinate + block.width;
+        block.yCoordinate = this.initialBlock.yCoordinate;
+      } else if (index === 2) {
+        block.xCoordinate = this.initialBlock.xCoordinate;
+        block.yCoordinate = this.initialBlock.yCoordinate + block.height;
+      } else if (index === 3) {
+        block.xCoordinate = this.initialBlock.xCoordinate + block.width;
+        block.yCoordinate = this.initialBlock.yCoordinate + block.height;
       }
+      block.drawBlock();
     });
   };
 
@@ -248,11 +316,10 @@ class Square extends Shape {
 }
 
 class TShape extends Shape {
-  constructor(startingX, startingY) {
-    super(startingX, startingY);
+  constructor() {
+    super(RED);
     this.shapeHeight = this.individualBlockWidth * 2;
     this.shapeWidth = this.individualBlockWidth * 3;
-    this.fillColor = "rgb(255 0 0)";
     this.rotation = "up"; // up, right, down, left
   }
 
@@ -478,11 +545,10 @@ class TShape extends Shape {
 }
 
 class LShape extends Shape {
-  constructor(startingX, startingY) {
-    super(startingX, startingY);
+  constructor() {
+    super(YELLOW);
     this.shapeHeight = this.individualBlockWidth * 4;
     this.shapeWidth = this.individualBlockWidth * 3;
-    this.fillColor = "rgb(255 255 0)";
     this.rotation = "down"; // down, up, left, right
   }
 
@@ -715,11 +781,10 @@ class LShape extends Shape {
 }
 
 class JShape extends Shape {
-  constructor(startingX, startingY) {
-    super(startingX, startingY);
+  constructor() {
+    super(ORANGE);
     this.shapeHeight = this.individualBlockWidth * 4;
     this.shapeWidth = this.individualBlockWidth * 3;
-    this.fillColor = "rgb(255 127 0)";
     this.rotation = "down"; // down, up, left, right
   }
 
@@ -970,4 +1035,4 @@ const dropShape = (shapeName) => {
   shape.fall();
 };
 
-dropShape("jShape");
+dropShape("square");
