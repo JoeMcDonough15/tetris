@@ -64,14 +64,14 @@ class Shape {
   };
 
   moveLeft = () => {
-    if (this.initialBlock.xCoordinate < this.initialBlock.width) return;
+    if (this.leftLedge <= 0) return;
     this.clearShape();
     this.initialBlock.xCoordinate -= this.initialBlock.width;
     this.drawShape();
   };
 
   moveRight = () => {
-    if (this.initialBlock.xCoordinate + this.shapeWidth >= canvas.width) return;
+    if (this.rightLedge >= canvas.width) return;
     this.clearShape();
     this.initialBlock.xCoordinate += this.initialBlock.width;
     this.drawShape();
@@ -95,12 +95,30 @@ class Shape {
 class Line extends Shape {
   constructor() {
     super(GREEN);
-    // this.shapeHeight = this.blocks[0].height * 2;
-    this.shapeHeight = this.blocks[0].height;
-    this.shapeWidth = this.blocks[0].width * 4;
+    this.shapeHeight = this.initialBlock.height;
+    this.shapeWidth = this.initialBlock.width * 4;
     this.rotation = "horizontal"; // horizontal or vertical
     this.bottomLedge = this.initialBlock.yCoordinate + this.initialBlock.height;
+    this.leftLedge = this.initialBlock.xCoordinate;
+    this.rightLedge =
+      this.initialBlock.xCoordinate + this.initialBlock.width * 4;
   }
+
+  resetLeftLedge = () => {
+    // regardless of rotation, the left ledge is always lined up with the initial block's x-coordinate
+    this.leftLedge = this.initialBlock.xCoordinate;
+  };
+
+  resetRightLedge = () => {
+    // if the piece is horizontal, the right ledge should be 4 block's worth of width blocks over from the initialBlock
+    if (this.rotation === "horizontal") {
+      this.rightLedge =
+        this.initialBlock.xCoordinate + this.initialBlock.width * 4;
+    } else if (this.rotation === "vertical") {
+      // if the piece is vertical, the right ledge is one block's worth of width over from the initialBlock
+      this.rightLedge = this.initialBlock.xCoordinate + this.initialBlock.width;
+    }
+  };
 
   resetBottomLedge = () => {
     // a method that looks at the rotation of the shape, and determines where the bottom ledge is
@@ -133,25 +151,23 @@ class Line extends Shape {
       block.drawBlock();
     });
 
-    // every time we draw the shape, reset the bottom ledge to reflect the shape's new position
+    // every time we draw the shape (whether as it's falling, or when we move/rotate it), we have to reset the shape's ledges to reflect the shape's new position
     this.resetBottomLedge();
+    this.resetLeftLedge();
+    this.resetRightLedge();
   };
 
   rotate = () => {
     this.clearShape();
     this.rotation = this.rotation === "horizontal" ? "vertical" : "horizontal";
-    this.drawShape();
     if (this.rotation === "vertical") {
-      // this.shapeHeight = this.initialBlock.height * 5; // we seem to need one extra value for height
       this.shapeHeight = this.initialBlock.height * 4;
-      this.bottomLedge = this.initialBlock.height * 4;
       this.shapeWidth = this.initialBlock.width;
     } else {
-      // this.shapeHeight = this.initialBlock.height * 2; // we seem to need one extra value for height
       this.shapeHeight = this.initialBlock.height;
-      this.bottomLedge = this.initialBlock.height;
       this.shapeWidth = this.initialBlock.width * 4;
     }
+    this.drawShape();
   };
 }
 
@@ -163,7 +179,19 @@ class Square extends Shape {
     this.shapeWidth = this.initialBlock.width * 2;
     this.bottomLedge =
       this.initialBlock.yCoordinate + this.initialBlock.height * 2;
+    this.leftLedge = this.initialBlock.xCoordinate;
+    this.rightLedge =
+      this.initialBlock.xCoordinate + this.initialBlock.width * 2;
   }
+
+  resetLeftLedge = () => {
+    this.leftLedge = this.initialBlock.xCoordinate;
+  };
+
+  resetRightLedge = () => {
+    this.rightLedge =
+      this.initialBlock.xCoordinate + this.initialBlock.width * 2;
+  };
 
   resetBottomLedge = () => {
     // reset the bottom ledge to change with each frame's drawn shape
@@ -193,6 +221,8 @@ class Square extends Shape {
     });
 
     this.resetBottomLedge();
+    this.resetLeftLedge();
+    this.resetRightLedge();
   };
 
   rotate = () => {
@@ -207,7 +237,39 @@ class TShape extends Shape {
     this.shapeWidth = this.initialBlock.width * 3;
     this.rotation = "up"; // up, right, down, left
     this.bottomLedge = this.initialBlock.yCoordinate + this.initialBlock.height;
+    this.leftLedge = this.initialBlock.xCoordinate;
+    this.rightLedge =
+      this.initialBlock.xCoordinate + this.initialBlock.width * 3;
   }
+
+  resetLeftLedge = () => {
+    if (
+      this.rotation === "up" ||
+      this.rotation === "down" ||
+      this.rotation === "right"
+    ) {
+      // if it's rotated up or down, the left edge is the aligned with the left side of the initialBlock
+      this.leftLedge = this.initialBlock.xCoordinate;
+    } else if (this.rotation === "left") {
+      // if it's rotated to the left, the left edge now juts out, so it should be decreased from the initialBlock's x coordinate by one block's width
+      this.leftLedge = this.initialBlock.xCoordinate - this.initialBlock.width;
+    }
+  };
+
+  resetRightLedge = () => {
+    if (this.rotation === "up" || this.rotation === "down") {
+      // if rotated up or down, the right edge is 3 blocks width from the initial block's left edge
+      this.rightLedge =
+        this.initialBlock.xCoordinate + this.initialBlock.width * 3;
+    } else if (this.rotation === "right") {
+      // if rotated right, the right edge is 2 block's width from the initial block
+      this.rightLedge =
+        this.initialBlock.xCoordinate + this.initialBlock.width * 2;
+    } else if (this.rotation === "left") {
+      // if the piece is rotated left, the right edge is one block's width from the initial block
+      this.rightLedge = this.initialBlock.xCoordinate + this.initialBlock.width;
+    }
+  };
 
   resetBottomLedge = () => {
     if (this.rotation === "up") {
@@ -279,23 +341,22 @@ class TShape extends Shape {
     });
 
     this.resetBottomLedge();
+    this.resetLeftLedge();
+    this.resetRightLedge();
   };
 
   rotate = () => {
     this.clearShape();
     if (this.rotation === "up") {
       this.rotation = "right";
-      // this.shapeHeight = this.initialBlock.height * 4;
       this.shapeHeight = this.initialBlock.height * 3;
       this.shapeWidth = this.initialBlock.width * 2;
     } else if (this.rotation === "right") {
       this.rotation = "down";
-      // this.shapeHeight = this.initialBlock.height * 3;
       this.shapeHeight = this.initialBlock.height * 2;
       this.shapeWidth = this.initialBlock.width * 3;
     } else if (this.rotation === "down") {
       this.rotation = "left";
-      // this.shapeHeight = this.initialBlock.height * 4;
       this.shapeHeight = this.initialBlock.height * 3;
       this.shapeWidth = this.initialBlock.width * 2;
     } else if (this.rotation === "left") {
@@ -310,8 +371,8 @@ class TShape extends Shape {
 class LShape extends Shape {
   constructor() {
     super(YELLOW);
-    this.shapeHeight = this.initialBlock.height * 4;
-    this.shapeWidth = this.initialBlock.width * 3;
+    this.shapeHeight = this.initialBlock.height * 3;
+    this.shapeWidth = this.initialBlock.width * 2;
     this.rotation = "down"; // down, up, left, right
     this.bottomLedge =
       this.initialBlock.yCoordinate + this.initialBlock.height * 3;
@@ -393,11 +454,11 @@ class LShape extends Shape {
     this.clearShape();
     if (this.rotation === "down") {
       this.rotation = "left";
-      this.shapeHeight = this.initialBlock.height * 3;
-      this.shapeWidth = this.initialBlock.width * 4;
+      this.shapeHeight = this.initialBlock.height * 2;
+      this.shapeWidth = this.initialBlock.width * 3;
     } else if (this.rotation === "left") {
       this.rotation = "up";
-      this.shapeHeight = this.initialBlock.height * 4;
+      this.shapeHeight = this.initialBlock.height * 3;
       this.shapeWidth = this.initialBlock.width * 2;
     } else if (this.rotation === "up") {
       this.rotation = "right";
@@ -405,7 +466,7 @@ class LShape extends Shape {
       this.shapeWidth = this.initialBlock.width * 3;
     } else if (this.rotation === "right") {
       this.rotation = "down";
-      this.shapeHeight = this.initialBlock.height * 4;
+      this.shapeHeight = this.initialBlock.height * 3;
       this.shapeWidth = this.initialBlock.width * 2;
     }
     this.drawShape();
@@ -499,18 +560,18 @@ class JShape extends Shape {
     if (this.rotation === "down") {
       this.rotation = "left";
       this.shapeHeight = this.initialBlock.height * 2;
-      this.shapeWidth = this.initialBlock.width * 4;
+      this.shapeWidth = this.initialBlock.width * 3;
     } else if (this.rotation === "left") {
       this.rotation = "up";
-      this.shapeHeight = this.initialBlock.height * 4;
+      this.shapeHeight = this.initialBlock.height * 3;
       this.shapeWidth = this.initialBlock.width * 2;
     } else if (this.rotation === "up") {
       this.rotation = "right";
-      this.shapeHeight = this.initialBlock.height * 3;
+      this.shapeHeight = this.initialBlock.height * 2;
       this.shapeWidth = this.initialBlock.width * 3;
     } else if (this.rotation === "right") {
       this.rotation = "down";
-      this.shapeHeight = this.initialBlock.height * 4;
+      this.shapeHeight = this.initialBlock.height * 3;
       this.shapeWidth = this.initialBlock.width * 2;
     }
     this.drawShape();
@@ -535,4 +596,4 @@ const dropShape = (shapeName) => {
   shape.fall();
 };
 
-dropShape("jShape");
+dropShape("tShape");
