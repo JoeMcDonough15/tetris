@@ -694,213 +694,262 @@ class TShape extends Shape {
 class LShape extends Shape {
   constructor() {
     super(YELLOW);
-    this.shapeHeight = this.individualBlockWidth * 4;
-    this.shapeWidth = this.individualBlockWidth * 3;
+    this.shapeHeight = this.initialBlock.height * 4;
+    this.shapeWidth = this.initialBlock.width * 3;
     this.rotation = "down"; // down, up, left, right
   }
 
   clearShape = () => {
     this.blocks.forEach((block) => {
-      if (this.rotation === "down") {
-        if (block === 3) {
-          // clear block on bottom right
-          ctx.clearRect(
-            this.xCoordinate + this.individualBlockWidth,
-            this.yCoordinate + this.individualBlockWidth * 2,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-        } else {
-          // clear blocks vertically
-          ctx.clearRect(
-            this.xCoordinate,
-            this.yCoordinate + this.individualBlockWidth * block,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-        }
-      } else if (this.rotation === "right") {
-        if (block === 3) {
-          // clear block on top right
-          ctx.clearRect(
-            this.xCoordinate + this.individualBlockWidth * 2,
-            this.yCoordinate - this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-        } else {
-          // clear blocks in a row
-          ctx.clearRect(
-            this.xCoordinate + this.individualBlockWidth * block,
-            this.yCoordinate,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-        }
-      } else if (this.rotation === "left") {
-        if (block === 3) {
-          // clear block on bottom left
-          ctx.clearRect(
-            this.xCoordinate,
-            this.yCoordinate + this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-        } else {
-          // clear blocks in a row
-          ctx.clearRect(
-            this.xCoordinate + this.individualBlockWidth * block,
-            this.yCoordinate,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-        }
-      } else if (this.rotation === "up") {
-        if (block === 3) {
-          // clear the block on the top left
-          ctx.clearRect(
-            this.xCoordinate - this.individualBlockWidth,
-            this.yCoordinate,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-        } else {
-          // clear blocks vertically
-          ctx.clearRect(
-            this.xCoordinate,
-            this.yCoordinate + this.individualBlockWidth * block,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-        }
-      }
+      block.clearBlock();
+      // if (this.rotation === "down") {
+      //   if (block === 3) {
+      //     // clear block on bottom right
+      //     ctx.clearRect(
+      //       this.xCoordinate + this.individualBlockWidth,
+      //       this.yCoordinate + this.individualBlockWidth * 2,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   } else {
+      //     // clear blocks vertically
+      //     ctx.clearRect(
+      //       this.xCoordinate,
+      //       this.yCoordinate + this.individualBlockWidth * block,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   }
+      // } else if (this.rotation === "right") {
+      //   if (block === 3) {
+      //     // clear block on top right
+      //     ctx.clearRect(
+      //       this.xCoordinate + this.individualBlockWidth * 2,
+      //       this.yCoordinate - this.individualBlockWidth,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   } else {
+      //     // clear blocks in a row
+      //     ctx.clearRect(
+      //       this.xCoordinate + this.individualBlockWidth * block,
+      //       this.yCoordinate,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   }
+      // } else if (this.rotation === "left") {
+      //   if (block === 3) {
+      //     // clear block on bottom left
+      //     ctx.clearRect(
+      //       this.xCoordinate,
+      //       this.yCoordinate + this.individualBlockWidth,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   } else {
+      //     // clear blocks in a row
+      //     ctx.clearRect(
+      //       this.xCoordinate + this.individualBlockWidth * block,
+      //       this.yCoordinate,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   }
+      // } else if (this.rotation === "up") {
+      //   if (block === 3) {
+      //     // clear the block on the top left
+      //     ctx.clearRect(
+      //       this.xCoordinate - this.individualBlockWidth,
+      //       this.yCoordinate,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   } else {
+      //     // clear blocks vertically
+      //     ctx.clearRect(
+      //       this.xCoordinate,
+      //       this.yCoordinate + this.individualBlockWidth * block,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   }
+      // }
     });
   };
 
   drawShape = () => {
-    ctx.fillStyle = this.fillColor;
-    ctx.strokeStyle = this.borderColor;
+    // ctx.fillStyle = this.fillColor;
+    // ctx.strokeStyle = this.borderColor;
 
-    this.blocks.forEach((block) => {
+    // this.blocks.forEach((block) => {
+    //   if (this.rotation === "down") {
+    //     if (block === 3) {
+    //       ctx.fillRect(
+    //         this.xCoordinate + this.individualBlockWidth,
+    //         this.yCoordinate + this.individualBlockWidth * 2,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //       ctx.strokeRect(
+    //         this.xCoordinate + this.individualBlockWidth,
+    //         this.yCoordinate + this.individualBlockWidth * 2,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //     } else {
+    //       // stack blocks vertically
+    //       ctx.fillRect(
+    //         this.xCoordinate,
+    //         this.yCoordinate + this.individualBlockWidth * block,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //       ctx.strokeRect(
+    //         this.xCoordinate,
+    //         this.yCoordinate + this.individualBlockWidth * block,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //     }
+    //   } else if (this.rotation === "right") {
+    //     if (block === 3) {
+    //       // put block on top right
+    //       ctx.fillRect(
+    //         this.xCoordinate + this.individualBlockWidth * 2,
+    //         this.yCoordinate - this.individualBlockWidth,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //       ctx.strokeRect(
+    //         this.xCoordinate + this.individualBlockWidth * 2,
+    //         this.yCoordinate - this.individualBlockWidth,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //     } else {
+    //       // place blocks in a row
+    //       ctx.fillRect(
+    //         this.xCoordinate + this.individualBlockWidth * block,
+    //         this.yCoordinate,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //       ctx.strokeRect(
+    //         this.xCoordinate + this.individualBlockWidth * block,
+    //         this.yCoordinate,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //     }
+    //   } else if (this.rotation === "left") {
+    //     if (block === 3) {
+    //       // put block on bottom left
+    //       ctx.fillRect(
+    //         this.xCoordinate,
+    //         this.yCoordinate + this.individualBlockWidth,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //       ctx.strokeRect(
+    //         this.xCoordinate,
+    //         this.yCoordinate + this.individualBlockWidth,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //     } else {
+    //       // place blocks in a row
+    //       ctx.fillRect(
+    //         this.xCoordinate + this.individualBlockWidth * block,
+    //         this.yCoordinate,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //       ctx.strokeRect(
+    //         this.xCoordinate + this.individualBlockWidth * block,
+    //         this.yCoordinate,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //     }
+    //   } else if (this.rotation === "up") {
+    //     if (block === 3) {
+    //       ctx.fillRect(
+    //         this.xCoordinate - this.individualBlockWidth,
+    //         this.yCoordinate,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //       ctx.strokeRect(
+    //         this.xCoordinate - this.individualBlockWidth,
+    //         this.yCoordinate,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //     } else {
+    //       // stack blocks vertically
+    //       ctx.fillRect(
+    //         this.xCoordinate,
+    //         this.yCoordinate + this.individualBlockWidth * block,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //       ctx.strokeRect(
+    //         this.xCoordinate,
+    //         this.yCoordinate + this.individualBlockWidth * block,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //     }
+    //   }
+    // });
+    this.blocks.forEach((block, index) => {
       if (this.rotation === "down") {
-        if (block === 3) {
-          ctx.fillRect(
-            this.xCoordinate + this.individualBlockWidth,
-            this.yCoordinate + this.individualBlockWidth * 2,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-          ctx.strokeRect(
-            this.xCoordinate + this.individualBlockWidth,
-            this.yCoordinate + this.individualBlockWidth * 2,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
+        if (index === 3) {
+          // place this block on the bottom right
+          block.xCoordinate = this.initialBlock.xCoordinate + block.width;
+          block.yCoordinate = this.initialBlock.yCoordinate + block.height * 2;
         } else {
           // stack blocks vertically
-          ctx.fillRect(
-            this.xCoordinate,
-            this.yCoordinate + this.individualBlockWidth * block,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-          ctx.strokeRect(
-            this.xCoordinate,
-            this.yCoordinate + this.individualBlockWidth * block,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
+          block.xCoordinate = this.initialBlock.xCoordinate;
+          block.yCoordinate =
+            this.initialBlock.yCoordinate + block.height * index;
         }
       } else if (this.rotation === "right") {
-        if (block === 3) {
+        if (index === 3) {
           // put block on top right
-          ctx.fillRect(
-            this.xCoordinate + this.individualBlockWidth * 2,
-            this.yCoordinate - this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-          ctx.strokeRect(
-            this.xCoordinate + this.individualBlockWidth * 2,
-            this.yCoordinate - this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
+          block.xCoordinate = this.initialBlock.xCoordinate + block.width * 2;
+          block.yCoordinate = this.initialBlock.yCoordinate - block.height;
         } else {
           // place blocks in a row
-          ctx.fillRect(
-            this.xCoordinate + this.individualBlockWidth * block,
-            this.yCoordinate,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-          ctx.strokeRect(
-            this.xCoordinate + this.individualBlockWidth * block,
-            this.yCoordinate,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
+          block.xCoordinate =
+            this.initialBlock.xCoordinate + block.width * index;
+          block.yCoordinate = this.initialBlock.yCoordinate;
         }
       } else if (this.rotation === "left") {
-        if (block === 3) {
+        if (index === 3) {
           // put block on bottom left
-          ctx.fillRect(
-            this.xCoordinate,
-            this.yCoordinate + this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-          ctx.strokeRect(
-            this.xCoordinate,
-            this.yCoordinate + this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
+          block.xCoordinate = this.initialBlock.xCoordinate;
+          block.yCoordinate = this.initialBlock.yCoordinate + block.height;
         } else {
           // place blocks in a row
-          ctx.fillRect(
-            this.xCoordinate + this.individualBlockWidth * block,
-            this.yCoordinate,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-          ctx.strokeRect(
-            this.xCoordinate + this.individualBlockWidth * block,
-            this.yCoordinate,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
+          block.xCoordinate =
+            this.initialBlock.xCoordinate + block.width * index;
+          block.yCoordinate = this.initialBlock.yCoordinate;
         }
       } else if (this.rotation === "up") {
-        if (block === 3) {
-          ctx.fillRect(
-            this.xCoordinate - this.individualBlockWidth,
-            this.yCoordinate,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-          ctx.strokeRect(
-            this.xCoordinate - this.individualBlockWidth,
-            this.yCoordinate,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
+        if (index === 3) {
+          // put this block on the top left
+          block.xCoordinate = this.initialBlock.xCoordinate - block.width;
+          block.yCoordinate = this.initialBlock.yCoordinate;
         } else {
           // stack blocks vertically
-          ctx.fillRect(
-            this.xCoordinate,
-            this.yCoordinate + this.individualBlockWidth * block,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-          ctx.strokeRect(
-            this.xCoordinate,
-            this.yCoordinate + this.individualBlockWidth * block,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
+          block.xCoordinate = this.initialBlock.xCoordinate;
+          block.yCoordinate =
+            this.initialBlock.yCoordinate + block.height * index;
         }
       }
+      block.drawBlock();
     });
   };
 
@@ -908,20 +957,20 @@ class LShape extends Shape {
     this.clearShape();
     if (this.rotation === "down") {
       this.rotation = "left";
-      this.shapeHeight = this.individualBlockWidth * 3;
-      this.shapeWidth = this.individualBlockWidth * 4;
+      this.shapeHeight = this.initialBlock.height * 3;
+      this.shapeWidth = this.initialBlock.width * 4;
     } else if (this.rotation === "left") {
       this.rotation = "up";
-      this.shapeHeight = this.individualBlockWidth * 4;
-      this.shapeWidth = this.individualBlockWidth * 2;
+      this.shapeHeight = this.initialBlock.height * 4;
+      this.shapeWidth = this.initialBlock.width * 2;
     } else if (this.rotation === "up") {
       this.rotation = "right";
-      this.shapeHeight = this.individualBlockWidth * 2;
-      this.shapeWidth = this.individualBlockWidth * 3;
+      this.shapeHeight = this.initialBlock.height * 2;
+      this.shapeWidth = this.initialBlock.width * 3;
     } else if (this.rotation === "right") {
       this.rotation = "down";
-      this.shapeHeight = this.individualBlockWidth * 4;
-      this.shapeWidth = this.individualBlockWidth * 2;
+      this.shapeHeight = this.initialBlock.height * 4;
+      this.shapeWidth = this.initialBlock.width * 2;
     }
     this.drawShape();
   };
@@ -1182,4 +1231,4 @@ const dropShape = (shapeName) => {
   shape.fall();
 };
 
-dropShape("tShape");
+dropShape("lShape");
