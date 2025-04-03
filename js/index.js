@@ -32,12 +32,16 @@ class Block {
 }
 
 class Shape {
-  constructor(colorString) {
+  constructor(colorString, startingOffset) {
     this.numBlocks = 4;
     this.shapeColor = colorString;
     this.blocks = [];
     for (let i = 0; i < this.numBlocks; i++) {
-      const newBlock = new Block(0, 0, this.shapeColor);
+      const newBlock = new Block(
+        Math.floor(canvas.width / 2 - startingOffset),
+        0,
+        this.shapeColor
+      );
       this.blocks.push(newBlock);
     }
     this.initialBlock = this.blocks[0];
@@ -94,7 +98,7 @@ class Shape {
 
 class Line extends Shape {
   constructor() {
-    super(GREEN);
+    super(GREEN, 40);
     this.shapeHeight = this.initialBlock.height;
     this.shapeWidth = this.initialBlock.width * 4;
     this.rotation = "horizontal"; // horizontal or vertical
@@ -173,7 +177,7 @@ class Line extends Shape {
 
 class Square extends Shape {
   constructor() {
-    super(BLUE);
+    super(BLUE, 20);
     // this.shapeHeight = this.initialBlock.height * 3;
     this.shapeHeight = this.initialBlock.height * 2;
     this.shapeWidth = this.initialBlock.width * 2;
@@ -232,7 +236,7 @@ class Square extends Shape {
 
 class TShape extends Shape {
   constructor() {
-    super(RED);
+    super(RED, 40);
     this.shapeHeight = this.initialBlock.height * 2;
     this.shapeWidth = this.initialBlock.width * 3;
     this.rotation = "up"; // up, right, down, left
@@ -370,7 +374,7 @@ class TShape extends Shape {
 
 class LShape extends Shape {
   constructor() {
-    super(YELLOW);
+    super(YELLOW, 20);
     this.shapeHeight = this.initialBlock.height * 3;
     this.shapeWidth = this.initialBlock.width * 2;
     this.rotation = "down"; // down, up, left, right
@@ -504,7 +508,7 @@ class LShape extends Shape {
 
 class JShape extends Shape {
   constructor() {
-    super(ORANGE);
+    super(ORANGE, 0);
     this.shapeHeight = this.initialBlock.height * 4;
     this.shapeWidth = this.initialBlock.width * 3;
     this.rotation = "down"; // down, up, left, right
@@ -653,4 +657,4 @@ const dropShape = (shapeName) => {
   shape.fall();
 };
 
-dropShape("jShape");
+dropShape("tShape");
