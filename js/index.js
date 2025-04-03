@@ -162,6 +162,9 @@ class Line extends Shape {
   };
 
   rotate = () => {
+    if (this.rotation === "vertical" && this.initialBlock.xCoordinate > 520) {
+      return;
+    }
     this.clearShape();
     this.rotation = this.rotation === "horizontal" ? "vertical" : "horizontal";
     if (this.rotation === "vertical") {
@@ -350,6 +353,25 @@ class TShape extends Shape {
   };
 
   rotate = () => {
+    console.log("x-coord: ", this.initialBlock.xCoordinate);
+    if (this.rotation === "right" && this.initialBlock.xCoordinate >= 560) {
+      this.rotation = "down";
+    } else if (
+      this.rotation === "left" &&
+      this.initialBlock.xCoordinate >= 580
+    ) {
+      return;
+    } else if (
+      this.rotation === "left" &&
+      this.initialBlock.xCoordinate >= 560
+    ) {
+      this.rotation = "up";
+    } else if (
+      this.rotation === "down" &&
+      this.initialBlock.xCoordinate === 0
+    ) {
+      this.rotation = "left";
+    }
     this.clearShape();
     if (this.rotation === "up") {
       this.rotation = "right";
