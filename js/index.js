@@ -7,7 +7,6 @@ const canvas = document.getElementById("canvas");
 canvas.width = 600;
 canvas.height = 800;
 const ctx = canvas.getContext("2d");
-const gameSpeed = 500;
 
 class Block {
   constructor(xCoordinate, yCoordinate, color) {
@@ -699,22 +698,34 @@ class JShape extends Shape {
   };
 }
 
-// Testing
-const dropShape = (shapeName) => {
-  let shape;
-  if (shapeName === "line") {
-    shape = new Line();
-  } else if (shapeName === "square") {
-    shape = new Square();
-  } else if (shapeName === "tShape") {
-    shape = new TShape();
-  } else if (shapeName === "lShape") {
-    shape = new LShape();
-  } else if (shapeName === "jShape") {
-    shape = new JShape();
+class Game {
+  constructor() {
+    this.level = 1;
+    this.gameSpeed = 500;
+    this.rowsCleared = 0;
+    this.gameOver = false;
+    this.grid = []; // 2d array
+    this.availablePieces = ["line", "square", "tShape", "lShape", "jShape"];
+    this.currentPiece = null;
   }
+}
 
-  shape.fall();
-};
+// // Testing
+// const dropShape = (shapeName) => {
+//   let shape;
+//   if (shapeName === "line") {
+//     shape = new Line();
+//   } else if (shapeName === "square") {
+//     shape = new Square();
+//   } else if (shapeName === "tShape") {
+//     shape = new TShape();
+//   } else if (shapeName === "lShape") {
+//     shape = new LShape();
+//   } else if (shapeName === "jShape") {
+//     shape = new JShape();
+//   }
 
-dropShape("jShape");
+//   shape.fall();
+// };
+
+// dropShape("jShape");
