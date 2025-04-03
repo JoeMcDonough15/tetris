@@ -318,206 +318,353 @@ class Square extends Shape {
 class TShape extends Shape {
   constructor() {
     super(RED);
-    this.shapeHeight = this.individualBlockWidth * 2;
-    this.shapeWidth = this.individualBlockWidth * 3;
+    this.shapeHeight = this.initialBlock.height * 2;
+    this.shapeWidth = this.initialBlock.width * 3;
     this.rotation = "up"; // up, right, down, left
   }
 
   clearShape = () => {
     this.blocks.forEach((block) => {
-      if (this.rotation === "up") {
-        if (block === 3) {
-          ctx.clearRect(
-            this.xCoordinate + this.individualBlockWidth,
-            this.yCoordinate - this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-        } else {
-          ctx.clearRect(
-            this.xCoordinate + this.individualBlockWidth * block,
-            this.yCoordinate,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-        }
-      } else if (this.rotation === "right") {
-        if (block === 3) {
-          ctx.clearRect(
-            this.xCoordinate + this.individualBlockWidth,
-            this.yCoordinate + this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-        } else {
-          ctx.clearRect(
-            this.xCoordinate,
-            this.yCoordinate + this.individualBlockWidth * block,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-        }
-      } else if (this.rotation === "left") {
-        if (block === 3) {
-          ctx.clearRect(
-            this.xCoordinate - this.individualBlockWidth,
-            this.yCoordinate + this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-        } else {
-          ctx.clearRect(
-            this.xCoordinate,
-            this.yCoordinate + this.individualBlockWidth * block,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-        }
-      } else if (this.rotation === "down") {
-        if (block === 3) {
-          ctx.clearRect(
-            this.xCoordinate + this.individualBlockWidth,
-            this.yCoordinate + this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-        } else {
-          ctx.clearRect(
-            this.xCoordinate + this.individualBlockWidth * block,
-            this.yCoordinate,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-        }
-      }
+      block.clearBlock();
+      // if (this.rotation === "up") {
+      //   if (block === 3) {
+      //     ctx.clearRect(
+      //       this.xCoordinate + this.individualBlockWidth,
+      //       this.yCoordinate - this.individualBlockWidth,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   } else {
+      //     ctx.clearRect(
+      //       this.xCoordinate + this.individualBlockWidth * block,
+      //       this.yCoordinate,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   }
+      // } else if (this.rotation === "right") {
+      //   if (block === 3) {
+      //     ctx.clearRect(
+      //       this.xCoordinate + this.individualBlockWidth,
+      //       this.yCoordinate + this.individualBlockWidth,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   } else {
+      //     ctx.clearRect(
+      //       this.xCoordinate,
+      //       this.yCoordinate + this.individualBlockWidth * block,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   }
+      // } else if (this.rotation === "left") {
+      //   if (block === 3) {
+      //     ctx.clearRect(
+      //       this.xCoordinate - this.individualBlockWidth,
+      //       this.yCoordinate + this.individualBlockWidth,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   } else {
+      //     ctx.clearRect(
+      //       this.xCoordinate,
+      //       this.yCoordinate + this.individualBlockWidth * block,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   }
+      // } else if (this.rotation === "down") {
+      //   if (block === 3) {
+      //     ctx.clearRect(
+      //       this.xCoordinate + this.individualBlockWidth,
+      //       this.yCoordinate + this.individualBlockWidth,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   } else {
+      //     ctx.clearRect(
+      //       this.xCoordinate + this.individualBlockWidth * block,
+      //       this.yCoordinate,
+      //       this.individualBlockWidth,
+      //       this.individualBlockWidth
+      //     );
+      //   }
+      // }
     });
   };
 
   drawShape = () => {
-    this.blocks.forEach((block) => {
-      ctx.fillStyle = this.fillColor;
-      ctx.strokeStyle = this.borderColor;
+    // this.blocks.forEach((block) => {
+    //   ctx.fillStyle = this.fillColor;
+    //   ctx.strokeStyle = this.borderColor;
+    //   if (this.rotation === "up") {
+    //     if (block === 3) {
+    //       // place this block above the middle block
+    //       ctx.fillRect(
+    //         this.xCoordinate + this.individualBlockWidth,
+    //         this.yCoordinate - this.individualBlockWidth,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //       ctx.strokeRect(
+    //         this.xCoordinate + this.individualBlockWidth,
+    //         this.yCoordinate - this.individualBlockWidth,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //     } else {
+    //       // place blocks in a row
+    //       ctx.fillRect(
+    //         this.xCoordinate + this.individualBlockWidth * block,
+    //         this.yCoordinate,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //       ctx.strokeRect(
+    //         this.xCoordinate + this.individualBlockWidth * block,
+    //         this.yCoordinate,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //     }
+    //   } else if (this.rotation === "right") {
+    //     if (block === 3) {
+    //       // put this block to the right of the middle block
+    //       ctx.fillRect(
+    //         this.xCoordinate + this.individualBlockWidth,
+    //         this.yCoordinate + this.individualBlockWidth,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //       ctx.strokeRect(
+    //         this.xCoordinate + this.individualBlockWidth,
+    //         this.yCoordinate + this.individualBlockWidth,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //     } else {
+    //       // stack the blocks vertically
+    //       ctx.fillRect(
+    //         this.xCoordinate,
+    //         this.yCoordinate + this.individualBlockWidth * block,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //       ctx.strokeRect(
+    //         this.xCoordinate,
+    //         this.yCoordinate + this.individualBlockWidth * block,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //     }
+    //   } else if (this.rotation === "left") {
+    //     if (block === 3) {
+    //       // put this block to the left of the middle block
+    //       ctx.fillRect(
+    //         this.xCoordinate - this.individualBlockWidth,
+    //         this.yCoordinate + this.individualBlockWidth,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //       ctx.strokeRect(
+    //         this.xCoordinate + this.individualBlockWidth,
+    //         this.yCoordinate + this.individualBlockWidth,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //     } else {
+    //       // stack the blocks vertically
+    //       ctx.fillRect(
+    //         this.xCoordinate,
+    //         this.yCoordinate + this.individualBlockWidth * block,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //       ctx.strokeRect(
+    //         this.xCoordinate,
+    //         this.yCoordinate + this.individualBlockWidth * block,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //     }
+    //   } else if (this.rotation === "down") {
+    //     if (block === 3) {
+    //       // put this block below the middle block
+    //       ctx.fillRect(
+    //         this.xCoordinate + this.individualBlockWidth,
+    //         this.yCoordinate + this.individualBlockWidth,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //       ctx.strokeRect(
+    //         this.xCoordinate + this.individualBlockWidth,
+    //         this.yCoordinate + this.individualBlockWidth,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //     } else {
+    //       // place blocks in a row
+    //       ctx.fillRect(
+    //         this.xCoordinate + this.individualBlockWidth * block,
+    //         this.yCoordinate,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //       ctx.strokeRect(
+    //         this.xCoordinate + this.individualBlockWidth * block,
+    //         this.yCoordinate,
+    //         this.individualBlockWidth,
+    //         this.individualBlockWidth
+    //       );
+    //     }
+    //   }
+    // });
+    this.blocks.forEach((block, index) => {
       if (this.rotation === "up") {
-        if (block === 3) {
-          // place this block above the middle block
-          ctx.fillRect(
-            this.xCoordinate + this.individualBlockWidth,
-            this.yCoordinate - this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-          ctx.strokeRect(
-            this.xCoordinate + this.individualBlockWidth,
-            this.yCoordinate - this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
+        if (index === 3) {
+          // place the final block above the middle block
+          block.xCoordinate = this.initialBlock.xCoordinate + block.width;
+          block.yCoordinate = this.initialBlock.yCoordinate - block.height;
+
+          // ctx.fillRect(
+          //   this.xCoordinate + this.individualBlockWidth,
+          //   this.yCoordinate - this.individualBlockWidth,
+          //   this.individualBlockWidth,
+          //   this.individualBlockWidth
+          // );
+          // ctx.strokeRect(
+          //   this.xCoordinate + this.individualBlockWidth,
+          //   this.yCoordinate - this.individualBlockWidth,
+          //   this.individualBlockWidth,
+          //   this.individualBlockWidth
+          // );
         } else {
           // place blocks in a row
-          ctx.fillRect(
-            this.xCoordinate + this.individualBlockWidth * block,
-            this.yCoordinate,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-          ctx.strokeRect(
-            this.xCoordinate + this.individualBlockWidth * block,
-            this.yCoordinate,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
+          block.xCoordinate =
+            this.initialBlock.xCoordinate + block.width * index;
+          block.yCoordinate = this.initialBlock.yCoordinate;
+          // ctx.fillRect(
+          //   this.xCoordinate + this.individualBlockWidth * block,
+          //   this.yCoordinate,
+          //   this.individualBlockWidth,
+          //   this.individualBlockWidth
+          // );
+          // ctx.strokeRect(
+          //   this.xCoordinate + this.individualBlockWidth * block,
+          //   this.yCoordinate,
+          //   this.individualBlockWidth,
+          //   this.individualBlockWidth
+          // );
         }
       } else if (this.rotation === "right") {
-        if (block === 3) {
-          // put this block to the right of the middle block
-          ctx.fillRect(
-            this.xCoordinate + this.individualBlockWidth,
-            this.yCoordinate + this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-          ctx.strokeRect(
-            this.xCoordinate + this.individualBlockWidth,
-            this.yCoordinate + this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
+        if (index === 3) {
+          // put the final block to the right of the middle block
+          block.xCoordinate = this.initialBlock.xCoordinate + block.width;
+          block.yCoordinate = this.initialBlock.yCoordinate + block.height;
+          // ctx.fillRect(
+          //   this.xCoordinate + this.individualBlockWidth,
+          //   this.yCoordinate + this.individualBlockWidth,
+          //   this.individualBlockWidth,
+          //   this.individualBlockWidth
+          // );
+          // ctx.strokeRect(
+          //   this.xCoordinate + this.individualBlockWidth,
+          //   this.yCoordinate + this.individualBlockWidth,
+          //   this.individualBlockWidth,
+          //   this.individualBlockWidth
+          // );
         } else {
           // stack the blocks vertically
-          ctx.fillRect(
-            this.xCoordinate,
-            this.yCoordinate + this.individualBlockWidth * block,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-          ctx.strokeRect(
-            this.xCoordinate,
-            this.yCoordinate + this.individualBlockWidth * block,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
+          block.xCoordinate = this.initialBlock.xCoordinate;
+          block.yCoordinate =
+            this.initialBlock.yCoordinate + block.height * index;
+          // ctx.fillRect(
+          //   this.xCoordinate,
+          //   this.yCoordinate + this.individualBlockWidth * block,
+          //   this.individualBlockWidth,
+          //   this.individualBlockWidth
+          // );
+          // ctx.strokeRect(
+          //   this.xCoordinate,
+          //   this.yCoordinate + this.individualBlockWidth * block,
+          //   this.individualBlockWidth,
+          //   this.individualBlockWidth
+          // );
         }
       } else if (this.rotation === "left") {
-        if (block === 3) {
+        if (index === 3) {
           // put this block to the left of the middle block
-          ctx.fillRect(
-            this.xCoordinate - this.individualBlockWidth,
-            this.yCoordinate + this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-          ctx.strokeRect(
-            this.xCoordinate + this.individualBlockWidth,
-            this.yCoordinate + this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
+          block.xCoordinate = this.initialBlock.xCoordinate - block.width;
+          block.yCoordinate = this.initialBlock.yCoordinate + block.height;
+          // ctx.fillRect(
+          //   this.xCoordinate - this.individualBlockWidth,
+          //   this.yCoordinate + this.individualBlockWidth,
+          //   this.individualBlockWidth,
+          //   this.individualBlockWidth
+          // );
+          // ctx.strokeRect(
+          //   this.xCoordinate + this.individualBlockWidth,
+          //   this.yCoordinate + this.individualBlockWidth,
+          //   this.individualBlockWidth,
+          //   this.individualBlockWidth
+          // );
         } else {
           // stack the blocks vertically
-          ctx.fillRect(
-            this.xCoordinate,
-            this.yCoordinate + this.individualBlockWidth * block,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-          ctx.strokeRect(
-            this.xCoordinate,
-            this.yCoordinate + this.individualBlockWidth * block,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
+          block.xCoordinate = this.initialBlock.xCoordinate;
+          block.yCoordinate =
+            this.initialBlock.yCoordinate + block.height * index;
+          // ctx.fillRect(
+          //   this.xCoordinate,
+          //   this.yCoordinate + this.individualBlockWidth * block,
+          //   this.individualBlockWidth,
+          //   this.individualBlockWidth
+          // );
+          // ctx.strokeRect(
+          //   this.xCoordinate,
+          //   this.yCoordinate + this.individualBlockWidth * block,
+          //   this.individualBlockWidth,
+          //   this.individualBlockWidth
+          // );
         }
       } else if (this.rotation === "down") {
-        if (block === 3) {
+        if (index === 3) {
           // put this block below the middle block
-          ctx.fillRect(
-            this.xCoordinate + this.individualBlockWidth,
-            this.yCoordinate + this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-          ctx.strokeRect(
-            this.xCoordinate + this.individualBlockWidth,
-            this.yCoordinate + this.individualBlockWidth,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
+          block.xCoordinate = this.initialBlock.xCoordinate + block.width;
+          block.yCoordinate = this.initialBlock.yCoordinate + block.height;
+
+          // ctx.fillRect(
+          //   this.xCoordinate + this.individualBlockWidth,
+          //   this.yCoordinate + this.individualBlockWidth,
+          //   this.individualBlockWidth,
+          //   this.individualBlockWidth
+          // );
+          // ctx.strokeRect(
+          //   this.xCoordinate + this.individualBlockWidth,
+          //   this.yCoordinate + this.individualBlockWidth,
+          //   this.individualBlockWidth,
+          //   this.individualBlockWidth
+          // );
         } else {
           // place blocks in a row
-          ctx.fillRect(
-            this.xCoordinate + this.individualBlockWidth * block,
-            this.yCoordinate,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
-          ctx.strokeRect(
-            this.xCoordinate + this.individualBlockWidth * block,
-            this.yCoordinate,
-            this.individualBlockWidth,
-            this.individualBlockWidth
-          );
+          block.xCoordinate =
+            this.initialBlock.xCoordinate + block.width * index;
+          block.yCoordinate = this.initialBlock.yCoordinate;
+          // ctx.fillRect(
+          //   this.xCoordinate + this.individualBlockWidth * block,
+          //   this.yCoordinate,
+          //   this.individualBlockWidth,
+          //   this.individualBlockWidth
+          // );
+          // ctx.strokeRect(
+          //   this.xCoordinate + this.individualBlockWidth * block,
+          //   this.yCoordinate,
+          //   this.individualBlockWidth,
+          //   this.individualBlockWidth
+          // );
         }
       }
+      block.drawBlock();
     });
   };
 
@@ -525,20 +672,20 @@ class TShape extends Shape {
     this.clearShape();
     if (this.rotation === "up") {
       this.rotation = "right";
-      this.shapeHeight = this.individualBlockWidth * 4;
-      this.shapeWidth = this.individualBlockWidth * 2;
+      this.shapeHeight = this.initialBlock.height * 4;
+      this.shapeWidth = this.initialBlock.width * 2;
     } else if (this.rotation === "right") {
       this.rotation = "down";
-      this.shapeHeight = this.individualBlockWidth * 3;
-      this.shapeWidth = this.individualBlockWidth * 3;
+      this.shapeHeight = this.initialBlock.height * 3;
+      this.shapeWidth = this.initialBlock.width * 3;
     } else if (this.rotation === "down") {
       this.rotation = "left";
-      this.shapeHeight = this.individualBlockWidth * 4;
-      this.shapeWidth = this.individualBlockWidth * 2;
+      this.shapeHeight = this.initialBlock.height * 4;
+      this.shapeWidth = this.initialBlock.width * 2;
     } else if (this.rotation === "left") {
       this.rotation = "up";
-      this.shapeHeight = this.individualBlockWidth * 2;
-      this.shapeWidth = this.individualBlockWidth * 3;
+      this.shapeHeight = this.initialBlock.height * 2;
+      this.shapeWidth = this.initialBlock.width * 3;
     }
     this.drawShape();
   };
@@ -1035,4 +1182,4 @@ const dropShape = (shapeName) => {
   shape.fall();
 };
 
-dropShape("square");
+dropShape("tShape");
