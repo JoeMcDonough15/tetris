@@ -162,7 +162,10 @@ class Line extends Shape {
   };
 
   rotate = () => {
-    if (this.rotation === "vertical" && this.initialBlock.xCoordinate > 520) {
+    if (
+      (this.rotation === "vertical" && this.initialBlock.xCoordinate > 520) ||
+      (this.rotation === "horizontal" && this.initialBlock.yCoordinate >= 720)
+    ) {
       return;
     }
     this.clearShape();
@@ -353,7 +356,9 @@ class TShape extends Shape {
   };
 
   rotate = () => {
-    console.log("x-coord: ", this.initialBlock.xCoordinate);
+    if (this.initialBlock.yCoordinate >= 740) {
+      return;
+    }
     if (this.rotation === "right" && this.initialBlock.xCoordinate >= 560) {
       this.rotation = "down";
     } else if (
@@ -506,6 +511,21 @@ class LShape extends Shape {
   };
 
   rotate = () => {
+    if (this.initialBlock.yCoordinate >= 740) {
+      return;
+    }
+    if (this.rotation === "left" && this.initialBlock.xCoordinate === 0) {
+      this.rotation = "up";
+    } else if (
+      this.rotation === "down" &&
+      this.initialBlock.xCoordinate >= 560
+    ) {
+      this.rotation = "left";
+    } else if (this.rotation === "up" && this.initialBlock.xCoordinate >= 580) {
+      return;
+    } else if (this.rotation === "up" && this.initialBlock.xCoordinate >= 560) {
+      this.rotation = "right";
+    }
     this.clearShape();
     if (this.rotation === "down") {
       this.rotation = "left";
@@ -639,6 +659,24 @@ class JShape extends Shape {
   };
 
   rotate = () => {
+    if (this.initialBlock.yCoordinate >= 740) {
+      return;
+    }
+    if (this.rotation === "right" && this.initialBlock.xCoordinate === 0) {
+      this.rotation = "left";
+    } else if (
+      this.rotation === "down" &&
+      this.initialBlock.xCoordinate >= 580
+    ) {
+      return;
+    } else if (
+      this.rotation === "down" &&
+      this.initialBlock.xCoordinate >= 560
+    ) {
+      this.rotation = "left";
+    } else if (this.rotation === "up" && this.initialBlock.xCoordinate >= 560) {
+      this.rotation = "right";
+    }
     this.clearShape();
     if (this.rotation === "down") {
       this.rotation = "left";
@@ -679,4 +717,4 @@ const dropShape = (shapeName) => {
   shape.fall();
 };
 
-dropShape("tShape");
+dropShape("jShape");
