@@ -631,26 +631,48 @@ class Game {
 
   // methods
 
+  addBlocksToGrid = () => {
+    this.currentPiece.blocks.forEach((block) => {
+      // run forEach over all the blocks of the shape.  Grab each block's currentRow and currentCol
+      const [currentRow, currentCol] = this.determineRowAndColumn(block);
+      // update the grid to put a true at each of the coordinates that are now occupied.
+      this.grid[currentRow][currentCol] = true;
+      // increment the number at the end of the currentRow, documenting that column(s) from that row have been occupied.
+      const rowOfGrid = this.grid[currentRow];
+      rowOfGrid[rowOfGrid.length - 1] += 1;
+    });
+  };
+
   placePiece = (interval) => {
     // First, clear the event listeners from the current piece, and stop setInterval
     clearInterval(interval);
     document.removeEventListener("keydown", this.pieceControllerEvents);
     // Then, update the game grid based on this piece's placed position
+    this.addBlocksToGrid();
+    // check to see if we have a cleared a row when this piece was placed
+    // we clear a row if a row of the grid ever reaches a number 30 at its last index
 
     // Finally, select a new piece to fall, making it unnecessary to return out of dropPiece.
     this.selectNewPiece();
   };
+
+  determineRowAndColumn = (block) => {
+    const currentRow = block.yCoordinate / GRID_SPACE;
+    const currentCol = block.xCoordinate / GRID_SPACE;
+    return [currentRow, currentCol];
+  };
+
+  reachedBottomRow = (rowNum) => rowNum === this.grid.length - 1;
 
   willCollideBottom = () => {
     for (let i = 0; i < this.currentPiece.blocks.length; i++) {
       const currentBlock = this.currentPiece.blocks[i];
       if (!currentBlock.isBottomLedge) continue;
 
-      const currentRow = currentBlock.yCoordinate / GRID_SPACE;
-      const currentCol = currentBlock.xCoordinate / GRID_SPACE;
+      const [currentRow, currentCol] = this.determineRowAndColumn(currentBlock);
 
       if (
-        currentRow === this.grid.length - 1 ||
+        this.reachedBottomRow(currentRow) ||
         this.grid[currentRow + 1][currentCol]
       ) {
         // if we are at the bottom of the grid, or if the grid is true at this position (meaning there's a shape occupying these coordinates)
