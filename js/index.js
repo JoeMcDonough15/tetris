@@ -1,17 +1,23 @@
+// Colors
 const GREEN = "rgb(0 255 0)";
 const BLUE = "rgb(0 100 255)";
 const RED = "rgb(255 0 0)";
 const YELLOW = "rgb(255 255 0)";
 const ORANGE = "rgb(255 127 0)";
+// Grid Specifications
+const NUM_ROWS = 40;
+const NUM_COLS = 30;
+const GRID_SPACE = 20;
+// Canvas
 const canvas = document.getElementById("canvas");
-canvas.width = 600;
-canvas.height = 800;
+canvas.width = NUM_COLS * GRID_SPACE; // 600
+canvas.height = NUM_ROWS * GRID_SPACE; // 800
 const ctx = canvas.getContext("2d");
 
 class Block {
   constructor(xCoordinate, yCoordinate, color) {
-    this.width = 20; // or 3% of the canvas width of 600px
-    this.height = 20; // or 2.5% of the canvas height of 800px
+    this.width = GRID_SPACE; // or 3% of the canvas width of 600px
+    this.height = GRID_SPACE; // or 2.5% of the canvas height of 800px
     this.borderColor = "rgb(0 0 0)";
     this.fillColor = color;
     this.xCoordinate = xCoordinate;
@@ -700,15 +706,29 @@ class JShape extends Shape {
 
 class Game {
   constructor() {
+    this.gameOver = false;
     this.level = 1;
     this.gameSpeed = 500;
     this.rowsCleared = 0;
-    this.gameOver = false;
-    this.grid = []; // 2d array
+    this.grid = new Array(NUM_ROWS); // will be a 2d array
     this.availablePieces = ["line", "square", "tShape", "lShape", "jShape"];
     this.currentPiece = null;
+
+    // populate the 2d grid - O(1) Time and Space.  There is a set number of rows and columns, so despite the nested loop, none of this is based on user input, so the Big O analysis of this operation would be considered constant.
+    for (let i = 0; i < this.grid.length; i++) {
+      // set all columns to false to denote unoccupied grid spaces.
+      const newRow = new Array(NUM_COLS + 1).fill(false);
+      newRow[newRow.length - 1] = 0; // override the last false value with a number to be used as the number of columns occupied in each row, initialized to 0.
+      this.grid[i] = newRow;
+    }
   }
 }
+
+const game = new Game();
+
+// for (let i = 0; i < game.grid.length; i++) {
+//   console.log("row: ", game.grid[i]);
+// }
 
 // // Testing
 // const dropShape = (shapeName) => {
