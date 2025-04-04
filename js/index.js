@@ -111,17 +111,29 @@ class Line extends Shape {
   drawShape = () => {
     this.blocks.forEach((block, index) => {
       if (this.rotation === "horizontal") {
+        // handle ledges
+        block.isBottomLedge = true;
+        if (index === 0) {
+          block.isLeftLedge = true;
+        }
+        if (index === 3) {
+          block.isRightLedge = true;
+        }
+
+        // handle coordinates
         block.xCoordinate = this.initialBlock.xCoordinate + GRID_SPACE * index;
         block.yCoordinate = this.initialBlock.yCoordinate;
-        block.isBottomLedge = true;
-        block.isLeftLedge = index === 0;
-        block.isRightLedge = index === 3;
       } else if (this.rotation === "vertical") {
-        block.xCoordinate = this.initialBlock.xCoordinate;
-        block.yCoordinate = this.initialBlock.yCoordinate + GRID_SPACE * index;
-        block.isBottomLedge = index === 3;
+        // handle ledges
+        if (index === 3) {
+          block.isBottomLedge = true;
+        }
         block.isLeftLedge = true;
         block.isRightLedge = true;
+
+        // handle coordinates
+        block.xCoordinate = this.initialBlock.xCoordinate;
+        block.yCoordinate = this.initialBlock.yCoordinate + GRID_SPACE * index;
       }
 
       block.drawBlock();
@@ -191,14 +203,15 @@ class Square extends Shape {
   drawShape = () => {
     this.blocks.forEach((block, index) => {
       // handle ledges for each block
+      if (index > 1) {
+        block.isBottomLedge = true;
+      }
       if (index % 2 === 0) {
         block.isLeftLedge = true;
       } else {
         block.isRightLedge = true;
       }
-      if (index > 1) {
-        block.isBottomLedge = true;
-      }
+
       // handle coordinates for each block
       if (index === 1) {
         block.xCoordinate = this.initialBlock.xCoordinate + GRID_SPACE;
@@ -289,11 +302,14 @@ class TShape extends Shape {
   drawShape = () => {
     this.blocks.forEach((block, index) => {
       if (this.rotation === "up") {
-        // handle left and right ledges
+        // handle ledges
+        if (index < 3) {
+          block.isBottomLedge = true;
+        }
         if (index === 0 || index === 3) {
           block.isLeftLedge = true;
         }
-        if (index === 2 || index === 3) {
+        if (index > 1) {
           block.isRightLedge = true;
         }
 
@@ -307,18 +323,17 @@ class TShape extends Shape {
           block.xCoordinate =
             this.initialBlock.xCoordinate + GRID_SPACE * index;
           block.yCoordinate = this.initialBlock.yCoordinate;
-          block.isBottomLedge = true;
         }
       } else if (this.rotation === "right") {
         // handle ledges
-        if (index === 2 || index === 3) {
+        if (index > 1) {
           block.isBottomLedge = true;
         }
-        if (index === 0 || index === 2 || index === 3) {
-          block.isRightLedge = true;
-        }
-        if (index === 0 || index === 1 || index === 2) {
+        if (index < 3) {
           block.isLeftLedge = true;
+        }
+        if (index !== 1) {
+          block.isRightLedge = true;
         }
 
         // handle coordinates
@@ -334,13 +349,13 @@ class TShape extends Shape {
         }
       } else if (this.rotation === "left") {
         // handle ledges
-        if (index === 2 || index === 3) {
+        if (index > 1) {
           block.isBottomLedge = true;
         }
-        if (index === 0 || index === 2 || index === 3) {
+        if (index !== 1) {
           block.isLeftLedge = true;
         }
-        if (index === 0 || index === 1 || index === 2) {
+        if (index < 3) {
           block.isRightLedge = true;
         }
 
@@ -357,13 +372,13 @@ class TShape extends Shape {
         }
       } else if (this.rotation === "down") {
         // handle ledges
-        if (index === 0 || index === 2 || index === 3) {
+        if (index !== 1) {
           block.isBottomLedge = true;
         }
         if (index === 0 || index === 3) {
           block.isLeftLedge = true;
         }
-        if (index === 2 || index === 3) {
+        if (index > 1) {
           block.isRightLedge = true;
         }
 
@@ -476,6 +491,9 @@ class LShape extends Shape {
 
   clearShape = () => {
     this.blocks.forEach((block) => {
+      // reset ledges back to false
+      block.resetLedges();
+      // clear block from the canvas
       block.clearBlock();
     });
   };
@@ -483,6 +501,18 @@ class LShape extends Shape {
   drawShape = () => {
     this.blocks.forEach((block, index) => {
       if (this.rotation === "down") {
+        // handle ledges
+        if (index > 1) {
+          block.isBottomLedge = true;
+        }
+        if (index < 3) {
+          block.isLeftLedge = true;
+        }
+        if (index !== 2) {
+          block.isRightLedge = true;
+        }
+
+        // handle coordinates
         if (index === 3) {
           // place this block on the bottom right
           block.xCoordinate = this.initialBlock.xCoordinate + GRID_SPACE;
@@ -494,6 +524,18 @@ class LShape extends Shape {
             this.initialBlock.yCoordinate + GRID_SPACE * index;
         }
       } else if (this.rotation === "right") {
+        // handle ledges
+        if (index < 3) {
+          block.isBottomLedge = true;
+        }
+        if (index === 0 || index === 3) {
+          block.isLeftLedge = true;
+        }
+        if (index > 1) {
+          block.isRightLedge = true;
+        }
+
+        // handle coordinates
         if (index === 3) {
           // put block on top right
           block.xCoordinate = this.initialBlock.xCoordinate + GRID_SPACE * 2;
@@ -505,6 +547,18 @@ class LShape extends Shape {
           block.yCoordinate = this.initialBlock.yCoordinate;
         }
       } else if (this.rotation === "left") {
+        // handle ledges
+        if (index > 0) {
+          block.isBottomLedge = true;
+        }
+        if (index === 0 || index === 3) {
+          block.isLeftLedge = true;
+        }
+        if (index > 1) {
+          block.isRightLedge = true;
+        }
+
+        // handle coordinates
         if (index === 3) {
           // put block on bottom left
           block.xCoordinate = this.initialBlock.xCoordinate;
@@ -516,6 +570,18 @@ class LShape extends Shape {
           block.yCoordinate = this.initialBlock.yCoordinate;
         }
       } else if (this.rotation === "up") {
+        // handle ledges
+        if (index > 1) {
+          block.isBottomLedge = true;
+        }
+        if (index > 0) {
+          block.isLeftLedge = true;
+        }
+        if (index < 3) {
+          block.isRightLedge = true;
+        }
+
+        // handle coordinates
         if (index === 3) {
           // put this block on the top left
           block.xCoordinate = this.initialBlock.xCoordinate - GRID_SPACE;
@@ -618,6 +684,9 @@ class JShape extends Shape {
 
   clearShape = () => {
     this.blocks.forEach((block) => {
+      // reset all ledges back to false
+      block.resetLedges();
+      // clear this block from the canvas
       block.clearBlock();
     });
   };
@@ -625,6 +694,18 @@ class JShape extends Shape {
   drawShape = () => {
     this.blocks.forEach((block, index) => {
       if (this.rotation === "down") {
+        // handle ledges
+        if (index > 1) {
+          block.isBottomLedge = true;
+        }
+        if (index !== 2) {
+          block.isLeftLedge = true;
+        }
+        if (index < 3) {
+          block.isRightLedge = true;
+        }
+
+        // handle coordinates
         if (index === 3) {
           // put this block on the bottom left
           block.xCoordinate = this.initialBlock.xCoordinate - GRID_SPACE;
@@ -636,6 +717,18 @@ class JShape extends Shape {
             this.initialBlock.yCoordinate + GRID_SPACE * index;
         }
       } else if (this.rotation === "right") {
+        // handle ledges
+        if (index !== 2) {
+          block.isBottomLedge = true;
+        }
+        if (index === 0 || index === 3) {
+          block.isLeftLedge = true;
+        }
+        if (index > 1) {
+          block.isRightLedge = true;
+        }
+
+        // handle coordinates
         if (index === 3) {
           // put block on bottom right
           block.xCoordinate = this.initialBlock.xCoordinate + GRID_SPACE * 2;
@@ -647,6 +740,18 @@ class JShape extends Shape {
           block.yCoordinate = this.initialBlock.yCoordinate;
         }
       } else if (this.rotation === "left") {
+        // handle ledges
+        if (index < 3) {
+          block.isBottomLedge = true;
+        }
+        if (index === 0 || index === 3) {
+          block.isLeftLedge = true;
+        }
+        if (index > 1) {
+          block.isRightLedge = true;
+        }
+
+        // handle coordinates
         if (index === 3) {
           // put block on top left
           block.xCoordinate = this.initialBlock.xCoordinate;
@@ -658,6 +763,18 @@ class JShape extends Shape {
           block.yCoordinate = this.initialBlock.yCoordinate;
         }
       } else if (this.rotation === "up") {
+        // handle ledges
+        if (index > 1) {
+          block.isBottomLedge = true;
+        }
+        if (index < 3) {
+          block.isLeftLedge = true;
+        }
+        if (index > 0) {
+          block.isRightLedge = true;
+        }
+
+        // handle coordinates
         if (index === 3) {
           // place this block on the top right
           block.xCoordinate = this.initialBlock.xCoordinate + GRID_SPACE;
