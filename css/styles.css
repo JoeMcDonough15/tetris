@@ -6,6 +6,40 @@
 
 body {
   background: black;
+  color: pink;
+  min-height: 100vh;
+}
+
+.main-container,
+.sub-headers-container,
+.section-one {
+  align-items: center;
+  display: flex;
+  gap: 20px;
+  height: 100%;
+  justify-content: center;
+  margin: auto;
+  max-width: 600px;
+}
+
+.section-one,
+.sub-headers-container {
+  flex-direction: column;
+}
+
+.main-header {
+  font-family: "Pixelify Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-size: 4rem;
+  font-style: normal;
+  font-weight: 500;
+  margin-top: 0.5em;
+}
+
+.sub-headers-container {
+  align-items: flex-start;
+  margin: auto;
+  width: 100%;
 }
 
 #canvas {

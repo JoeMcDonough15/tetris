@@ -33,6 +33,12 @@ class Block {
     ctx.fillRect(this.xCoordinate, this.yCoordinate, GRID_SPACE, GRID_SPACE);
     ctx.strokeRect(this.xCoordinate, this.yCoordinate, GRID_SPACE, GRID_SPACE);
   };
+
+  moveBlockDownOneRow = () => {
+    this.clearBlock();
+    this.yCoordinate += GRID_SPACE;
+    this.drawBlock();
+  };
 }
 
 export default Block;

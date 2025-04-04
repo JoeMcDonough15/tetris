@@ -1,49 +1,97 @@
 import { Line, Square, TShape, LShape, JShape } from "./shapes.js";
 import { NUM_ROWS, NUM_COLS, GRID_SPACE } from "./gridSpecs.js";
 
+const levelHeading = document.getElementById("level-heading");
+const rowsClearedHeading = document.getElementById("rows-cleared-heading");
+
 class Game {
   constructor() {
     this.gameOver = false;
     this.level = 1;
-    this.gameSpeed = 500;
+    this.gameSpeed = 1000;
     this.rowsCleared = 0;
-    this.grid = new Array(NUM_ROWS); // will be a 2d array
+    this.grid = new Array(NUM_ROWS);
     this.availablePieces = ["line", "square", "tShape", "lShape", "jShape"];
-    this.currentPiece = null; // will be an instance of a specific sub class of Shape based on the strings in this.availablePieces
+    this.currentPiece = null;
 
-    // populate the 2d grid - O(1) Time and Space.  There is a set number of rows and columns, so despite the nested loop, none of this is based on user input, so the Big O analysis of this operation would be considered constant.
     for (let i = 0; i < this.grid.length; i++) {
-      // set all columns to false to denote unoccupied grid spaces.
-      const newRow = new Array(NUM_COLS + 1).fill(false);
-      newRow[newRow.length - 1] = 0; // override the last false value with a number to be used as the number of columns occupied in each row, initialized to 0.
+      const newRow = new Array(NUM_COLS + 1).fill(null);
+      newRow[newRow.length - 1] = 0; // last index acts as the column count so we can know if a row has cleared
       this.grid[i] = newRow;
     }
   }
 
-  // methods
+  // Game methods
 
   addBlocksToGrid = () => {
     this.currentPiece.blocks.forEach((block) => {
-      // run forEach over all the blocks of the shape.  Grab each block's currentRow and currentCol
       const [currentRow, currentCol] = this.determineRowAndColumn(block);
-      // update the grid to put a true at each of the coordinates that are now occupied.
-      this.grid[currentRow][currentCol] = true;
-      // increment the number at the end of the currentRow, documenting that column(s) from that row have been occupied.
+      this.grid[currentRow][currentCol] = block;
       const rowOfGrid = this.grid[currentRow];
       rowOfGrid[rowOfGrid.length - 1] += 1;
     });
   };
 
+  destroyBlocksOfRow = (rowNum) => {
+    const currentRow = this.grid[rowNum];
+    currentRow.forEach((block, index) => {
+      if (index <= currentRow.length - 2) {
+        block.clearBlock();
+        this.grid[rowNum][index] = null;
+      }
+    });
+    // reset the cleared row's column count to 0
+    currentRow[currentRow.length - 1] = 0;
+  };
+
+  moveRemainingBlocksDown = (clearedRowNum) => {
+    for (let rowNum = clearedRowNum - 1; rowNum >= 0; rowNum--) {
+      const rowToMove = this.grid[rowNum];
+      rowToMove.forEach((currentBlock, index) => {
+        if (index <= rowToMove.length - 2) {
+          if (currentBlock) {
+            currentBlock.moveBlockDownOneRow();
+            rowToMove[index] = null;
+            const nextRowDown = this.grid[rowNum + 1];
+            nextRowDown[index] = currentBlock;
+            nextRowDown[nextRowDown.length - 1] += 1;
+          }
+        }
+      });
+      rowToMove[rowToMove.length - 1] = 0;
+    }
+  };
+
+  updateRowsCleared = () => {
+    this.rowsCleared++;
+    rowsClearedHeading.innerText = `Rows Cleared: ${this.rowsCleared}`;
+    if (this.rowsCleared >= 5 && this.rowsCleared % 5 === 0) {
+      this.levelUp();
+    }
+  };
+
+  levelUp = () => {
+    this.level++;
+    levelHeading.innerText = `Level: ${this.level}`;
+    this.gameSpeed -= 50;
+  };
+
+  checkForClearedRows = () => {
+    for (let rowNum = this.grid.length - 1; rowNum >= 0; rowNum--) {
+      const row = this.grid[rowNum];
+      while (row[row.length - 1] === NUM_COLS) {
+        this.updateRowsCleared();
+        this.destroyBlocksOfRow(rowNum);
+        this.moveRemainingBlocksDown(rowNum);
+      }
+    }
+  };
+
   placePiece = (interval) => {
-    // First, clear the event listeners from the current piece, and stop setInterval
     clearInterval(interval);
     document.removeEventListener("keydown", this.pieceControllerEvents);
-    // Then, update the game grid based on this piece's placed position
     this.addBlocksToGrid();
-    // check to see if we have a cleared a row when this piece was placed
-    // we clear a row if a row of the grid ever reaches a number 30 at its last index
-
-    // Finally, select a new piece to fall, making it unnecessary to return out of dropPiece.
+    this.checkForClearedRows();
     this.selectNewPiece();
   };
 
@@ -59,63 +107,47 @@ class Game {
 
   reachedRightSideOfGrid = (colNum) => colNum === NUM_COLS - 1;
 
-  willCollideBottom = () => {
+  willCollide = (ledge) => {
     for (let i = 0; i < this.currentPiece.blocks.length; i++) {
       const currentBlock = this.currentPiece.blocks[i];
-      if (!currentBlock.isBottomLedge) continue;
+
+      if (
+        (ledge === "bottom" && !currentBlock.isBottomLedge) ||
+        (ledge === "left" && !currentBlock.isLeftLedge) ||
+        (ledge === "right" && !currentBlock.isRightLedge)
+      ) {
+        continue;
+      }
 
       const [currentRow, currentCol] = this.determineRowAndColumn(currentBlock);
 
       if (
-        this.reachedBottomOfGrid(currentRow) ||
-        this.grid[currentRow + 1][currentCol]
+        ledge === "bottom" &&
+        (this.reachedBottomOfGrid(currentRow) ||
+          this.grid[currentRow + 1][currentCol])
       ) {
-        // if we are at the bottom of the grid, or if the grid is true at this position (meaning there's a shape occupying these coordinates)
         return true;
-      }
-    }
-    return false;
-  };
-
-  willCollideLeft = () => {
-    // this should work like willCollideBottom, but deal with the left ledge blocks
-    for (let i = 0; i < this.currentPiece.blocks.length; i++) {
-      const currentBlock = this.currentPiece.blocks[i];
-      if (!currentBlock.isLeftLedge) continue;
-
-      const [currentRow, currentCol] = this.determineRowAndColumn(currentBlock);
-
-      if (
-        this.reachedLeftSideOfGrid(currentCol) ||
-        this.grid[currentRow][currentCol - 1]
+      } else if (
+        ledge === "left" &&
+        (this.reachedLeftSideOfGrid(currentCol) ||
+          this.grid[currentRow][currentCol - 1])
+      ) {
+        return true;
+      } else if (
+        ledge === "right" &&
+        (this.reachedRightSideOfGrid(currentCol) ||
+          this.grid[currentRow][currentCol + 1])
       ) {
         return true;
       }
     }
-    return false;
-  };
 
-  willCollideRight = () => {
-    // this should work like willCollideBottom, but deal with the right ledge blocks
-    for (let i = 0; i < this.currentPiece.blocks.length; i++) {
-      const currentBlock = this.currentPiece.blocks[i];
-      if (!currentBlock.isRightLedge) continue;
-
-      const [currentRow, currentCol] = this.determineRowAndColumn(currentBlock);
-
-      if (
-        this.reachedRightSideOfGrid(currentCol) ||
-        this.grid[currentRow][currentCol + 1]
-      ) {
-        return true;
-      }
-    }
     return false;
   };
 
   dropPiece = () => {
     const fallInterval = setInterval(() => {
-      if (this.willCollideBottom()) {
+      if (this.willCollide("bottom")) {
         this.placePiece(fallInterval);
         return;
       }
@@ -128,14 +160,14 @@ class Game {
   };
 
   movePieceLeft = () => {
-    if (this.willCollideLeft()) return;
+    if (this.willCollide("left")) return;
     this.currentPiece.clearShape();
     this.currentPiece.initialBlock.xCoordinate -= GRID_SPACE;
     this.currentPiece.drawShape();
   };
 
   movePieceRight = () => {
-    if (this.willCollideRight()) return;
+    if (this.willCollide("right")) return;
     this.currentPiece.clearShape();
     this.currentPiece.initialBlock.xCoordinate += GRID_SPACE;
     this.currentPiece.drawShape();
