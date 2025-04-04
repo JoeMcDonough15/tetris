@@ -16,26 +16,30 @@ const ctx = canvas.getContext("2d");
 
 class Block {
   constructor(xCoordinate, yCoordinate, color) {
-    this.width = GRID_SPACE; // or 3% of the canvas width of 600px
-    this.height = GRID_SPACE; // or 2.5% of the canvas height of 800px
     this.borderColor = "rgb(0 0 0)";
     this.fillColor = color;
     this.xCoordinate = xCoordinate;
     this.yCoordinate = yCoordinate;
-    this.isBottomLedge = true;
-    this.isLeftLedge = true;
-    this.isRightLedge = true;
+    this.isBottomLedge = false;
+    this.isLeftLedge = false;
+    this.isRightLedge = false;
   }
 
   clearBlock = () => {
-    ctx.clearRect(this.xCoordinate, this.yCoordinate, this.width, this.height);
+    ctx.clearRect(this.xCoordinate, this.yCoordinate, GRID_SPACE, GRID_SPACE);
+  };
+
+  resetLedges = () => {
+    this.isBottomLedge = false;
+    this.isLeftLedge = false;
+    this.isRightLedge = false;
   };
 
   drawBlock = () => {
     ctx.fillStyle = this.fillColor;
     ctx.strokeStyle = this.borderColor;
-    ctx.fillRect(this.xCoordinate, this.yCoordinate, this.width, this.height);
-    ctx.strokeRect(this.xCoordinate, this.yCoordinate, this.width, this.height);
+    ctx.fillRect(this.xCoordinate, this.yCoordinate, GRID_SPACE, GRID_SPACE);
+    ctx.strokeRect(this.xCoordinate, this.yCoordinate, GRID_SPACE, GRID_SPACE);
   };
 }
 
@@ -97,6 +101,9 @@ class Line extends Shape {
 
   clearShape = () => {
     this.blocks.forEach((block) => {
+      // reset ledges to false
+      block.resetLedges();
+      // remove block from canvas
       block.clearBlock();
     });
   };
@@ -106,17 +113,15 @@ class Line extends Shape {
       if (this.rotation === "horizontal") {
         block.xCoordinate = this.initialBlock.xCoordinate + GRID_SPACE * index;
         block.yCoordinate = this.initialBlock.yCoordinate;
-        // if horizontal:
-        // all blocks are the bottom ledge
-        // the zeroeth index block is the left ledge
-        // the 3rd index block is the right ledge
+        block.isBottomLedge = true;
+        block.isLeftLedge = index === 0;
+        block.isRightLedge = index === 3;
       } else if (this.rotation === "vertical") {
         block.xCoordinate = this.initialBlock.xCoordinate;
         block.yCoordinate = this.initialBlock.yCoordinate + GRID_SPACE * index;
-        // if vertical:
-        // only the 3rd index block is the bottom ledge
-        // all the blocks are the left ledge
-        // all the blocks are the right ledge
+        block.isBottomLedge = index === 3;
+        block.isLeftLedge = true;
+        block.isRightLedge = true;
       }
 
       block.drawBlock();
@@ -176,12 +181,25 @@ class Square extends Shape {
 
   clearShape = () => {
     this.blocks.forEach((block) => {
+      // reset ledges to false
+      block.resetLedges();
+      // remove block from canvas
       block.clearBlock();
     });
   };
 
   drawShape = () => {
     this.blocks.forEach((block, index) => {
+      // handle ledges for each block
+      if (index % 2 === 0) {
+        block.isLeftLedge = true;
+      } else {
+        block.isRightLedge = true;
+      }
+      if (index > 1) {
+        block.isBottomLedge = true;
+      }
+      // handle coordinates for each block
       if (index === 1) {
         block.xCoordinate = this.initialBlock.xCoordinate + GRID_SPACE;
         block.yCoordinate = this.initialBlock.yCoordinate;
@@ -261,6 +279,9 @@ class TShape extends Shape {
 
   clearShape = () => {
     this.blocks.forEach((block) => {
+      // reset ledges to false
+      block.resetLedges();
+      // clear the block from the canvas
       block.clearBlock();
     });
   };
@@ -268,17 +289,39 @@ class TShape extends Shape {
   drawShape = () => {
     this.blocks.forEach((block, index) => {
       if (this.rotation === "up") {
+        // handle left and right ledges
+        if (index === 0 || index === 3) {
+          block.isLeftLedge = true;
+        }
+        if (index === 2 || index === 3) {
+          block.isRightLedge = true;
+        }
+
+        // handle coordinates and bottom ledges
         if (index === 3) {
           // place the final block above the middle block
           block.xCoordinate = this.initialBlock.xCoordinate + GRID_SPACE;
           block.yCoordinate = this.initialBlock.yCoordinate - GRID_SPACE;
         } else {
-          // place blocks in a row
+          // place blocks in a row and list these as the bottom ledge blocks
           block.xCoordinate =
             this.initialBlock.xCoordinate + GRID_SPACE * index;
           block.yCoordinate = this.initialBlock.yCoordinate;
+          block.isBottomLedge = true;
         }
       } else if (this.rotation === "right") {
+        // handle ledges
+        if (index === 2 || index === 3) {
+          block.isBottomLedge = true;
+        }
+        if (index === 0 || index === 2 || index === 3) {
+          block.isRightLedge = true;
+        }
+        if (index === 0 || index === 1 || index === 2) {
+          block.isLeftLedge = true;
+        }
+
+        // handle coordinates
         if (index === 3) {
           // put the final block to the right of the middle block
           block.xCoordinate = this.initialBlock.xCoordinate + GRID_SPACE;
@@ -290,6 +333,18 @@ class TShape extends Shape {
             this.initialBlock.yCoordinate + GRID_SPACE * index;
         }
       } else if (this.rotation === "left") {
+        // handle ledges
+        if (index === 2 || index === 3) {
+          block.isBottomLedge = true;
+        }
+        if (index === 0 || index === 2 || index === 3) {
+          block.isLeftLedge = true;
+        }
+        if (index === 0 || index === 1 || index === 2) {
+          block.isRightLedge = true;
+        }
+
+        // handle coordinates
         if (index === 3) {
           // put this block to the left of the middle block
           block.xCoordinate = this.initialBlock.xCoordinate - GRID_SPACE;
@@ -301,6 +356,18 @@ class TShape extends Shape {
             this.initialBlock.yCoordinate + GRID_SPACE * index;
         }
       } else if (this.rotation === "down") {
+        // handle ledges
+        if (index === 0 || index === 2 || index === 3) {
+          block.isBottomLedge = true;
+        }
+        if (index === 0 || index === 3) {
+          block.isLeftLedge = true;
+        }
+        if (index === 2 || index === 3) {
+          block.isRightLedge = true;
+        }
+
+        // handle coordinates
         if (index === 3) {
           // put this block below the middle block
           block.xCoordinate = this.initialBlock.xCoordinate + GRID_SPACE;
