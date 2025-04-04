@@ -13,9 +13,9 @@ class Game {
 
     // populate the 2d grid - O(1) Time and Space.  There is a set number of rows and columns, so despite the nested loop, none of this is based on user input, so the Big O analysis of this operation would be considered constant.
     for (let i = 0; i < this.grid.length; i++) {
-      // set all columns to false to denote unoccupied grid spaces.
-      const newRow = new Array(NUM_COLS + 1).fill(false);
-      newRow[newRow.length - 1] = 0; // override the last false value with a number to be used as the number of columns occupied in each row, initialized to 0.
+      // set all columns to null to denote unoccupied grid spaces.
+      const newRow = new Array(NUM_COLS + 1).fill(null);
+      newRow[newRow.length - 1] = 0; // override the last null value with a number to be used as the number of columns occupied in each row, initialized to 0.
       this.grid[i] = newRow;
     }
   }
@@ -27,11 +27,35 @@ class Game {
       // run forEach over all the blocks of the shape.  Grab each block's currentRow and currentCol
       const [currentRow, currentCol] = this.determineRowAndColumn(block);
       // update the grid to put a true at each of the coordinates that are now occupied.
-      this.grid[currentRow][currentCol] = true;
-      // increment the number at the end of the currentRow, documenting that column(s) from that row have been occupied.
+      this.grid[currentRow][currentCol] = block;
+      // increment the number at the end of the currentRow, documenting that column(s) from that row have been occupied with block(s).
       const rowOfGrid = this.grid[currentRow];
       rowOfGrid[rowOfGrid.length - 1] += 1;
     });
+  };
+
+  destroyBlocksOfRow = (rowNum) => {
+    this.grid[rowNum].forEach((block, index) => {
+      if (index <= this.grid[rowNum].length - 2) {
+        // if the index is not the final one, then it's a block
+        block.clearBlock(); // clear block from the canvas
+        this.grid[rowNum][index] = null; // replace the block that was at this column with null
+      }
+    });
+    // reset the cleared row's column count to 0
+    this.grid[rowNum][this.grid[rowNum].length - 1] = 0;
+  };
+
+  checkForClearedRows = () => {
+    // iterate backwards through the grid, checking each row from the bottom up.
+    for (let rowNum = this.grid.length - 1; rowNum >= 0; rowNum--) {
+      const row = this.grid[rowNum];
+      if (row[row.length - 1] === NUM_COLS) {
+        // this row has cleared, so remove all of its blocks from the canvas
+        this.destroyBlocksOfRow(rowNum);
+        // then, any blocks above that row should move down to take the place of the now emptied row
+      }
+    }
   };
 
   placePiece = (interval) => {
@@ -41,6 +65,7 @@ class Game {
     // Then, update the game grid based on this piece's placed position
     this.addBlocksToGrid();
     // check to see if we have a cleared a row when this piece was placed
+    this.checkForClearedRows();
     // we clear a row if a row of the grid ever reaches a number 30 at its last index
 
     // Finally, select a new piece to fall, making it unnecessary to return out of dropPiece.
