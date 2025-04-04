@@ -664,6 +664,8 @@ class Game {
 
   reachedBottomRow = (rowNum) => rowNum === this.grid.length - 1;
 
+  reachedLeftSideOfGrid = (colNum) => colNum === 0;
+
   willCollideBottom = () => {
     for (let i = 0; i < this.currentPiece.blocks.length; i++) {
       const currentBlock = this.currentPiece.blocks[i];
@@ -682,9 +684,31 @@ class Game {
     return false;
   };
 
-  willCollideLeft = () => {};
+  willCollideLeft = () => {
+    // this should work like willCollideBottom, but deal with the left ledge blocks
+    for (let i = 0; i < this.currentPiece.blocks.length; i++) {
+      const currentBlock = this.currentPiece.blocks[i];
+      if (!currentBlock.isLeftLedge) continue;
 
-  willCollideRight = () => {};
+      const [currentRow, currentCol] = this.determineRowAndColumn(currentBlock);
+
+      if (
+        this.reachedLeftSideOfGrid(currentCol) ||
+        this.grid[currentRow][currentCol - 1]
+      ) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  willCollideRight = () => {
+    // this should work like willCollideBottom, but deal with the right ledge blocks
+    for (let i = 0; i < this.currentPiece.blocks.length; i++) {
+      const currentBlock = this.currentPiece.blocks[i];
+      if (!currentBlock.isRightLedge) continue;
+    }
+  };
 
   dropPiece = () => {
     const fallInterval = setInterval(() => {
@@ -701,7 +725,7 @@ class Game {
   };
 
   movePieceLeft = () => {
-    if (this.currentPiece.leftLedge <= 0) return;
+    if (this.willCollideLeft()) return;
     this.currentPiece.clearShape();
     this.currentPiece.initialBlock.xCoordinate -= GRID_SPACE;
     this.currentPiece.drawShape();
