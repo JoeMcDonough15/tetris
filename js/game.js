@@ -1,11 +1,14 @@
 import { Line, Square, TShape, LShape, JShape } from "./shapes.js";
 import { NUM_ROWS, NUM_COLS, GRID_SPACE } from "./gridSpecs.js";
 
+const levelHeading = document.getElementById("level-heading");
+const rowsClearedHeading = document.getElementById("rows-cleared-heading");
+
 class Game {
   constructor() {
     this.gameOver = false;
     this.level = 1;
-    this.gameSpeed = 500;
+    this.gameSpeed = 1500;
     this.rowsCleared = 0;
     this.grid = new Array(NUM_ROWS);
     this.availablePieces = ["line", "square", "tShape", "lShape", "jShape"];
@@ -59,11 +62,25 @@ class Game {
     }
   };
 
+  updateRowsCleared = () => {
+    this.rowsCleared++;
+    rowsClearedHeading.innerText = `Rows Cleared: ${this.rowsCleared}`;
+    if (this.rowsCleared >= 5 && this.rowsCleared % 5 === 0) {
+      this.levelUp();
+    }
+  };
+
+  levelUp = () => {
+    this.level++;
+    levelHeading.innerText = `Level: ${this.level}`;
+    this.gameSpeed -= 50;
+  };
+
   checkForClearedRows = () => {
     for (let rowNum = this.grid.length - 1; rowNum >= 0; rowNum--) {
       const row = this.grid[rowNum];
       while (row[row.length - 1] === NUM_COLS) {
-        this.rowsCleared++;
+        this.updateRowsCleared();
         this.destroyBlocksOfRow(rowNum);
         this.moveRemainingBlocksDown(rowNum);
       }
