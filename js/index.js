@@ -54,51 +54,48 @@ class Shape {
 
   // methods
 
-  placePiece = (interval) => {
-    clearInterval(interval);
-    document.removeEventListener("keydown", this.pieceControllerEvents);
-  };
+  // placePiece = (interval) => {
+  //   clearInterval(interval);
+  //   document.removeEventListener("keydown", this.pieceControllerEvents);
+  // };
 
-  fall = () => {
-    const fallInterval = setInterval(() => {
-      if (this.bottomLedge >= canvas.height - this.initialBlock.height) {
-        this.placePiece(fallInterval);
-      }
-      this.clearShape();
-      this.initialBlock.yCoordinate += this.initialBlock.height;
-      this.drawShape();
-    }, gameSpeed);
+  // fall = () => {
+  //   const fallInterval = setInterval(() => {
+  //     if (this.bottomLedge >= canvas.height - this.initialBlock.height) {
+  //       this.placePiece(fallInterval);
+  //     }
+  //     this.clearShape();
+  //     this.initialBlock.yCoordinate += this.initialBlock.height;
+  //     this.drawShape();
+  //   }, gameSpeed);
 
-    document.addEventListener("keydown", this.pieceControllerEvents);
-  };
+  //   document.addEventListener("keydown", this.pieceControllerEvents);
+  // };
 
-  moveLeft = () => {
-    if (this.leftLedge <= 0) return;
-    this.clearShape();
-    this.initialBlock.xCoordinate -= this.initialBlock.width;
-    this.drawShape();
-  };
+  // moveLeft = () => {
+  //   if (this.leftLedge <= 0) return;
+  //   this.clearShape();
+  //   this.initialBlock.xCoordinate -= this.initialBlock.width;
+  //   this.drawShape();
+  // };
 
-  moveRight = () => {
-    if (this.rightLedge >= canvas.width) return;
-    this.clearShape();
-    this.initialBlock.xCoordinate += this.initialBlock.width;
-    this.drawShape();
-  };
+  // moveRight = () => {
+  //   if (this.rightLedge >= canvas.width) return;
+  //   this.clearShape();
+  //   this.initialBlock.xCoordinate += this.initialBlock.width;
+  //   this.drawShape();
+  // };
 
-  pieceControllerEvents = (e) => {
-    const keyName = e.key;
-    if (keyName === "ArrowRight") {
-      this.moveRight();
-    } else if (keyName === "ArrowLeft") {
-      this.moveLeft();
-    } else if (keyName === "r") {
-      this.rotate();
-    }
-  };
-
-  // TODO
-  speedDown = () => {};
+  // pieceControllerEvents = (e) => {
+  //   const keyName = e.key;
+  //   if (keyName === "ArrowRight") {
+  //     this.moveRight();
+  //   } else if (keyName === "ArrowLeft") {
+  //     this.moveLeft();
+  //   } else if (keyName === "r") {
+  //     this.rotate();
+  //   }
+  // };
 }
 
 class Line extends Shape {
@@ -712,7 +709,7 @@ class Game {
     this.rowsCleared = 0;
     this.grid = new Array(NUM_ROWS); // will be a 2d array
     this.availablePieces = ["line", "square", "tShape", "lShape", "jShape"];
-    this.currentPiece = null;
+    this.currentPiece = null; // will be an instance of a specific sub class of Shape based on the strings in this.availablePieces
 
     // populate the 2d grid - O(1) Time and Space.  There is a set number of rows and columns, so despite the nested loop, none of this is based on user input, so the Big O analysis of this operation would be considered constant.
     for (let i = 0; i < this.grid.length; i++) {
@@ -722,30 +719,87 @@ class Game {
       this.grid[i] = newRow;
     }
   }
+
+  // methods
+
+  placePiece = (interval) => {
+    // clear the event listeners from the current piece, and stop setInterval
+    clearInterval(interval);
+    document.removeEventListener("keydown", this.pieceControllerEvents);
+    // select a new piece to fall
+    this.selectNewPiece();
+  };
+
+  dropPiece = () => {
+    const fallInterval = setInterval(() => {
+      if (this.currentPiece.bottomLedge >= canvas.height) {
+        this.placePiece(fallInterval);
+        return;
+      }
+      this.currentPiece.clearShape();
+      this.currentPiece.initialBlock.yCoordinate += GRID_SPACE;
+      this.currentPiece.drawShape();
+    }, this.gameSpeed);
+
+    document.addEventListener("keydown", this.pieceControllerEvents);
+  };
+
+  movePieceLeft = () => {
+    if (this.currentPiece.leftLedge <= 0) return;
+    this.currentPiece.clearShape();
+    this.currentPiece.initialBlock.xCoordinate -= GRID_SPACE;
+    this.currentPiece.drawShape();
+  };
+
+  movePieceRight = () => {
+    if (this.currentPiece.rightLedge >= canvas.width) return;
+    this.currentPiece.clearShape();
+    this.currentPiece.initialBlock.xCoordinate += GRID_SPACE;
+    this.currentPiece.drawShape();
+  };
+
+  pieceControllerEvents = (e) => {
+    const keyName = e.key;
+    if (keyName === "ArrowRight") {
+      this.movePieceRight();
+    } else if (keyName === "ArrowLeft") {
+      this.movePieceLeft();
+    } else if (keyName === "r") {
+      this.currentPiece.rotate();
+    }
+  };
+
+  selectNewPiece = () => {
+    const generatedIndex = Math.floor(
+      Math.random() * this.availablePieces.length
+    );
+
+    const pieceName = this.availablePieces[generatedIndex];
+    let newPiece;
+    if (pieceName === "line") {
+      newPiece = new Line();
+    } else if (pieceName === "square") {
+      newPiece = new Square();
+    } else if (pieceName === "tShape") {
+      newPiece = new TShape();
+    } else if (pieceName === "lShape") {
+      newPiece = new LShape();
+    } else if (pieceName === "jShape") {
+      newPiece = new JShape();
+    }
+
+    this.currentPiece = newPiece;
+
+    this.dropPiece();
+  };
+
+  // TODOS
+  speedDown = () => {};
 }
 
 const game = new Game();
 
 // for (let i = 0; i < game.grid.length; i++) {
-//   console.log("row: ", game.grid[i]);
 // }
 
-// // Testing
-// const dropShape = (shapeName) => {
-//   let shape;
-//   if (shapeName === "line") {
-//     shape = new Line();
-//   } else if (shapeName === "square") {
-//     shape = new Square();
-//   } else if (shapeName === "tShape") {
-//     shape = new TShape();
-//   } else if (shapeName === "lShape") {
-//     shape = new LShape();
-//   } else if (shapeName === "jShape") {
-//     shape = new JShape();
-//   }
-
-//   shape.fall();
-// };
-
-// dropShape("jShape");
+game.selectNewPiece(); // begins game
