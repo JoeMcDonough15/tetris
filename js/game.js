@@ -90,60 +90,47 @@ class Game {
 
   reachedRightSideOfGrid = (colNum) => colNum === NUM_COLS - 1;
 
-  willCollideBottom = () => {
+  willCollide = (ledge) => {
     for (let i = 0; i < this.currentPiece.blocks.length; i++) {
       const currentBlock = this.currentPiece.blocks[i];
-      if (!currentBlock.isBottomLedge) continue;
+
+      if (
+        (ledge === "bottom" && !currentBlock.isBottomLedge) ||
+        (ledge === "left" && !currentBlock.isLeftLedge) ||
+        (ledge === "right" && !currentBlock.isRightLedge)
+      ) {
+        continue;
+      }
 
       const [currentRow, currentCol] = this.determineRowAndColumn(currentBlock);
 
       if (
-        this.reachedBottomOfGrid(currentRow) ||
-        this.grid[currentRow + 1][currentCol]
+        ledge === "bottom" &&
+        (this.reachedBottomOfGrid(currentRow) ||
+          this.grid[currentRow + 1][currentCol])
+      ) {
+        return true;
+      } else if (
+        ledge === "left" &&
+        (this.reachedLeftSideOfGrid(currentCol) ||
+          this.grid[currentRow][currentCol - 1])
+      ) {
+        return true;
+      } else if (
+        ledge === "right" &&
+        (this.reachedRightSideOfGrid(currentCol) ||
+          this.grid[currentRow][currentCol + 1])
       ) {
         return true;
       }
     }
-    return false;
-  };
 
-  willCollideLeft = () => {
-    for (let i = 0; i < this.currentPiece.blocks.length; i++) {
-      const currentBlock = this.currentPiece.blocks[i];
-      if (!currentBlock.isLeftLedge) continue;
-
-      const [currentRow, currentCol] = this.determineRowAndColumn(currentBlock);
-
-      if (
-        this.reachedLeftSideOfGrid(currentCol) ||
-        this.grid[currentRow][currentCol - 1]
-      ) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  willCollideRight = () => {
-    for (let i = 0; i < this.currentPiece.blocks.length; i++) {
-      const currentBlock = this.currentPiece.blocks[i];
-      if (!currentBlock.isRightLedge) continue;
-
-      const [currentRow, currentCol] = this.determineRowAndColumn(currentBlock);
-
-      if (
-        this.reachedRightSideOfGrid(currentCol) ||
-        this.grid[currentRow][currentCol + 1]
-      ) {
-        return true;
-      }
-    }
     return false;
   };
 
   dropPiece = () => {
     const fallInterval = setInterval(() => {
-      if (this.willCollideBottom()) {
+      if (this.willCollide("bottom")) {
         this.placePiece(fallInterval);
         return;
       }
@@ -156,14 +143,14 @@ class Game {
   };
 
   movePieceLeft = () => {
-    if (this.willCollideLeft()) return;
+    if (this.willCollide("left")) return;
     this.currentPiece.clearShape();
     this.currentPiece.initialBlock.xCoordinate -= GRID_SPACE;
     this.currentPiece.drawShape();
   };
 
   movePieceRight = () => {
-    if (this.willCollideRight()) return;
+    if (this.willCollide("right")) return;
     this.currentPiece.clearShape();
     this.currentPiece.initialBlock.xCoordinate += GRID_SPACE;
     this.currentPiece.drawShape();
