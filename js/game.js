@@ -46,14 +46,45 @@ class Game {
     this.grid[rowNum][this.grid[rowNum].length - 1] = 0;
   };
 
+  moveRemainingBlocksDown = (clearedRowNum) => {
+    // any blocks in any rows above this rowNum should move down one row
+    for (let rowNum = clearedRowNum - 1; rowNum >= 0; rowNum--) {
+      // store the current row of the grid
+      const rowToMove = this.grid[rowNum];
+      // iterate over this currentRow
+      rowToMove.forEach((currentBlock, index) => {
+        // if we are not on the last index, so not the column count
+        if (index <= rowToMove.length - 2) {
+          // if there is a block at this column, so if it's not null
+          if (currentBlock) {
+            // call the moveBlockDownOneRow method on block so it can move independent of the shape it belonged to before
+            currentBlock.moveBlockDownOneRow(); // paint this block one row lower on the canvas
+            // replace this column with null and set the exact column one row lower to be this currentBlock we stored on line 54
+            rowToMove[index] = null; // this block does not exist on this column anymore
+            this.grid[rowNum + 1][index] = currentBlock; // this block now exists on the column one row lower
+            this.grid[rowNum + 1][this.grid[rowNum + 1].length - 1] += 1; // increment the number of occupied columns in the next row down, since this block moved to that row
+          }
+        }
+      });
+      // reset the currentRow's column count to 0 since any blocks in this row moved down one row
+      rowToMove[rowToMove.length - 1] = 0;
+    }
+    // now that the blocks have shifted down, check for more cleared rows
+    this.checkForClearedRows();
+  };
+
   checkForClearedRows = () => {
-    // iterate backwards through the grid, checking each row from the bottom up.
+    // iterate from the bottom up through the grid, checking each row to see if it is full of blocks
     for (let rowNum = this.grid.length - 1; rowNum >= 0; rowNum--) {
       const row = this.grid[rowNum];
+      // if the row's column count is the NUM_COLS, that means every column is occupied
       if (row[row.length - 1] === NUM_COLS) {
-        // this row has cleared, so remove all of its blocks from the canvas
+        // update the rowsCleared
+        this.rowsCleared++;
+        // since this row has now cleared, we remove all of its blocks from the canvas
         this.destroyBlocksOfRow(rowNum);
-        // then, any blocks above that row should move down to take the place of the now emptied row
+        // then, any blocks above this rowNum should move down to take the place of the now emptied row
+        this.moveRemainingBlocksDown(rowNum);
       }
     }
   };
@@ -65,9 +96,8 @@ class Game {
     // Then, update the game grid based on this piece's placed position
     this.addBlocksToGrid();
     // check to see if we have a cleared a row when this piece was placed
+    // we clear a row if a row of the grid ever reaches the NUM_COLS at its last index
     this.checkForClearedRows();
-    // we clear a row if a row of the grid ever reaches a number 30 at its last index
-
     // Finally, select a new piece to fall, making it unnecessary to return out of dropPiece.
     this.selectNewPiece();
   };
