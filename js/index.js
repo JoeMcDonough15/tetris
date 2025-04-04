@@ -58,6 +58,13 @@ class Shape {
     }
     this.initialBlock = this.blocks[0];
   }
+
+  clearShape = () => {
+    this.blocks.forEach((block) => {
+      block.resetLedges();
+      block.clearBlock();
+    });
+  };
 }
 
 class Line extends Shape {
@@ -66,47 +73,7 @@ class Line extends Shape {
     this.shapeHeight = GRID_SPACE;
     this.shapeWidth = GRID_SPACE * this.numBlocks;
     this.rotation = "horizontal"; // horizontal or vertical
-    // this.bottomLedge = this.initialBlock.yCoordinate + GRID_SPACE;
-    // this.leftLedge = this.initialBlock.xCoordinate;
-    // this.rightLedge =
-    //   this.initialBlock.xCoordinate + GRID_SPACE * 4;
   }
-
-  // resetLeftLedge = () => {
-  //   // regardless of rotation, the left ledge is always lined up with the initial block's x-coordinate
-  //   this.leftLedge = this.initialBlock.xCoordinate;
-  // };
-
-  // resetRightLedge = () => {
-  //   // if the piece is horizontal, the right ledge should be 4 block's worth of width blocks over from the initialBlock
-  //   if (this.rotation === "horizontal") {
-  //     this.rightLedge =
-  //       this.initialBlock.xCoordinate + GRID_SPACE * 4;
-  //   } else if (this.rotation === "vertical") {
-  //     // if the piece is vertical, the right ledge is one block's worth of width over from the initialBlock
-  //     this.rightLedge = this.initialBlock.xCoordinate + GRID_SPACE;
-  //   }
-  // };
-
-  // resetBottomLedge = () => {
-  //   // a method that looks at the rotation of the shape, and determines where the bottom ledge is
-  //   if (this.rotation === "horizontal") {
-  //     this.bottomLedge =
-  //       this.initialBlock.yCoordinate + GRID_SPACE;
-  //   } else if (this.rotation === "vertical") {
-  //     this.bottomLedge =
-  //       this.initialBlock.yCoordinate + GRID_SPACE * 4;
-  //   }
-  // };
-
-  clearShape = () => {
-    this.blocks.forEach((block) => {
-      // reset ledges to false
-      block.resetLedges();
-      // remove block from canvas
-      block.clearBlock();
-    });
-  };
 
   drawShape = () => {
     this.blocks.forEach((block, index) => {
@@ -138,11 +105,6 @@ class Line extends Shape {
 
       block.drawBlock();
     });
-
-    // every time we draw the shape (whether as it's falling, or when we move/rotate it), we have to reset the shape's ledges to reflect the shape's new position
-    // this.resetBottomLedge();
-    // this.resetLeftLedge();
-    // this.resetRightLedge();
   };
 
   rotate = () => {
@@ -170,35 +132,7 @@ class Square extends Shape {
     super(BLUE, 20);
     this.shapeHeight = GRID_SPACE * (this.numBlocks / 2);
     this.shapeWidth = GRID_SPACE * (this.numBlocks / 2);
-    // this.bottomLedge =
-    //   this.initialBlock.yCoordinate + GRID_SPACE * 2;
-    // this.leftLedge = this.initialBlock.xCoordinate;
-    // this.rightLedge =
-    //   this.initialBlock.xCoordinate + GRID_SPACE * 2;
   }
-
-  // resetLeftLedge = () => {
-  //   this.leftLedge = this.initialBlock.xCoordinate;
-  // };
-
-  // resetRightLedge = () => {
-  //   this.rightLedge =
-  //     this.initialBlock.xCoordinate + GRID_SPACE * 2;
-  // };
-
-  // resetBottomLedge = () => {
-  //   this.bottomLedge =
-  //     this.initialBlock.yCoordinate + GRID_SPACE * 2;
-  // };
-
-  clearShape = () => {
-    this.blocks.forEach((block) => {
-      // reset ledges to false
-      block.resetLedges();
-      // remove block from canvas
-      block.clearBlock();
-    });
-  };
 
   drawShape = () => {
     this.blocks.forEach((block, index) => {
@@ -225,10 +159,6 @@ class Square extends Shape {
       }
       block.drawBlock();
     });
-
-    // this.resetBottomLedge();
-    // this.resetLeftLedge();
-    // this.resetRightLedge();
   };
 
   rotate = () => {
@@ -242,62 +172,7 @@ class TShape extends Shape {
     this.shapeHeight = GRID_SPACE * (this.numBlocks / 2);
     this.shapeWidth = GRID_SPACE * (this.numBlocks - 1);
     this.rotation = "up"; // up, right, down, left
-    // this.bottomLedge = this.initialBlock.yCoordinate + GRID_SPACE;
-    // this.leftLedge = this.initialBlock.xCoordinate;
-    // this.rightLedge =
-    //   this.initialBlock.xCoordinate + GRID_SPACE * 3;
   }
-
-  // resetLeftLedge = () => {
-  //   if (
-  //     this.rotation === "up" ||
-  //     this.rotation === "down" ||
-  //     this.rotation === "right"
-  //   ) {
-  //     // if it's rotated up or down, the left edge is the aligned with the left side of the initialBlock
-  //     this.leftLedge = this.initialBlock.xCoordinate;
-  //   } else if (this.rotation === "left") {
-  //     // if it's rotated to the left, the left edge now juts out, so it should be decreased from the initialBlock's x coordinate by one block's width
-  //     this.leftLedge = this.initialBlock.xCoordinate - GRID_SPACE;
-  //   }
-  // };
-
-  // resetRightLedge = () => {
-  //   if (this.rotation === "up" || this.rotation === "down") {
-  //     // if rotated up or down, the right edge is 3 blocks width from the initial block's left edge
-  //     this.rightLedge =
-  //       this.initialBlock.xCoordinate + GRID_SPACE * 3;
-  //   } else if (this.rotation === "right") {
-  //     // if rotated right, the right edge is 2 block's width from the initial block
-  //     this.rightLedge =
-  //       this.initialBlock.xCoordinate + GRID_SPACE * 2;
-  //   } else if (this.rotation === "left") {
-  //     // if the piece is rotated left, the right edge is one block's width from the initial block
-  //     this.rightLedge = this.initialBlock.xCoordinate + GRID_SPACE;
-  //   }
-  // };
-
-  // resetBottomLedge = () => {
-  //   if (this.rotation === "up") {
-  //     this.bottomLedge =
-  //       this.initialBlock.yCoordinate + GRID_SPACE;
-  //   } else if (this.rotation === "down") {
-  //     this.bottomLedge =
-  //       this.initialBlock.yCoordinate + GRID_SPACE * 2;
-  //   } else if (this.rotation === "left" || this.rotation === "right") {
-  //     this.bottomLedge =
-  //       this.initialBlock.yCoordinate + GRID_SPACE * 3;
-  //   }
-  // };
-
-  clearShape = () => {
-    this.blocks.forEach((block) => {
-      // reset ledges to false
-      block.resetLedges();
-      // clear the block from the canvas
-      block.clearBlock();
-    });
-  };
 
   drawShape = () => {
     this.blocks.forEach((block, index) => {
@@ -396,10 +271,6 @@ class TShape extends Shape {
       }
       block.drawBlock();
     });
-
-    // this.resetBottomLedge();
-    // this.resetLeftLedge();
-    // this.resetRightLedge();
   };
 
   rotate = () => {
@@ -452,51 +323,7 @@ class LShape extends Shape {
     this.shapeHeight = GRID_SPACE * 3;
     this.shapeWidth = GRID_SPACE * 2;
     this.rotation = "down"; // down, up, left, right
-    // this.bottomLedge = this.initialBlock.yCoordinate + GRID_SPACE * 3;
-    // this.leftLedge = this.initialBlock.xCoordinate;
-    // this.rightLedge = this.initialBlock.xCoordinate + GRID_SPACE * 2;
   }
-
-  // resetLeftLedge = () => {
-  //   if (
-  //     this.rotation === "down" ||
-  //     this.rotation === "left" ||
-  //     this.rotation === "right"
-  //   ) {
-  //     this.leftLedge = this.initialBlock.xCoordinate;
-  //   } else if (this.rotation === "up") {
-  //     this.leftLedge = this.initialBlock.xCoordinate - GRID_SPACE;
-  //   }
-  // };
-
-  // resetRightLedge = () => {
-  //   if (this.rotation === "down") {
-  //     this.rightLedge = this.initialBlock.xCoordinate + GRID_SPACE * 2;
-  //   } else if (this.rotation === "left" || this.rotation === "right") {
-  //     this.rightLedge = this.initialBlock.xCoordinate + GRID_SPACE * 3;
-  //   } else if (this.rotation === "up") {
-  //     this.rightLedge = this.initialBlock.xCoordinate + GRID_SPACE;
-  //   }
-  // };
-
-  // resetBottomLedge = () => {
-  //   if (this.rotation === "up" || this.rotation === "down") {
-  //     this.bottomLedge = this.initialBlock.yCoordinate + GRID_SPACE * 3;
-  //   } else if (this.rotation === "left") {
-  //     this.bottomLedge = this.initialBlock.yCoordinate + GRID_SPACE * 2;
-  //   } else if (this.rotation === "right") {
-  //     this.bottomLedge = this.initialBlock.yCoordinate + GRID_SPACE;
-  //   }
-  // };
-
-  clearShape = () => {
-    this.blocks.forEach((block) => {
-      // reset ledges back to false
-      block.resetLedges();
-      // clear block from the canvas
-      block.clearBlock();
-    });
-  };
 
   drawShape = () => {
     this.blocks.forEach((block, index) => {
@@ -595,10 +422,6 @@ class LShape extends Shape {
       }
       block.drawBlock();
     });
-
-    // this.resetBottomLedge();
-    // this.resetLeftLedge();
-    // this.resetRightLedge();
   };
 
   rotate = () => {
@@ -645,51 +468,7 @@ class JShape extends Shape {
     this.shapeHeight = GRID_SPACE * 4;
     this.shapeWidth = GRID_SPACE * 3;
     this.rotation = "down"; // down, up, left, right
-    // this.bottomLedge = this.initialBlock.yCoordinate + GRID_SPACE * 3;
-    // this.leftLedge = this.initialBlock.xCoordinate - GRID_SPACE;
-    // this.rightLedge = this.initialBlock.xCoordinate + GRID_SPACE;
   }
-
-  // resetLeftLedge = () => {
-  //   if (this.rotation === "down") {
-  //     this.leftLedge = this.initialBlock.xCoordinate - GRID_SPACE;
-  //   } else if (
-  //     this.rotation === "up" ||
-  //     this.rotation === "left" ||
-  //     this.rotation === "right"
-  //   ) {
-  //     this.leftLedge = this.initialBlock.xCoordinate;
-  //   }
-  // };
-
-  // resetRightLedge = () => {
-  //   if (this.rotation === "down") {
-  //     this.rightLedge = this.initialBlock.xCoordinate + GRID_SPACE;
-  //   } else if (this.rotation === "up") {
-  //     this.rightLedge = this.initialBlock.xCoordinate + GRID_SPACE * 2;
-  //   } else if (this.rotation === "left" || this.rotation === "right") {
-  //     this.rightLedge = this.initialBlock.xCoordinate + GRID_SPACE * 3;
-  //   }
-  // };
-
-  // resetBottomLedge = () => {
-  //   if (this.rotation === "up" || this.rotation === "down") {
-  //     this.bottomLedge = this.initialBlock.yCoordinate + GRID_SPACE * 3;
-  //   } else if (this.rotation === "right") {
-  //     this.bottomLedge = this.initialBlock.yCoordinate + GRID_SPACE * 2;
-  //   } else if (this.rotation === "left") {
-  //     this.bottomLedge = this.initialBlock.yCoordinate + GRID_SPACE;
-  //   }
-  // };
-
-  clearShape = () => {
-    this.blocks.forEach((block) => {
-      // reset all ledges back to false
-      block.resetLedges();
-      // clear this block from the canvas
-      block.clearBlock();
-    });
-  };
 
   drawShape = () => {
     this.blocks.forEach((block, index) => {
@@ -788,10 +567,6 @@ class JShape extends Shape {
       }
       block.drawBlock();
     });
-
-    // this.resetBottomLedge();
-    // this.resetLeftLedge();
-    // this.resetRightLedge();
   };
 
   rotate = () => {
@@ -857,16 +632,41 @@ class Game {
   // methods
 
   placePiece = (interval) => {
-    // clear the event listeners from the current piece, and stop setInterval
+    // First, clear the event listeners from the current piece, and stop setInterval
     clearInterval(interval);
     document.removeEventListener("keydown", this.pieceControllerEvents);
-    // select a new piece to fall, making it unnecessary to return out of dropPiece.
+    // Then, update the game grid based on this piece's placed position
+
+    // Finally, select a new piece to fall, making it unnecessary to return out of dropPiece.
     this.selectNewPiece();
   };
 
+  willCollideBottom = () => {
+    for (let i = 0; i < this.currentPiece.blocks.length; i++) {
+      const currentBlock = this.currentPiece.blocks[i];
+      if (!currentBlock.isBottomLedge) continue;
+
+      const currentRow = currentBlock.yCoordinate / GRID_SPACE;
+      const currentCol = currentBlock.xCoordinate / GRID_SPACE;
+
+      if (
+        currentRow === this.grid.length - 1 ||
+        this.grid[currentRow + 1][currentCol]
+      ) {
+        // if we are at the bottom of the grid, or if the grid is true at this position (meaning there's a shape occupying these coordinates)
+        return true;
+      }
+    }
+    return false;
+  };
+
+  willCollideLeft = () => {};
+
+  willCollideRight = () => {};
+
   dropPiece = () => {
     const fallInterval = setInterval(() => {
-      if (this.currentPiece.bottomLedge >= canvas.height) {
+      if (this.willCollideBottom()) {
         this.placePiece(fallInterval);
         return;
       }
