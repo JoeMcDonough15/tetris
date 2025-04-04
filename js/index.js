@@ -662,9 +662,11 @@ class Game {
     return [currentRow, currentCol];
   };
 
-  reachedBottomRow = (rowNum) => rowNum === this.grid.length - 1;
+  reachedBottomOfGrid = (rowNum) => rowNum === NUM_ROWS - 1;
 
   reachedLeftSideOfGrid = (colNum) => colNum === 0;
+
+  reachedRightSideOfGrid = (colNum) => colNum === NUM_COLS - 1;
 
   willCollideBottom = () => {
     for (let i = 0; i < this.currentPiece.blocks.length; i++) {
@@ -674,7 +676,7 @@ class Game {
       const [currentRow, currentCol] = this.determineRowAndColumn(currentBlock);
 
       if (
-        this.reachedBottomRow(currentRow) ||
+        this.reachedBottomOfGrid(currentRow) ||
         this.grid[currentRow + 1][currentCol]
       ) {
         // if we are at the bottom of the grid, or if the grid is true at this position (meaning there's a shape occupying these coordinates)
@@ -707,7 +709,17 @@ class Game {
     for (let i = 0; i < this.currentPiece.blocks.length; i++) {
       const currentBlock = this.currentPiece.blocks[i];
       if (!currentBlock.isRightLedge) continue;
+
+      const [currentRow, currentCol] = this.determineRowAndColumn(currentBlock);
+
+      if (
+        this.reachedRightSideOfGrid(currentCol) ||
+        this.grid[currentRow][currentCol + 1]
+      ) {
+        return true;
+      }
     }
+    return false;
   };
 
   dropPiece = () => {
@@ -732,7 +744,7 @@ class Game {
   };
 
   movePieceRight = () => {
-    if (this.currentPiece.rightLedge >= canvas.width) return;
+    if (this.willCollideRight()) return;
     this.currentPiece.clearShape();
     this.currentPiece.initialBlock.xCoordinate += GRID_SPACE;
     this.currentPiece.drawShape();
