@@ -8,7 +8,7 @@ class Game {
   constructor() {
     this.gameOver = false;
     this.level = 1;
-    this.gameSpeed = 1500;
+    this.gameSpeed = 1000;
     this.rowsCleared = 0;
     this.grid = new Array(NUM_ROWS);
     this.availablePieces = ["line", "square", "tShape", "lShape", "jShape"];
