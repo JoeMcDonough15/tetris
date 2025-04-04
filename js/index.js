@@ -791,7 +791,4 @@ class Game {
 
 const game = new Game();
 
-// for (let i = 0; i < game.grid.length; i++) {
-// }
-
 game.selectNewPiece(); // begins game
