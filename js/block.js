@@ -1,9 +1,11 @@
-import { NUM_ROWS, NUM_COLS, GRID_SPACE } from "./gridSpecs.js";
+export const NUM_ROWS = 30;
+export const NUM_COLS = 20;
+export const GRID_SPACE = 20;
 
 // Canvas
 const canvas = document.getElementById("canvas");
-canvas.width = NUM_COLS * GRID_SPACE; // 600
-canvas.height = NUM_ROWS * GRID_SPACE; // 800
+canvas.width = NUM_COLS * GRID_SPACE;
+canvas.height = NUM_ROWS * GRID_SPACE;
 const ctx = canvas.getContext("2d");
 
 class Block {

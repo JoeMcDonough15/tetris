@@ -1,5 +1,5 @@
-import Game from "./game.js";
+import Tetris from "./tetris.js";
 
-const game = new Game();
+const game = new Tetris();
 
 game.selectNewPiece(); // begins game

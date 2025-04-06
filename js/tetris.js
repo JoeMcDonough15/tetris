@@ -7,26 +7,19 @@ import {
   SShape,
   ZShape,
 } from "./shapes.js";
-import {
-  NUM_ROWS,
-  NUM_COLS,
-  GRID_SPACE,
-  reachedBottomOfGrid,
-  reachedLeftSideOfGrid,
-  reachedRightSideOfGrid,
-  determineRowAndColumn,
-} from "./gridSpecs.js";
+import GameGrid from "./gameGrid.js";
+import { GRID_SPACE, NUM_ROWS, NUM_COLS } from "./block.js";
 
 const levelHeading = document.getElementById("level-heading");
 const rowsClearedHeading = document.getElementById("rows-cleared-heading");
 
-class Game {
+class Tetris {
   constructor() {
     this.gameOver = false;
     this.level = 1;
-    this.gameSpeed = 1000;
+    this.gameSpeed = 500;
     this.rowsCleared = 0;
-    this.grid = new Array(NUM_ROWS);
+    this.game = new GameGrid(NUM_ROWS, NUM_COLS);
     this.availablePieces = [
       "line",
       "square",
@@ -38,31 +31,25 @@ class Game {
     ];
     this.currentPiece = null;
     this.numRotations = 0;
-
-    for (let i = 0; i < this.grid.length; i++) {
-      const newRow = new Array(NUM_COLS + 1).fill(null);
-      newRow[newRow.length - 1] = 0; // last index acts as the column count so we can know if a row has cleared
-      this.grid[i] = newRow;
-    }
   }
 
   // Game methods
 
   addBlocksToGrid = () => {
     this.currentPiece.blocks.forEach((block) => {
-      const [currentRow, currentCol] = determineRowAndColumn(block);
-      this.grid[currentRow][currentCol] = block;
-      const rowOfGrid = this.grid[currentRow];
+      const [currentRow, currentCol] = this.game.determineRowAndColumn(block);
+      this.game.grid[currentRow][currentCol] = block;
+      const rowOfGrid = this.game.grid[currentRow];
       rowOfGrid[rowOfGrid.length - 1] += 1;
     });
   };
 
   destroyBlocksOfRow = (rowNum) => {
-    const currentRow = this.grid[rowNum];
+    const currentRow = this.game.grid[rowNum];
     currentRow.forEach((block, index) => {
       if (index <= currentRow.length - 2) {
         block.clearBlock();
-        this.grid[rowNum][index] = null;
+        this.game.grid[rowNum][index] = null;
       }
     });
     // reset the cleared row's column count to 0
@@ -71,13 +58,13 @@ class Game {
 
   moveRemainingBlocksDown = (clearedRowNum) => {
     for (let rowNum = clearedRowNum - 1; rowNum >= 0; rowNum--) {
-      const rowToMove = this.grid[rowNum];
+      const rowToMove = this.game.grid[rowNum];
       rowToMove.forEach((currentBlock, index) => {
         if (index <= rowToMove.length - 2) {
           if (currentBlock) {
             currentBlock.moveBlockDownOneRow();
             rowToMove[index] = null;
-            const nextRowDown = this.grid[rowNum + 1];
+            const nextRowDown = this.game.grid[rowNum + 1];
             nextRowDown[index] = currentBlock;
             nextRowDown[nextRowDown.length - 1] += 1;
           }
@@ -102,8 +89,8 @@ class Game {
   };
 
   checkForClearedRows = () => {
-    for (let rowNum = this.grid.length - 1; rowNum >= 0; rowNum--) {
-      const row = this.grid[rowNum];
+    for (let rowNum = this.game.grid.length - 1; rowNum >= 0; rowNum--) {
+      const row = this.game.grid[rowNum];
       while (row[row.length - 1] === NUM_COLS) {
         this.updateRowsCleared();
         this.destroyBlocksOfRow(rowNum);
@@ -132,24 +119,25 @@ class Game {
         continue;
       }
 
-      const [currentRow, currentCol] = determineRowAndColumn(currentBlock);
+      const [currentRow, currentCol] =
+        this.game.determineRowAndColumn(currentBlock);
 
       if (
         ledge === "bottom" &&
-        (reachedBottomOfGrid(currentRow) ||
-          this.grid[currentRow + 1][currentCol])
+        (this.game.reachedBottomOfGrid(currentRow) ||
+          this.game.grid[currentRow + 1][currentCol])
       ) {
         return true;
       } else if (
         ledge === "left" &&
-        (reachedLeftSideOfGrid(currentCol) ||
-          this.grid[currentRow][currentCol - 1])
+        (this.game.reachedLeftSideOfGrid(currentCol) ||
+          this.game.grid[currentRow][currentCol - 1])
       ) {
         return true;
       } else if (
         ledge === "right" &&
-        (reachedRightSideOfGrid(currentCol) ||
-          this.grid[currentRow][currentCol + 1])
+        (this.game.reachedRightSideOfGrid(currentCol) ||
+          this.game.grid[currentRow][currentCol + 1])
       ) {
         return true;
       }
@@ -196,7 +184,7 @@ class Game {
     const nextRotation =
       availableRotations[nextRotationNum % availableRotations.length];
 
-    if (this.currentPiece.checkForRotationConflict(nextRotation, this.grid)) {
+    if (this.currentPiece.checkForRotationConflict(nextRotation, this.game)) {
       return false;
     }
 
@@ -252,4 +240,4 @@ class Game {
   speedDown = () => {};
 }
 
-export default Game;
+export default Tetris;
