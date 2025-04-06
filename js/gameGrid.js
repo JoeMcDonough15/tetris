@@ -1,4 +1,4 @@
-import { GRID_SPACE } from "./block.js";
+import { GRID_SPACE } from "./constants.js";
 
 class GameGrid {
   constructor(numRows, numCols) {

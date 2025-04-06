@@ -1,4 +1,5 @@
-import Block, { GRID_SPACE } from "./block.js";
+import Block from "./block.js";
+import { GRID_SPACE } from "./constants.js";
 
 // Colors
 const GREEN = "rgb(0 255 0)";

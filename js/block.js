@@ -1,6 +1,4 @@
-export const NUM_ROWS = 30;
-export const NUM_COLS = 20;
-export const GRID_SPACE = 20;
+import { NUM_ROWS, NUM_COLS, GRID_SPACE } from "./constants.js";
 
 // Canvas
 const canvas = document.getElementById("canvas");
