@@ -1,4 +1,10 @@
-import { GRID_SPACE } from "./gridSpecs.js";
+import {
+  determineRowAndColumn,
+  GRID_SPACE,
+  reachedBottomOfGrid,
+  reachedLeftSideOfGrid,
+  reachedRightSideOfGrid,
+} from "./gridSpecs.js";
 import Block from "./block.js";
 
 // Colors
@@ -25,6 +31,13 @@ class Shape {
       block.resetLedges();
       block.clearBlock();
     });
+  };
+
+  rotate = (rotationNum) => {
+    const rotationIndex = rotationNum % this.availableRotations.length;
+    this.clearShape();
+    this.rotation = this.availableRotations[rotationIndex];
+    this.drawShape();
   };
 }
 
@@ -83,23 +96,48 @@ export class Line extends Shape {
     });
   };
 
-  rotate = () => {
-    if (
-      (this.rotation === "vertical" && this.anchorBlock.xCoordinate > 520) ||
-      (this.rotation === "horizontal" && this.anchorBlock.yCoordinate >= 720)
-    ) {
-      return;
+  checkForRotationConflict = (directionToRotate, gameGrid) => {
+    const [anchorBlockRow, anchorBlockCol] = determineRowAndColumn(
+      this.anchorBlock
+    );
+    if (directionToRotate === "horizontal") {
+      const oneColLeft = anchorBlockCol - 1;
+      const oneColRight = anchorBlockCol + 1;
+      const twoColsRight = anchorBlockCol + 2;
+      // make sure this rotation would not put us out of range on either the left or right side of the grid
+      if (
+        reachedLeftSideOfGrid(anchorBlockCol) ||
+        reachedRightSideOfGrid(oneColRight)
+      ) {
+        return true;
+      }
+
+      // Next, check the necessary, adjacent spaces of the gameGrid to see if they are already occupied by another block
+      if (
+        gameGrid[anchorBlockRow][oneColLeft] ||
+        gameGrid[anchorBlockRow][oneColRight] ||
+        gameGrid[anchorBlockRow][twoColsRight]
+      ) {
+        return true;
+      }
+    } else if (directionToRotate === "vertical") {
+      const oneRowAbove = anchorBlockRow - 1;
+      const oneRowBelow = anchorBlockRow + 1;
+      const twoRowsBelow = anchorBlockRow + 2;
+      // make sure we would not go out of range
+      if (reachedBottomOfGrid(oneRowBelow)) {
+        return true;
+      }
+      // Next, check the necessary, adjacent spaces of the gameGrid to see if they are already occupied by another block
+      if (
+        gameGrid[oneRowAbove][anchorBlockCol] ||
+        gameGrid[oneRowBelow][anchorBlockCol] ||
+        gameGrid[twoRowsBelow][anchorBlockCol]
+      ) {
+        return true;
+      }
     }
-    this.clearShape();
-    this.rotation = this.rotation === "horizontal" ? "vertical" : "horizontal";
-    if (this.rotation === "vertical") {
-      this.shapeHeight = GRID_SPACE * this.numBlocks;
-      this.shapeWidth = GRID_SPACE;
-    } else {
-      this.shapeHeight = GRID_SPACE;
-      this.shapeWidth = GRID_SPACE * this.numBlocks;
-    }
-    this.drawShape();
+    return false;
   };
 }
 
@@ -136,10 +174,6 @@ export class Square extends Shape {
       }
       block.drawBlock();
     });
-  };
-
-  rotate = () => {
-    return;
   };
 }
 
@@ -236,13 +270,13 @@ export class TShape extends Shape {
       } else if (this.rotation === "right") {
         // handle ledges
         if (index === 1 || index === 2) {
-          block.isBottomLedge;
+          block.isBottomLedge = true;
         }
         if (index !== 2) {
-          block.isLeftLedge;
+          block.isLeftLedge = true;
         }
         if (index > 0) {
-          block.isRightLedge;
+          block.isRightLedge = true;
         }
 
         // handle coordinates
@@ -264,44 +298,63 @@ export class TShape extends Shape {
     });
   };
 
-  rotate = () => {
-    if (this.anchorBlock.yCoordinate >= 740) {
-      return;
+  checkForRotationConflict = (directionToRotate, gameGrid) => {
+    const [anchorBlockRow, anchorBlockCol] = determineRowAndColumn(
+      this.anchorBlock
+    );
+    // Adjacent grid spaces
+    const oneColLeft = anchorBlockCol - 1;
+    const oneColRight = anchorBlockCol + 1;
+    const oneRowDown = anchorBlockRow + 1;
+    const oneRowUp = anchorBlockRow - 1;
+
+    if (directionToRotate === "up") {
+      // first make sure we would not go out of range on the right side only.
+      // then check for conflicts with other blocks on the grid
+      if (
+        reachedRightSideOfGrid(anchorBlockCol) ||
+        gameGrid[oneRowUp][anchorBlockCol] ||
+        gameGrid[anchorBlockRow][oneColLeft] ||
+        gameGrid[anchorBlockRow][oneColRight]
+      ) {
+        return true;
+      }
+    } else if (directionToRotate === "right") {
+      // first make sure we would not go out of range on the bottom side only.
+      // then check for conflicts with other blocks on the grid
+      if (
+        reachedBottomOfGrid(anchorBlockRow) ||
+        gameGrid[oneRowUp][anchorBlockCol] ||
+        gameGrid[oneRowDown][anchorBlockCol] ||
+        gameGrid[anchorBlockRow][oneColRight]
+      ) {
+        return true;
+      }
+    } else if (directionToRotate === "down") {
+      // first make sure we would not go out of range on the left side only.
+      // then check for conflicts with other blocks on the grid
+      if (
+        reachedLeftSideOfGrid(anchorBlockCol) ||
+        gameGrid[anchorBlockRow][oneColLeft] ||
+        gameGrid[anchorBlockRow][oneColRight] ||
+        gameGrid[oneRowDown][anchorBlockCol]
+      ) {
+        return true;
+      }
+    } else if (directionToRotate === "left") {
+      // we can't be at the left edge, the right edge, or the bottom edge in this case
+      // because we are coming from the down position and there are blocks to the left, right, and below this.anchorBlock
+      // so we just need to check the adjacent grid spaces
+      if (
+        gameGrid[oneRowUp][anchorBlockCol] ||
+        gameGrid[anchorBlockRow][oneColLeft] ||
+        gameGrid[oneRowDown][anchorBlockCol]
+      ) {
+        return true;
+      }
     }
-    if (this.rotation === "right" && this.anchorBlock.xCoordinate >= 560) {
-      this.rotation = "down";
-    } else if (
-      this.rotation === "left" &&
-      this.anchorBlock.xCoordinate >= 580
-    ) {
-      return;
-    } else if (
-      this.rotation === "left" &&
-      this.anchorBlock.xCoordinate >= 560
-    ) {
-      this.rotation = "up";
-    } else if (this.rotation === "down" && this.anchorBlock.xCoordinate === 0) {
-      this.rotation = "left";
-    }
-    this.clearShape();
-    if (this.rotation === "up") {
-      this.rotation = "right";
-      this.shapeHeight = GRID_SPACE * 3;
-      this.shapeWidth = GRID_SPACE * 2;
-    } else if (this.rotation === "right") {
-      this.rotation = "down";
-      this.shapeHeight = GRID_SPACE * 2;
-      this.shapeWidth = GRID_SPACE * 3;
-    } else if (this.rotation === "down") {
-      this.rotation = "left";
-      this.shapeHeight = GRID_SPACE * 3;
-      this.shapeWidth = GRID_SPACE * 2;
-    } else if (this.rotation === "left") {
-      this.rotation = "up";
-      this.shapeHeight = GRID_SPACE * 2;
-      this.shapeWidth = GRID_SPACE * 3;
-    }
-    this.drawShape();
+
+    return false;
   };
 }
 
@@ -312,7 +365,7 @@ export class LShape extends Shape {
     this.shapeHeight = GRID_SPACE * 3;
     this.shapeWidth = GRID_SPACE * 2;
     this.availableRotations = ["left", "up", "right", "down"];
-    this.rotation = availableRotations[0];
+    this.rotation = this.availableRotations[0];
   }
 
   drawShape = () => {
@@ -426,41 +479,58 @@ export class LShape extends Shape {
     });
   };
 
-  rotate = () => {
-    if (this.anchorBlock.yCoordinate >= 740) {
-      return;
+  checkForRotationConflict = (directionToRotate, gameGrid) => {
+    const [anchorBlockRow, anchorBlockCol] = determineRowAndColumn(
+      this.anchorBlock
+    );
+    const oneRowUp = anchorBlockRow - 1;
+    const oneRowDown = anchorBlockRow + 1;
+    const oneColLeft = anchorBlockCol - 1;
+    const oneColRight = anchorBlockCol + 1;
+
+    if (directionToRotate === "left") {
+      // make sure we would not go out of range on the left side only.
+      // Then, check to see if the adjacent spaces are occupied
+      if (
+        reachedLeftSideOfGrid(anchorBlockCol) ||
+        gameGrid[anchorBlockRow][oneColLeft] ||
+        gameGrid[anchorBlockRow][oneColRight] ||
+        gameGrid[oneRowDown][oneColLeft]
+      ) {
+        return true;
+      }
+    } else if (directionToRotate === "up") {
+      // since we are coming from left, we can't go out of range because we already have 2 blocks to the left, one to the right, and one below this.anchorBlock
+      // so we just need to check the adjacent blocks for existing blocks in the grid
+      if (
+        gameGrid[oneRowUp][anchorBlockCol] ||
+        gameGrid[oneRowDown][anchorBlockCol] ||
+        gameGrid[oneRowUp][oneColLeft]
+      )
+        return true;
+    } else if (directionToRotate === "right") {
+      // we only need to check that we are not at the right ledge to stay in range
+      // then the adjacent grid spaces for existing blocks
+      if (
+        reachedRightSideOfGrid(anchorBlockCol) ||
+        gameGrid[anchorBlockRow][oneColLeft] ||
+        gameGrid[anchorBlockRow][oneColRight] ||
+        gameGrid[oneRowUp][oneColRight]
+      ) {
+        return true;
+      }
+    } else if (directionToRotate === "down") {
+      // check that we haven't reached the bottom of the grid to stay in range and then the adjacent spaces for
+      // occupying blocks
+      if (
+        reachedBottomOfGrid(anchorBlockRow) ||
+        gameGrid[oneRowUp][anchorBlockCol] ||
+        gameGrid[oneRowDown][anchorBlockCol] ||
+        gameGrid[oneRowDown][oneColRight]
+      ) {
+        return true;
+      }
     }
-    if (this.rotation === "left" && this.anchorBlock.xCoordinate === 0) {
-      this.rotation = "up";
-    } else if (
-      this.rotation === "down" &&
-      this.anchorBlock.xCoordinate >= 560
-    ) {
-      this.rotation = "left";
-    } else if (this.rotation === "up" && this.anchorBlock.xCoordinate >= 580) {
-      return;
-    } else if (this.rotation === "up" && this.anchorBlock.xCoordinate >= 560) {
-      this.rotation = "right";
-    }
-    this.clearShape();
-    if (this.rotation === "down") {
-      this.rotation = "left";
-      this.shapeHeight = GRID_SPACE * 2;
-      this.shapeWidth = GRID_SPACE * 3;
-    } else if (this.rotation === "left") {
-      this.rotation = "up";
-      this.shapeHeight = GRID_SPACE * 3;
-      this.shapeWidth = GRID_SPACE * 2;
-    } else if (this.rotation === "up") {
-      this.rotation = "right";
-      this.shapeHeight = GRID_SPACE * 2;
-      this.shapeWidth = GRID_SPACE * 3;
-    } else if (this.rotation === "right") {
-      this.rotation = "down";
-      this.shapeHeight = GRID_SPACE * 3;
-      this.shapeWidth = GRID_SPACE * 2;
-    }
-    this.drawShape();
   };
 }
 
@@ -471,7 +541,7 @@ export class JShape extends Shape {
     this.shapeHeight = GRID_SPACE * 4;
     this.shapeWidth = GRID_SPACE * 3;
     this.availableRotations = ["right", "down", "left", "up"];
-    this.rotation = availableRotations[0];
+    this.rotation = this.availableRotations[0];
     this.rotation = "right";
   }
 
@@ -586,45 +656,48 @@ export class JShape extends Shape {
     });
   };
 
-  rotate = () => {
-    if (this.anchorBlock.yCoordinate >= 740) {
-      return;
-    }
-    if (this.rotation === "right" && this.anchorBlock.xCoordinate === 0) {
-      this.rotation = "left";
-    } else if (
-      this.rotation === "down" &&
-      this.anchorBlock.xCoordinate >= 580
-    ) {
-      return;
-    } else if (
-      this.rotation === "down" &&
-      this.anchorBlock.xCoordinate >= 560
-    ) {
-      this.rotation = "left";
-    } else if (this.rotation === "up" && this.anchorBlock.xCoordinate >= 560) {
-      this.rotation = "right";
-    }
-    this.clearShape();
-    if (this.rotation === "down") {
-      this.rotation = "left";
-      this.shapeHeight = GRID_SPACE * 2;
-      this.shapeWidth = GRID_SPACE * 3;
-    } else if (this.rotation === "left") {
-      this.rotation = "up";
-      this.shapeHeight = GRID_SPACE * 3;
-      this.shapeWidth = GRID_SPACE * 2;
-    } else if (this.rotation === "up") {
-      this.rotation = "right";
-      this.shapeHeight = GRID_SPACE * 2;
-      this.shapeWidth = GRID_SPACE * 3;
-    } else if (this.rotation === "right") {
-      this.rotation = "down";
-      this.shapeHeight = GRID_SPACE * 3;
-      this.shapeWidth = GRID_SPACE * 2;
-    }
-    this.drawShape();
-  };
+  // rotate = (rotationNum) => {
+  //   const rotationIndex = rotationNum % this.availableRotations.length;
+
+  //   // if (this.anchorBlock.yCoordinate >= 740) {
+  //   //   return;
+  //   // }
+  //   // if (this.rotation === "right" && this.anchorBlock.xCoordinate === 0) {
+  //   //   this.rotation = "left";
+  //   // } else if (
+  //   //   this.rotation === "down" &&
+  //   //   this.anchorBlock.xCoordinate >= 580
+  //   // ) {
+  //   //   return;
+  //   // } else if (
+  //   //   this.rotation === "down" &&
+  //   //   this.anchorBlock.xCoordinate >= 560
+  //   // ) {
+  //   //   this.rotation = "left";
+  //   // } else if (this.rotation === "up" && this.anchorBlock.xCoordinate >= 560) {
+  //   //   this.rotation = "right";
+  //   // }
+  //   this.clearShape();
+  //   this.rotation = this.availableRotations[rotationIndex];
+  //   // if (this.rotation === "down") {
+  //   //   this.rotation = "left";
+  //   //   this.shapeHeight = GRID_SPACE * 2;
+  //   //   this.shapeWidth = GRID_SPACE * 3;
+  //   // } else if (this.rotation === "left") {
+  //   //   this.rotation = "up";
+  //   //   this.shapeHeight = GRID_SPACE * 3;
+  //   //   this.shapeWidth = GRID_SPACE * 2;
+  //   // } else if (this.rotation === "up") {
+  //   //   this.rotation = "right";
+  //   //   this.shapeHeight = GRID_SPACE * 2;
+  //   //   this.shapeWidth = GRID_SPACE * 3;
+  //   // } else if (this.rotation === "right") {
+  //   //   this.rotation = "down";
+  //   //   this.shapeHeight = GRID_SPACE * 3;
+  //   //   this.shapeWidth = GRID_SPACE * 2;
+  //   // }
+  //   this.drawShape();
+  // };
 }
 
 export default Shape;
