@@ -10,6 +10,7 @@ import {
 import GameGrid from "./gameGrid.js";
 import { GRID_SPACE, NUM_ROWS, NUM_COLS } from "./constants.js";
 
+const subHeadersContainer = document.getElementById("sub-headers-container");
 const levelHeading = document.getElementById("level-heading");
 const totalScoreHeading = document.getElementById("total-score-heading");
 const rowsClearedHeading = document.getElementById("rows-cleared-heading");
@@ -31,6 +32,7 @@ class Tetris {
       "sShape",
       "zShape",
     ];
+    this.pieceQueue = [];
     this.currentPiece = null;
     this.numRotations = 0;
   }
@@ -240,7 +242,7 @@ class Tetris {
     }
   };
 
-  selectNewPiece = () => {
+  addPieceToQueue = () => {
     const generatedIndex = Math.floor(
       Math.random() * this.availablePieces.length
     );
@@ -262,8 +264,35 @@ class Tetris {
     } else if (pieceName === "zShape") {
       newPiece = new ZShape();
     }
+    this.pieceQueue.push(newPiece);
+  };
 
-    this.currentPiece = newPiece;
+  setPreviewOfNextPiece = () => {
+    const childrenOfSubHeadersContainer = subHeadersContainer.children;
+    const existingPreviewImg = childrenOfSubHeadersContainer[3];
+    if (existingPreviewImg) {
+      subHeadersContainer.removeChild(existingPreviewImg);
+    }
+    const previewImg = document.createElement("img");
+    previewImg.setAttribute(
+      "src",
+      `/images/${this.pieceQueue[0].shapeName}-preview.png`
+    );
+    previewImg.setAttribute("alt", "preview-of-next-shape");
+    subHeadersContainer.appendChild(previewImg);
+  };
+
+  selectNewPiece = () => {
+    if (!this.pieceQueue.length) {
+      for (let i = 0; i < 2; i++) {
+        this.addPieceToQueue();
+      }
+    } else {
+      this.addPieceToQueue();
+    }
+
+    this.currentPiece = this.pieceQueue.shift();
+    this.setPreviewOfNextPiece();
 
     this.dropPiece();
   };
