@@ -8,7 +8,7 @@ import {
   ZShape,
 } from "./shapes.js";
 import GameGrid from "./gameGrid.js";
-import { GRID_SPACE, NUM_ROWS, NUM_COLS } from "./block.js";
+import { GRID_SPACE, NUM_ROWS, NUM_COLS } from "./constants.js";
 
 const levelHeading = document.getElementById("level-heading");
 const rowsClearedHeading = document.getElementById("rows-cleared-heading");
@@ -16,8 +16,8 @@ const rowsClearedHeading = document.getElementById("rows-cleared-heading");
 class Tetris {
   constructor() {
     this.gameOver = false;
-    this.level = 1;
-    this.gameSpeed = 500;
+    this.level = 0;
+    this.gameSpeed = 1000;
     this.rowsCleared = 0;
     this.game = new GameGrid(NUM_ROWS, NUM_COLS);
     this.availablePieces = [
