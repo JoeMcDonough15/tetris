@@ -1,4 +1,11 @@
-import { GRID_SPACE } from "./gridSpecs.js";
+import {
+  determineRowAndColumn,
+  GRID_SPACE,
+  reachedBottomOfGrid,
+  reachedLeftSideOfGrid,
+  reachedRightSideOfGrid,
+  reachedTopOfGrid,
+} from "./gridSpecs.js";
 import Block from "./block.js";
 
 // Colors
@@ -9,12 +16,12 @@ const YELLOW = "rgb(255 255 0)";
 const ORANGE = "rgb(255 127 0)";
 
 class Shape {
-  constructor(colorString, startingOffset) {
+  constructor(colorString) {
     this.numBlocks = 4;
     this.shapeColor = colorString;
     this.blocks = [];
     for (let i = 0; i < this.numBlocks; i++) {
-      const newBlock = new Block(startingOffset, this.shapeColor);
+      const newBlock = new Block(this.shapeColor);
       this.blocks.push(newBlock);
     }
     this.anchorBlock = this.blocks[0];
@@ -26,15 +33,21 @@ class Shape {
       block.clearBlock();
     });
   };
+
+  rotate = (rotationNum) => {
+    const rotationIndex = rotationNum % this.availableRotations.length;
+    this.clearShape();
+    this.rotation = this.availableRotations[rotationIndex];
+    this.drawShape();
+  };
 }
 
 export class Line extends Shape {
   constructor() {
-    super(GREEN, 40);
+    super(GREEN);
     this.shapeName = "line";
     this.shapeHeight = GRID_SPACE;
     this.shapeWidth = GRID_SPACE * this.numBlocks;
-    // this.rotation = "horizontal"; // horizontal or vertical
     this.availableRotations = ["horizontal", "vertical"];
     this.rotation = this.availableRotations[0];
   }
@@ -83,29 +96,48 @@ export class Line extends Shape {
     });
   };
 
-  rotate = () => {
-    if (
-      (this.rotation === "vertical" && this.anchorBlock.xCoordinate > 520) ||
-      (this.rotation === "horizontal" && this.anchorBlock.yCoordinate >= 720)
-    ) {
-      return;
+  checkForRotationConflict = (directionToRotate, gameGrid) => {
+    const [anchorBlockRow, anchorBlockCol] = determineRowAndColumn(
+      this.anchorBlock
+    );
+    if (reachedTopOfGrid(anchorBlockRow)) return true;
+    const oneRowUp = anchorBlockRow - 1;
+    const oneRowDown = anchorBlockRow + 1;
+    const twoRowsDown = anchorBlockRow + 2;
+    const oneColLeft = anchorBlockCol - 1;
+    const oneColRight = anchorBlockCol + 1;
+    const twoColsRight = anchorBlockCol + 2;
+    if (directionToRotate === "horizontal") {
+      // make sure this rotation would not put us out of range on either the left or right side of the grid.
+      // Next, check the necessary, adjacent spaces of the gameGrid to see if they are already occupied by another block
+      if (
+        reachedLeftSideOfGrid(anchorBlockCol) ||
+        reachedRightSideOfGrid(oneColRight) ||
+        gameGrid[anchorBlockRow][oneColLeft] ||
+        gameGrid[anchorBlockRow][oneColRight] ||
+        gameGrid[anchorBlockRow][twoColsRight]
+      ) {
+        return true;
+      }
+    } else if (directionToRotate === "vertical") {
+      // make sure we would not go out of range.
+      // Next, check the necessary, adjacent spaces of the gameGrid to see if they are already occupied by another block
+      if (
+        reachedBottomOfGrid(oneRowDown) ||
+        gameGrid[oneRowUp][anchorBlockCol] ||
+        gameGrid[oneRowDown][anchorBlockCol] ||
+        gameGrid[twoRowsDown][anchorBlockCol]
+      ) {
+        return true;
+      }
     }
-    this.clearShape();
-    this.rotation = this.rotation === "horizontal" ? "vertical" : "horizontal";
-    if (this.rotation === "vertical") {
-      this.shapeHeight = GRID_SPACE * this.numBlocks;
-      this.shapeWidth = GRID_SPACE;
-    } else {
-      this.shapeHeight = GRID_SPACE;
-      this.shapeWidth = GRID_SPACE * this.numBlocks;
-    }
-    this.drawShape();
+    return false;
   };
 }
 
 export class Square extends Shape {
   constructor() {
-    super(BLUE, 20);
+    super(BLUE);
     this.shapeName = "square";
     this.shapeHeight = GRID_SPACE * (this.numBlocks / 2);
     this.shapeWidth = GRID_SPACE * (this.numBlocks / 2);
@@ -137,15 +169,11 @@ export class Square extends Shape {
       block.drawBlock();
     });
   };
-
-  rotate = () => {
-    return;
-  };
 }
 
 export class TShape extends Shape {
   constructor() {
-    super(RED, 40);
+    super(RED);
     this.shapeName = "tShape";
     this.shapeHeight = GRID_SPACE * (this.numBlocks / 2);
     this.shapeWidth = GRID_SPACE * (this.numBlocks - 1);
@@ -236,13 +264,13 @@ export class TShape extends Shape {
       } else if (this.rotation === "right") {
         // handle ledges
         if (index === 1 || index === 2) {
-          block.isBottomLedge;
+          block.isBottomLedge = true;
         }
         if (index !== 2) {
-          block.isLeftLedge;
+          block.isLeftLedge = true;
         }
         if (index > 0) {
-          block.isRightLedge;
+          block.isRightLedge = true;
         }
 
         // handle coordinates
@@ -264,55 +292,75 @@ export class TShape extends Shape {
     });
   };
 
-  rotate = () => {
-    if (this.anchorBlock.yCoordinate >= 740) {
-      return;
+  checkForRotationConflict = (directionToRotate, gameGrid) => {
+    const [anchorBlockRow, anchorBlockCol] = determineRowAndColumn(
+      this.anchorBlock
+    );
+    if (reachedTopOfGrid(anchorBlockRow)) return true;
+    // Adjacent grid spaces
+    const oneColLeft = anchorBlockCol - 1;
+    const oneColRight = anchorBlockCol + 1;
+    const oneRowDown = anchorBlockRow + 1;
+    const oneRowUp = anchorBlockRow - 1;
+
+    if (directionToRotate === "up") {
+      // first make sure we would not go out of range on the right side only.
+      // then check for conflicts with other blocks on the grid
+      if (
+        reachedRightSideOfGrid(anchorBlockCol) ||
+        gameGrid[oneRowUp][anchorBlockCol] ||
+        gameGrid[anchorBlockRow][oneColLeft] ||
+        gameGrid[anchorBlockRow][oneColRight]
+      ) {
+        return true;
+      }
+    } else if (directionToRotate === "right") {
+      // first make sure we would not go out of range on the bottom side only.
+      // then check for conflicts with other blocks on the grid
+      if (
+        reachedBottomOfGrid(anchorBlockRow) ||
+        gameGrid[oneRowUp][anchorBlockCol] ||
+        gameGrid[oneRowDown][anchorBlockCol] ||
+        gameGrid[anchorBlockRow][oneColRight]
+      ) {
+        return true;
+      }
+    } else if (directionToRotate === "down") {
+      // first make sure we would not go out of range on the left side only.
+      // then check for conflicts with other blocks on the grid
+      if (
+        reachedLeftSideOfGrid(anchorBlockCol) ||
+        gameGrid[anchorBlockRow][oneColLeft] ||
+        gameGrid[anchorBlockRow][oneColRight] ||
+        gameGrid[oneRowDown][anchorBlockCol]
+      ) {
+        return true;
+      }
+    } else if (directionToRotate === "left") {
+      // we can't be at the left edge, the right edge, or the bottom edge in this case
+      // because we are coming from the down position and there are blocks to the left, right, and below this.anchorBlock
+      // so we just need to check the adjacent grid spaces
+      if (
+        gameGrid[oneRowUp][anchorBlockCol] ||
+        gameGrid[anchorBlockRow][oneColLeft] ||
+        gameGrid[oneRowDown][anchorBlockCol]
+      ) {
+        return true;
+      }
     }
-    if (this.rotation === "right" && this.anchorBlock.xCoordinate >= 560) {
-      this.rotation = "down";
-    } else if (
-      this.rotation === "left" &&
-      this.anchorBlock.xCoordinate >= 580
-    ) {
-      return;
-    } else if (
-      this.rotation === "left" &&
-      this.anchorBlock.xCoordinate >= 560
-    ) {
-      this.rotation = "up";
-    } else if (this.rotation === "down" && this.anchorBlock.xCoordinate === 0) {
-      this.rotation = "left";
-    }
-    this.clearShape();
-    if (this.rotation === "up") {
-      this.rotation = "right";
-      this.shapeHeight = GRID_SPACE * 3;
-      this.shapeWidth = GRID_SPACE * 2;
-    } else if (this.rotation === "right") {
-      this.rotation = "down";
-      this.shapeHeight = GRID_SPACE * 2;
-      this.shapeWidth = GRID_SPACE * 3;
-    } else if (this.rotation === "down") {
-      this.rotation = "left";
-      this.shapeHeight = GRID_SPACE * 3;
-      this.shapeWidth = GRID_SPACE * 2;
-    } else if (this.rotation === "left") {
-      this.rotation = "up";
-      this.shapeHeight = GRID_SPACE * 2;
-      this.shapeWidth = GRID_SPACE * 3;
-    }
-    this.drawShape();
+
+    return false;
   };
 }
 
 export class LShape extends Shape {
   constructor() {
-    super(ORANGE, 20);
+    super(ORANGE);
     this.shapeName = "lShape";
     this.shapeHeight = GRID_SPACE * 3;
     this.shapeWidth = GRID_SPACE * 2;
     this.availableRotations = ["left", "up", "right", "down"];
-    this.rotation = availableRotations[0];
+    this.rotation = this.availableRotations[0];
   }
 
   drawShape = () => {
@@ -426,52 +474,71 @@ export class LShape extends Shape {
     });
   };
 
-  rotate = () => {
-    if (this.anchorBlock.yCoordinate >= 740) {
-      return;
+  checkForRotationConflict = (directionToRotate, gameGrid) => {
+    const [anchorBlockRow, anchorBlockCol] = determineRowAndColumn(
+      this.anchorBlock
+    );
+    if (reachedTopOfGrid(anchorBlockRow)) return true;
+
+    const oneRowUp = anchorBlockRow - 1;
+    const oneRowDown = anchorBlockRow + 1;
+    const oneColLeft = anchorBlockCol - 1;
+    const oneColRight = anchorBlockCol + 1;
+
+    if (directionToRotate === "left") {
+      // make sure we would not go out of range on the left side only.
+      // Then, check to see if the adjacent spaces are occupied
+      if (
+        reachedLeftSideOfGrid(anchorBlockCol) ||
+        gameGrid[anchorBlockRow][oneColLeft] ||
+        gameGrid[anchorBlockRow][oneColRight] ||
+        gameGrid[oneRowDown][oneColLeft]
+      ) {
+        return true;
+      }
+    } else if (directionToRotate === "up") {
+      // since we are coming from left, we can't go out of range because we already have 2 blocks to the left, one to the right, and one below this.anchorBlock
+      // so we just need to check the adjacent blocks for existing blocks in the grid
+      if (
+        gameGrid[oneRowUp][anchorBlockCol] ||
+        gameGrid[oneRowDown][anchorBlockCol] ||
+        gameGrid[oneRowUp][oneColLeft]
+      )
+        return true;
+    } else if (directionToRotate === "right") {
+      // we only need to check that we are not at the right ledge to stay in range
+      // then the adjacent grid spaces for existing blocks
+      if (
+        reachedRightSideOfGrid(anchorBlockCol) ||
+        gameGrid[anchorBlockRow][oneColLeft] ||
+        gameGrid[anchorBlockRow][oneColRight] ||
+        gameGrid[oneRowUp][oneColRight]
+      ) {
+        return true;
+      }
+    } else if (directionToRotate === "down") {
+      // check that we haven't reached the bottom of the grid to stay in range and then the adjacent spaces for
+      // occupying blocks
+      if (
+        reachedBottomOfGrid(anchorBlockRow) ||
+        gameGrid[oneRowUp][anchorBlockCol] ||
+        gameGrid[oneRowDown][anchorBlockCol] ||
+        gameGrid[oneRowDown][oneColRight]
+      ) {
+        return true;
+      }
     }
-    if (this.rotation === "left" && this.anchorBlock.xCoordinate === 0) {
-      this.rotation = "up";
-    } else if (
-      this.rotation === "down" &&
-      this.anchorBlock.xCoordinate >= 560
-    ) {
-      this.rotation = "left";
-    } else if (this.rotation === "up" && this.anchorBlock.xCoordinate >= 580) {
-      return;
-    } else if (this.rotation === "up" && this.anchorBlock.xCoordinate >= 560) {
-      this.rotation = "right";
-    }
-    this.clearShape();
-    if (this.rotation === "down") {
-      this.rotation = "left";
-      this.shapeHeight = GRID_SPACE * 2;
-      this.shapeWidth = GRID_SPACE * 3;
-    } else if (this.rotation === "left") {
-      this.rotation = "up";
-      this.shapeHeight = GRID_SPACE * 3;
-      this.shapeWidth = GRID_SPACE * 2;
-    } else if (this.rotation === "up") {
-      this.rotation = "right";
-      this.shapeHeight = GRID_SPACE * 2;
-      this.shapeWidth = GRID_SPACE * 3;
-    } else if (this.rotation === "right") {
-      this.rotation = "down";
-      this.shapeHeight = GRID_SPACE * 3;
-      this.shapeWidth = GRID_SPACE * 2;
-    }
-    this.drawShape();
   };
 }
 
 export class JShape extends Shape {
   constructor() {
-    super(YELLOW, 0);
+    super(YELLOW);
     this.shapeName = "jShape";
     this.shapeHeight = GRID_SPACE * 4;
     this.shapeWidth = GRID_SPACE * 3;
     this.availableRotations = ["right", "down", "left", "up"];
-    this.rotation = availableRotations[0];
+    this.rotation = this.availableRotations[0];
     this.rotation = "right";
   }
 
@@ -586,44 +653,61 @@ export class JShape extends Shape {
     });
   };
 
-  rotate = () => {
-    if (this.anchorBlock.yCoordinate >= 740) {
-      return;
+  checkForRotationConflict = (directionToRotate, gameGrid) => {
+    const [anchorBlockRow, anchorBlockCol] = determineRowAndColumn(
+      this.anchorBlock
+    );
+    if (reachedTopOfGrid(anchorBlockRow)) return true;
+    const oneRowUp = anchorBlockRow - 1;
+    const oneRowDown = anchorBlockRow + 1;
+    const oneColLeft = anchorBlockCol - 1;
+    const oneColRight = anchorBlockCol + 1;
+
+    if (directionToRotate === "right") {
+      // that means we're cmoing from up
+      // we only need to check the left side
+      // then we can check the adjacent spaces for existing blocks
+      if (
+        reachedLeftSideOfGrid(anchorBlockCol) ||
+        gameGrid[anchorBlockRow][oneColLeft] ||
+        gameGrid[anchorBlockRow][oneColRight] ||
+        gameGrid[oneRowDown][oneColRight]
+      ) {
+        return true;
+      }
+    } else if (directionToRotate === "down") {
+      // that means we're coming from right
+      // that means we can't go out of range because the anchorBlock already has a block to its left, right, and below it
+      // so just check the necessary adjacencies for existing blocks
+      if (
+        gameGrid[oneRowUp][anchorBlockCol] ||
+        gameGrid[oneRowDown][anchorBlockCol] ||
+        gameGrid[oneRowDown][oneColLeft]
+      ) {
+        return true;
+      }
+    } else if (directionToRotate === "left") {
+      // that means we're coming from down, so we just need to check the right side to make sure
+      // we're in range.  Then we can check the adjacencies for existing blocks.
+      if (
+        reachedRightSideOfGrid(anchorBlockCol) ||
+        gameGrid[anchorBlockRow][oneColRight] ||
+        gameGrid[anchorBlockRow][oneColLeft] ||
+        gameGrid[oneRowUp][oneColLeft]
+      ) {
+        return true;
+      }
+    } else if (directionToRotate === "up") {
+      // that means we're coming from left, so we need to make sure we're not on the bottom row to be in range
+      if (
+        reachedBottomOfGrid(anchorBlockRow) ||
+        gameGrid[oneRowDown][anchorBlockCol] ||
+        gameGrid[oneRowUp][anchorBlockCol] ||
+        gameGrid[oneRowUp][oneColRight]
+      ) {
+        return true;
+      }
     }
-    if (this.rotation === "right" && this.anchorBlock.xCoordinate === 0) {
-      this.rotation = "left";
-    } else if (
-      this.rotation === "down" &&
-      this.anchorBlock.xCoordinate >= 580
-    ) {
-      return;
-    } else if (
-      this.rotation === "down" &&
-      this.anchorBlock.xCoordinate >= 560
-    ) {
-      this.rotation = "left";
-    } else if (this.rotation === "up" && this.anchorBlock.xCoordinate >= 560) {
-      this.rotation = "right";
-    }
-    this.clearShape();
-    if (this.rotation === "down") {
-      this.rotation = "left";
-      this.shapeHeight = GRID_SPACE * 2;
-      this.shapeWidth = GRID_SPACE * 3;
-    } else if (this.rotation === "left") {
-      this.rotation = "up";
-      this.shapeHeight = GRID_SPACE * 3;
-      this.shapeWidth = GRID_SPACE * 2;
-    } else if (this.rotation === "up") {
-      this.rotation = "right";
-      this.shapeHeight = GRID_SPACE * 2;
-      this.shapeWidth = GRID_SPACE * 3;
-    } else if (this.rotation === "right") {
-      this.rotation = "down";
-      this.shapeHeight = GRID_SPACE * 3;
-      this.shapeWidth = GRID_SPACE * 2;
-    }
-    this.drawShape();
   };
 }
 

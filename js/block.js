@@ -7,11 +7,11 @@ canvas.height = NUM_ROWS * GRID_SPACE; // 800
 const ctx = canvas.getContext("2d");
 
 class Block {
-  constructor(offSet, color) {
+  constructor(color) {
     this.borderColor = "rgb(0 0 0)";
     this.fillColor = color;
-    this.xCoordinate = Math.floor(canvas.width / 2 - offSet);
-    this.yCoordinate = 0;
+    this.xCoordinate = Math.floor(canvas.width / 2 - GRID_SPACE);
+    this.yCoordinate = -20;
     this.isBottomLedge = false;
     this.isLeftLedge = false;
     this.isRightLedge = false;

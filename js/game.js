@@ -1,5 +1,13 @@
 import { Line, Square, TShape, LShape, JShape } from "./shapes.js";
-import { NUM_ROWS, NUM_COLS, GRID_SPACE } from "./gridSpecs.js";
+import {
+  NUM_ROWS,
+  NUM_COLS,
+  GRID_SPACE,
+  reachedBottomOfGrid,
+  reachedLeftSideOfGrid,
+  reachedRightSideOfGrid,
+  determineRowAndColumn,
+} from "./gridSpecs.js";
 
 const levelHeading = document.getElementById("level-heading");
 const rowsClearedHeading = document.getElementById("rows-cleared-heading");
@@ -13,6 +21,7 @@ class Game {
     this.grid = new Array(NUM_ROWS);
     this.availablePieces = ["line", "square", "tShape", "lShape", "jShape"];
     this.currentPiece = null;
+    this.numRotations = 0;
 
     for (let i = 0; i < this.grid.length; i++) {
       const newRow = new Array(NUM_COLS + 1).fill(null);
@@ -25,7 +34,7 @@ class Game {
 
   addBlocksToGrid = () => {
     this.currentPiece.blocks.forEach((block) => {
-      const [currentRow, currentCol] = this.determineRowAndColumn(block);
+      const [currentRow, currentCol] = determineRowAndColumn(block);
       this.grid[currentRow][currentCol] = block;
       const rowOfGrid = this.grid[currentRow];
       rowOfGrid[rowOfGrid.length - 1] += 1;
@@ -95,18 +104,6 @@ class Game {
     this.selectNewPiece();
   };
 
-  determineRowAndColumn = (block) => {
-    const currentRow = block.yCoordinate / GRID_SPACE;
-    const currentCol = block.xCoordinate / GRID_SPACE;
-    return [currentRow, currentCol];
-  };
-
-  reachedBottomOfGrid = (rowNum) => rowNum === NUM_ROWS - 1;
-
-  reachedLeftSideOfGrid = (colNum) => colNum === 0;
-
-  reachedRightSideOfGrid = (colNum) => colNum === NUM_COLS - 1;
-
   willCollide = (ledge) => {
     for (let i = 0; i < this.currentPiece.blocks.length; i++) {
       const currentBlock = this.currentPiece.blocks[i];
@@ -119,23 +116,23 @@ class Game {
         continue;
       }
 
-      const [currentRow, currentCol] = this.determineRowAndColumn(currentBlock);
+      const [currentRow, currentCol] = determineRowAndColumn(currentBlock);
 
       if (
         ledge === "bottom" &&
-        (this.reachedBottomOfGrid(currentRow) ||
+        (reachedBottomOfGrid(currentRow) ||
           this.grid[currentRow + 1][currentCol])
       ) {
         return true;
       } else if (
         ledge === "left" &&
-        (this.reachedLeftSideOfGrid(currentCol) ||
+        (reachedLeftSideOfGrid(currentCol) ||
           this.grid[currentRow][currentCol - 1])
       ) {
         return true;
       } else if (
         ledge === "right" &&
-        (this.reachedRightSideOfGrid(currentCol) ||
+        (reachedRightSideOfGrid(currentCol) ||
           this.grid[currentRow][currentCol + 1])
       ) {
         return true;
@@ -173,14 +170,37 @@ class Game {
     this.currentPiece.drawShape();
   };
 
+  rotationPermitted = () => {
+    const shapeName = this.currentPiece.shapeName;
+    if (shapeName === "square") {
+      return false;
+    }
+    const availableRotations = this.currentPiece.availableRotations;
+    const nextRotationNum = this.numRotations + 1;
+    const nextRotation =
+      availableRotations[nextRotationNum % availableRotations.length];
+
+    if (this.currentPiece.checkForRotationConflict(nextRotation, this.grid)) {
+      return false;
+    }
+
+    return true;
+  };
+
+  rotatePiece = () => {
+    if (!this.rotationPermitted()) return;
+    this.numRotations++;
+    this.currentPiece.rotate(this.numRotations);
+  };
+
   pieceControllerEvents = (e) => {
     const keyName = e.key;
     if (keyName === "ArrowRight") {
       this.movePieceRight();
     } else if (keyName === "ArrowLeft") {
       this.movePieceLeft();
-    } else if (keyName === "r") {
-      this.currentPiece.rotate();
+    } else if (keyName === "r" || keyName === "ArrowUp") {
+      this.rotatePiece();
     }
   };
 
