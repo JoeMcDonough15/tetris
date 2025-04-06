@@ -31,9 +31,12 @@ class Shape {
 export class Line extends Shape {
   constructor() {
     super(GREEN, 40);
+    this.shapeName = "line";
     this.shapeHeight = GRID_SPACE;
     this.shapeWidth = GRID_SPACE * this.numBlocks;
-    this.rotation = "horizontal"; // horizontal or vertical
+    // this.rotation = "horizontal"; // horizontal or vertical
+    this.availableRotations = ["horizontal", "vertical"];
+    this.rotation = this.availableRotations[0];
   }
 
   drawShape = () => {
@@ -103,6 +106,7 @@ export class Line extends Shape {
 export class Square extends Shape {
   constructor() {
     super(BLUE, 20);
+    this.shapeName = "square";
     this.shapeHeight = GRID_SPACE * (this.numBlocks / 2);
     this.shapeWidth = GRID_SPACE * (this.numBlocks / 2);
   }
@@ -142,9 +146,11 @@ export class Square extends Shape {
 export class TShape extends Shape {
   constructor() {
     super(RED, 40);
+    this.shapeName = "tShape";
     this.shapeHeight = GRID_SPACE * (this.numBlocks / 2);
     this.shapeWidth = GRID_SPACE * (this.numBlocks - 1);
-    this.rotation = "down"; // up, right, down, left
+    this.availableRotations = ["down", "left", "up", "right"];
+    this.rotation = this.availableRotations[0];
   }
 
   drawShape = () => {
@@ -302,9 +308,11 @@ export class TShape extends Shape {
 export class LShape extends Shape {
   constructor() {
     super(ORANGE, 20);
+    this.shapeName = "lShape";
     this.shapeHeight = GRID_SPACE * 3;
     this.shapeWidth = GRID_SPACE * 2;
-    this.rotation = "left"; // down, up, left, right
+    this.availableRotations = ["left", "up", "right", "down"];
+    this.rotation = availableRotations[0];
   }
 
   drawShape = () => {
@@ -459,9 +467,12 @@ export class LShape extends Shape {
 export class JShape extends Shape {
   constructor() {
     super(YELLOW, 0);
+    this.shapeName = "jShape";
     this.shapeHeight = GRID_SPACE * 4;
     this.shapeWidth = GRID_SPACE * 3;
-    this.rotation = "right"; // right, down, left, up
+    this.availableRotations = ["right", "down", "left", "up"];
+    this.rotation = availableRotations[0];
+    this.rotation = "right";
   }
 
   drawShape = () => {
