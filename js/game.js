@@ -1,4 +1,12 @@
-import { Line, Square, TShape, LShape, JShape } from "./shapes.js";
+import {
+  Line,
+  Square,
+  TShape,
+  LShape,
+  JShape,
+  SShape,
+  ZShape,
+} from "./shapes.js";
 import {
   NUM_ROWS,
   NUM_COLS,
@@ -19,7 +27,15 @@ class Game {
     this.gameSpeed = 1000;
     this.rowsCleared = 0;
     this.grid = new Array(NUM_ROWS);
-    this.availablePieces = ["line", "square", "tShape", "lShape", "jShape"];
+    this.availablePieces = [
+      "line",
+      "square",
+      "tShape",
+      "lShape",
+      "jShape",
+      "sShape",
+      "zShape",
+    ];
     this.currentPiece = null;
     this.numRotations = 0;
 
@@ -221,6 +237,10 @@ class Game {
       newPiece = new LShape();
     } else if (pieceName === "jShape") {
       newPiece = new JShape();
+    } else if (pieceName === "sShape") {
+      newPiece = new SShape();
+    } else if (pieceName === "zShape") {
+      newPiece = new ZShape();
     }
 
     this.currentPiece = newPiece;

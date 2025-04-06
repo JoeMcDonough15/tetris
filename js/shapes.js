@@ -14,6 +14,8 @@ const BLUE = "rgb(0 100 255)";
 const RED = "rgb(255 0 0)";
 const YELLOW = "rgb(255 255 0)";
 const ORANGE = "rgb(255 127 0)";
+const PINK = "rgb(255 0 255)";
+const PURPLE = "rgb(127 0 127)";
 
 class Shape {
   constructor(colorString) {
@@ -46,8 +48,8 @@ export class Line extends Shape {
   constructor() {
     super(GREEN);
     this.shapeName = "line";
-    this.shapeHeight = GRID_SPACE;
-    this.shapeWidth = GRID_SPACE * this.numBlocks;
+    // this.shapeHeight = GRID_SPACE;
+    // this.shapeWidth = GRID_SPACE * this.numBlocks;
     this.availableRotations = ["horizontal", "vertical"];
     this.rotation = this.availableRotations[0];
   }
@@ -139,8 +141,8 @@ export class Square extends Shape {
   constructor() {
     super(BLUE);
     this.shapeName = "square";
-    this.shapeHeight = GRID_SPACE * (this.numBlocks / 2);
-    this.shapeWidth = GRID_SPACE * (this.numBlocks / 2);
+    // this.shapeHeight = GRID_SPACE * (this.numBlocks / 2);
+    // this.shapeWidth = GRID_SPACE * (this.numBlocks / 2);
   }
 
   drawShape = () => {
@@ -175,8 +177,8 @@ export class TShape extends Shape {
   constructor() {
     super(RED);
     this.shapeName = "tShape";
-    this.shapeHeight = GRID_SPACE * (this.numBlocks / 2);
-    this.shapeWidth = GRID_SPACE * (this.numBlocks - 1);
+    // this.shapeHeight = GRID_SPACE * (this.numBlocks / 2);
+    // this.shapeWidth = GRID_SPACE * (this.numBlocks - 1);
     this.availableRotations = ["down", "left", "up", "right"];
     this.rotation = this.availableRotations[0];
   }
@@ -357,8 +359,8 @@ export class LShape extends Shape {
   constructor() {
     super(ORANGE);
     this.shapeName = "lShape";
-    this.shapeHeight = GRID_SPACE * 3;
-    this.shapeWidth = GRID_SPACE * 2;
+    // this.shapeHeight = GRID_SPACE * 3;
+    // this.shapeWidth = GRID_SPACE * 2;
     this.availableRotations = ["left", "up", "right", "down"];
     this.rotation = this.availableRotations[0];
   }
@@ -535,11 +537,10 @@ export class JShape extends Shape {
   constructor() {
     super(YELLOW);
     this.shapeName = "jShape";
-    this.shapeHeight = GRID_SPACE * 4;
-    this.shapeWidth = GRID_SPACE * 3;
+    // this.shapeHeight = GRID_SPACE * 4;
+    // this.shapeWidth = GRID_SPACE * 3;
     this.availableRotations = ["right", "down", "left", "up"];
     this.rotation = this.availableRotations[0];
-    this.rotation = "right";
   }
 
   drawShape = () => {
@@ -704,6 +705,207 @@ export class JShape extends Shape {
         gameGrid[oneRowDown][anchorBlockCol] ||
         gameGrid[oneRowUp][anchorBlockCol] ||
         gameGrid[oneRowUp][oneColRight]
+      ) {
+        return true;
+      }
+    }
+  };
+}
+
+export class SShape extends Shape {
+  constructor() {
+    super(PINK);
+    this.shapeName = "sShape";
+    // this.shapeHeight = GRID_SPACE * 4;
+    // this.shapeWidth = GRID_SPACE * 3;
+    this.availableRotations = ["horizontal", "vertical"];
+    this.rotation = this.availableRotations[0];
+  }
+
+  drawShape = () => {
+    this.blocks.forEach((block, index) => {
+      if (this.rotation === "horizontal") {
+        // handle ledges
+        if (index !== 2) {
+          block.isBottomLedge = true;
+        }
+        if (index === 0 || index === 3) {
+          block.isLeftLedge = true;
+        }
+        if (index === 1 || index === 2) {
+          block.isRightLedge = true;
+        }
+
+        // handle coordinates
+        if (index === 1) {
+          // place directly to the right of anchor
+          block.xCoordinate = this.anchorBlock.xCoordinate + GRID_SPACE;
+          block.yCoordinate = this.anchorBlock.yCoordinate;
+        } else if (index === 2) {
+          // place directly beneath anchor
+          block.xCoordinate = this.anchorBlock.xCoordinate;
+          block.yCoordinate = this.anchorBlock.yCoordinate + GRID_SPACE;
+        } else if (index === 3) {
+          // place to the bottom left of anchor
+          block.xCoordinate = this.anchorBlock.xCoordinate - GRID_SPACE;
+          block.yCoordinate = this.anchorBlock.yCoordinate + GRID_SPACE;
+        }
+      } else if (this.rotation === "vertical") {
+        // handle ledges
+        if (index === 0 || index === 3) {
+          block.isBottomLedge = true;
+        }
+        if (index !== 2) {
+          block.isLeftLedge = true;
+        }
+        if (index > 0) {
+          block.isRightLedge = true;
+        }
+
+        // handle coordinates
+        if (index === 1) {
+          // place directly above the anchor
+          block.xCoordinate = this.anchorBlock.xCoordinate;
+          block.yCoordinate = this.anchorBlock.yCoordinate - GRID_SPACE;
+        } else if (index === 2) {
+          // place directly to the right of anchor
+          block.xCoordinate = this.anchorBlock.xCoordinate + GRID_SPACE;
+          block.yCoordinate = this.anchorBlock.yCoordinate;
+        } else if (index === 3) {
+          // place to the bottom right of anchor
+          block.xCoordinate = this.anchorBlock.xCoordinate + GRID_SPACE;
+          block.yCoordinate = this.anchorBlock.yCoordinate + GRID_SPACE;
+        }
+      }
+      block.drawBlock();
+    });
+  };
+
+  checkForRotationConflict = (directionToRotate, gameGrid) => {
+    const [anchorBlockRow, anchorBlockCol] = determineRowAndColumn(
+      this.anchorBlock
+    );
+    if (reachedTopOfGrid(anchorBlockRow)) return true;
+    const oneRowUp = anchorBlockRow - 1;
+    const oneRowDown = anchorBlockRow + 1;
+    const oneColLeft = anchorBlockCol - 1;
+    const oneColRight = anchorBlockCol + 1;
+    if (directionToRotate === "horizontal") {
+      if (
+        reachedLeftSideOfGrid(anchorBlockCol) ||
+        gameGrid[oneRowDown][anchorBlockCol] ||
+        gameGrid[oneRowDown][oneColLeft]
+      ) {
+        return true;
+      }
+    } else if (directionToRotate === "vertical") {
+      // we can't go out of range because we already have blocks to the right, left, and below anchor
+      if (
+        gameGrid[oneRowUp][anchorBlockCol] ||
+        gameGrid[oneRowDown][oneColLeft]
+      ) {
+        return true;
+      }
+    }
+  };
+}
+
+export class ZShape extends Shape {
+  constructor() {
+    super(PURPLE);
+    this.shapeName = "zShape";
+    // this.shapeHeight = GRID_SPACE * 4;
+    // this.shapeWidth = GRID_SPACE * 3;
+    this.availableRotations = ["horizontal", "vertical"];
+    this.rotation = this.availableRotations[0];
+  }
+
+  drawShape = () => {
+    this.blocks.forEach((block, index) => {
+      if (this.rotation === "horizontal") {
+        // handle ledges
+        if (index > 0) {
+          block.isBottomLedge = true;
+        }
+
+        if (index === 1 || index === 2) {
+          block.isLeftLedge = true;
+        }
+
+        if (index === 0 || index === 3) {
+          block.isRightLedge = true;
+        }
+
+        // handle coordinates
+        if (index === 1) {
+          // place directly to the left of anchor
+          block.xCoordinate = this.anchorBlock.xCoordinate - GRID_SPACE;
+          block.yCoordinate = this.anchorBlock.yCoordinate;
+        } else if (index === 2) {
+          // place directly beneath anchor
+          block.xCoordinate = this.anchorBlock.xCoordinate;
+          block.yCoordinate = this.anchorBlock.yCoordinate + GRID_SPACE;
+        } else if (index === 3) {
+          // place bottom right of anchor
+          block.xCoordinate = this.anchorBlock.xCoordinate + GRID_SPACE;
+          block.yCoordinate = this.anchorBlock.yCoordinate + GRID_SPACE;
+        }
+      } else if (this.rotation === "vertical") {
+        // handle ledges
+        if (index === 0 || index === 3) {
+          block.isBottomLedge = true;
+        }
+
+        if (index > 0) {
+          block.isLeftLedge = true;
+        }
+
+        if (index !== 2) {
+          block.isRightLedge = true;
+        }
+        // handle coordinates
+        if (index === 1) {
+          // place directly above anchor
+          block.xCoordinate = this.anchorBlock.xCoordinate;
+          block.yCoordinate = this.anchorBlock.yCoordinate - GRID_SPACE;
+        } else if (index === 2) {
+          // place directly to the left of anchor
+          block.xCoordinate = this.anchorBlock.xCoordinate - GRID_SPACE;
+          block.yCoordinate = this.anchorBlock.yCoordinate;
+        } else if (index === 3) {
+          // place bottom left of anchor
+          block.xCoordinate = this.anchorBlock.xCoordinate - GRID_SPACE;
+          block.yCoordinate = this.anchorBlock.yCoordinate + GRID_SPACE;
+        }
+      }
+      block.drawBlock();
+    });
+  };
+
+  checkForRotationConflict = (directionToRotate, gameGrid) => {
+    const [anchorBlockRow, anchorBlockCol] = determineRowAndColumn(
+      this.anchorBlock
+    );
+    if (reachedTopOfGrid(anchorBlockRow)) return true;
+    const oneRowUp = anchorBlockRow - 1;
+    const oneRowDown = anchorBlockRow + 1;
+    const oneColLeft = anchorBlockCol - 1;
+    const oneColRight = anchorBlockCol + 1;
+    if (directionToRotate === "horizontal") {
+      // we can only go out of range on the right side
+      if (
+        reachedRightSideOfGrid(anchorBlockCol) ||
+        gameGrid[oneRowDown][anchorBlockCol] ||
+        gameGrid[oneRowDown][oneColRight]
+      ) {
+        return true;
+      }
+    } else if (directionToRotate === "vertical") {
+      // we don't have to worry about going out of range on the left, right, or bottom because we have pieces
+      // to the left, right, and below the anchor in the current, horizontal, position
+      if (
+        gameGrid[oneRowUp][anchorBlockCol] ||
+        gameGrid[oneRowDown][oneColLeft]
       ) {
         return true;
       }
