@@ -152,7 +152,7 @@ class Game {
         return;
       }
       this.currentPiece.clearShape();
-      this.currentPiece.initialBlock.yCoordinate += GRID_SPACE;
+      this.currentPiece.anchorBlock.yCoordinate += GRID_SPACE;
       this.currentPiece.drawShape();
     }, this.gameSpeed);
 
@@ -162,14 +162,14 @@ class Game {
   movePieceLeft = () => {
     if (this.willCollide("left")) return;
     this.currentPiece.clearShape();
-    this.currentPiece.initialBlock.xCoordinate -= GRID_SPACE;
+    this.currentPiece.anchorBlock.xCoordinate -= GRID_SPACE;
     this.currentPiece.drawShape();
   };
 
   movePieceRight = () => {
     if (this.willCollide("right")) return;
     this.currentPiece.clearShape();
-    this.currentPiece.initialBlock.xCoordinate += GRID_SPACE;
+    this.currentPiece.anchorBlock.xCoordinate += GRID_SPACE;
     this.currentPiece.drawShape();
   };
 
