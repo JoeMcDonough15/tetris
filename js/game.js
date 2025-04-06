@@ -184,14 +184,6 @@ class Game {
       return false;
     }
 
-    // } else if (shapeName === "jShape") {
-    //   if (nextRotation === "up") {
-    //   } else if (nextRotation === "down") {
-    //   } else if (nextRotation === "left") {
-    //   } else if (nextRotation === "right") {
-    //   }
-    // }
-
     return true;
   };
 

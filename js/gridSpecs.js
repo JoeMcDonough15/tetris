@@ -10,6 +10,8 @@ export const determineRowAndColumn = (block) => {
   return [currentRow, currentCol];
 };
 
+export const reachedTopOfGrid = (rowNum) => rowNum <= 0;
+
 export const reachedBottomOfGrid = (rowNum) => rowNum >= NUM_ROWS - 1;
 
 export const reachedLeftSideOfGrid = (colNum) => colNum <= 0;
