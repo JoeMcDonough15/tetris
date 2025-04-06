@@ -11,14 +11,16 @@ import GameGrid from "./gameGrid.js";
 import { GRID_SPACE, NUM_ROWS, NUM_COLS } from "./constants.js";
 
 const levelHeading = document.getElementById("level-heading");
+const totalScoreHeading = document.getElementById("total-score-heading");
 const rowsClearedHeading = document.getElementById("rows-cleared-heading");
 
 class Tetris {
   constructor() {
     this.gameOver = false;
+    this.gameSpeed = 400;
     this.level = 0;
-    this.gameSpeed = 1000;
-    this.rowsCleared = 0;
+    this.totalRowsCleared = 0;
+    this.playerTotalScore = 0;
     this.game = new GameGrid(NUM_ROWS, NUM_COLS);
     this.availablePieces = [
       "line",
@@ -74,10 +76,35 @@ class Tetris {
     }
   };
 
-  updateRowsCleared = () => {
-    this.rowsCleared++;
-    rowsClearedHeading.innerText = `Rows Cleared: ${this.rowsCleared}`;
-    if (this.rowsCleared >= 5 && this.rowsCleared % 5 === 0) {
+  clearedTenRows = () => {
+    return this.totalRowsCleared >= 10 && this.totalRowsCleared % 10 === 0;
+  };
+
+  clearedTwentyRows = () => {
+    return this.totalRowsCleared >= 20 && this.totalRowsCleared % 20 === 0;
+  };
+
+  awardPoints = (rows) => {
+    let awardedPoints;
+    if (rows === 1) {
+      awardedPoints = 40;
+    } else if (rows === 2) {
+      awardedPoints = 100;
+    } else if (rows === 3) {
+      awardedPoints = 300;
+    } else if (rows === 4) {
+      awardedPoints = 1200;
+    }
+    this.playerTotalScore += awardedPoints * (this.level + 1);
+    totalScoreHeading.innerText = `Total Score: ${this.playerTotalScore}`;
+  };
+
+  updateRowsCleared = (rows) => {
+    this.totalRowsCleared += rows;
+    rowsClearedHeading.innerText = `Rows Cleared: ${this.totalRowsCleared}`;
+    if (this.level < 9 && this.clearedTenRows()) {
+      this.levelUp();
+    } else if (this.level >= 9 && this.clearedTwentyRows()) {
       this.levelUp();
     }
   };
@@ -89,13 +116,18 @@ class Tetris {
   };
 
   checkForClearedRows = () => {
+    let rowsCleared = 0;
     for (let rowNum = this.game.grid.length - 1; rowNum >= 0; rowNum--) {
       const row = this.game.grid[rowNum];
       while (row[row.length - 1] === NUM_COLS) {
-        this.updateRowsCleared();
+        rowsCleared++;
         this.destroyBlocksOfRow(rowNum);
         this.moveRemainingBlocksDown(rowNum);
       }
+    }
+    if (rowsCleared) {
+      this.updateRowsCleared(rowsCleared);
+      this.awardPoints(rowsCleared);
     }
   };
 
