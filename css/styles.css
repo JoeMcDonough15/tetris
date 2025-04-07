@@ -45,3 +45,16 @@ body {
 #canvas {
   border: 1px solid white;
 }
+
+.preview-img-container {
+  align-items: center;
+  display: flex;
+  height: 100px;
+  justify-content: center;
+  width: 100px;
+}
+
+.preview-img {
+  object-fit: cover;
+  width: 100%;
+}

@@ -9,8 +9,9 @@ import {
 } from "./shapes.js";
 import GameGrid from "./gameGrid.js";
 import { GRID_SPACE, NUM_ROWS, NUM_COLS } from "./constants.js";
+import { canvas, ctx } from "./canvas.js";
 
-const subHeadersContainer = document.getElementById("sub-headers-container");
+const previewImgContainer = document.getElementById("preview-img-container");
 const levelHeading = document.getElementById("level-heading");
 const totalScoreHeading = document.getElementById("total-score-heading");
 const rowsClearedHeading = document.getElementById("rows-cleared-heading");
@@ -42,6 +43,9 @@ class Tetris {
   addBlocksToGrid = () => {
     this.currentPiece.blocks.forEach((block) => {
       const [currentRow, currentCol] = this.game.determineRowAndColumn(block);
+      if (this.game.reachedTopOfGrid(currentRow)) {
+        this.gameOver = true;
+      }
       this.game.grid[currentRow][currentCol] = block;
       const rowOfGrid = this.game.grid[currentRow];
       rowOfGrid[rowOfGrid.length - 1] += 1;
@@ -138,7 +142,11 @@ class Tetris {
     document.removeEventListener("keydown", this.pieceControllerEvents);
     this.addBlocksToGrid();
     this.checkForClearedRows();
-    this.selectNewPiece();
+    if (!this.gameOver) {
+      this.selectNewPiece();
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
   };
 
   willCollide = (ledge) => {
@@ -268,10 +276,9 @@ class Tetris {
   };
 
   setPreviewOfNextPiece = () => {
-    const childrenOfSubHeadersContainer = subHeadersContainer.children;
-    const existingPreviewImg = childrenOfSubHeadersContainer[3];
+    const existingPreviewImg = previewImgContainer.children[0];
     if (existingPreviewImg) {
-      subHeadersContainer.removeChild(existingPreviewImg);
+      previewImgContainer.removeChild(existingPreviewImg);
     }
     const previewImg = document.createElement("img");
     previewImg.setAttribute(
@@ -279,7 +286,8 @@ class Tetris {
       `/images/${this.pieceQueue[0].shapeName}-preview.png`
     );
     previewImg.setAttribute("alt", "preview-of-next-shape");
-    subHeadersContainer.appendChild(previewImg);
+    previewImg.classList.add("preview-img");
+    previewImgContainer.appendChild(previewImg);
   };
 
   selectNewPiece = () => {
@@ -296,9 +304,6 @@ class Tetris {
 
     this.dropPiece();
   };
-
-  // TODOS
-  speedDown = () => {};
 }
 
 export default Tetris;
