@@ -43,6 +43,7 @@ export class Line extends Shape {
     this.shapeName = "line";
     this.availableRotations = ["horizontal", "vertical"];
     this.rotation = this.availableRotations[0];
+    this.preview = "/images/Line-preview.png";
   }
 
   drawShape = () => {
@@ -132,6 +133,7 @@ export class Square extends Shape {
   constructor() {
     super(BLUE);
     this.shapeName = "square";
+    this.preview = "/images/Square-preview.png";
   }
 
   drawShape = () => {

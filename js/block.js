@@ -1,10 +1,5 @@
-import { NUM_ROWS, NUM_COLS, GRID_SPACE } from "./constants.js";
-
-// Canvas
-const canvas = document.getElementById("canvas");
-canvas.width = NUM_COLS * GRID_SPACE;
-canvas.height = NUM_ROWS * GRID_SPACE;
-const ctx = canvas.getContext("2d");
+import { GRID_SPACE } from "./constants.js";
+import { canvas, ctx } from "./canvas.js";
 
 class Block {
   constructor(color) {

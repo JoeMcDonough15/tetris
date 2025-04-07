@@ -9,16 +9,20 @@ import {
 } from "./shapes.js";
 import GameGrid from "./gameGrid.js";
 import { GRID_SPACE, NUM_ROWS, NUM_COLS } from "./constants.js";
+import { canvas, ctx } from "./canvas.js";
 
+const previewImgContainer = document.getElementById("preview-img-container");
 const levelHeading = document.getElementById("level-heading");
+const totalScoreHeading = document.getElementById("total-score-heading");
 const rowsClearedHeading = document.getElementById("rows-cleared-heading");
 
 class Tetris {
   constructor() {
     this.gameOver = false;
+    this.gameSpeed = 400;
     this.level = 0;
-    this.gameSpeed = 1000;
-    this.rowsCleared = 0;
+    this.totalRowsCleared = 0;
+    this.playerTotalScore = 0;
     this.game = new GameGrid(NUM_ROWS, NUM_COLS);
     this.availablePieces = [
       "line",
@@ -29,6 +33,7 @@ class Tetris {
       "sShape",
       "zShape",
     ];
+    this.pieceQueue = [];
     this.currentPiece = null;
     this.numRotations = 0;
   }
@@ -38,6 +43,9 @@ class Tetris {
   addBlocksToGrid = () => {
     this.currentPiece.blocks.forEach((block) => {
       const [currentRow, currentCol] = this.game.determineRowAndColumn(block);
+      if (this.game.reachedTopOfGrid(currentRow)) {
+        this.gameOver = true;
+      }
       this.game.grid[currentRow][currentCol] = block;
       const rowOfGrid = this.game.grid[currentRow];
       rowOfGrid[rowOfGrid.length - 1] += 1;
@@ -74,10 +82,35 @@ class Tetris {
     }
   };
 
-  updateRowsCleared = () => {
-    this.rowsCleared++;
-    rowsClearedHeading.innerText = `Rows Cleared: ${this.rowsCleared}`;
-    if (this.rowsCleared >= 5 && this.rowsCleared % 5 === 0) {
+  clearedTenRows = () => {
+    return this.totalRowsCleared >= 10 && this.totalRowsCleared % 10 === 0;
+  };
+
+  clearedTwentyRows = () => {
+    return this.totalRowsCleared >= 20 && this.totalRowsCleared % 20 === 0;
+  };
+
+  awardPoints = (rows) => {
+    let awardedPoints;
+    if (rows === 1) {
+      awardedPoints = 40;
+    } else if (rows === 2) {
+      awardedPoints = 100;
+    } else if (rows === 3) {
+      awardedPoints = 300;
+    } else if (rows === 4) {
+      awardedPoints = 1200;
+    }
+    this.playerTotalScore += awardedPoints * (this.level + 1);
+    totalScoreHeading.innerText = `Total Score: ${this.playerTotalScore}`;
+  };
+
+  updateRowsCleared = (rows) => {
+    this.totalRowsCleared += rows;
+    rowsClearedHeading.innerText = `Rows Cleared: ${this.totalRowsCleared}`;
+    if (this.level < 9 && this.clearedTenRows()) {
+      this.levelUp();
+    } else if (this.level >= 9 && this.clearedTwentyRows()) {
       this.levelUp();
     }
   };
@@ -89,13 +122,18 @@ class Tetris {
   };
 
   checkForClearedRows = () => {
+    let rowsCleared = 0;
     for (let rowNum = this.game.grid.length - 1; rowNum >= 0; rowNum--) {
       const row = this.game.grid[rowNum];
       while (row[row.length - 1] === NUM_COLS) {
-        this.updateRowsCleared();
+        rowsCleared++;
         this.destroyBlocksOfRow(rowNum);
         this.moveRemainingBlocksDown(rowNum);
       }
+    }
+    if (rowsCleared) {
+      this.updateRowsCleared(rowsCleared);
+      this.awardPoints(rowsCleared);
     }
   };
 
@@ -104,7 +142,11 @@ class Tetris {
     document.removeEventListener("keydown", this.pieceControllerEvents);
     this.addBlocksToGrid();
     this.checkForClearedRows();
-    this.selectNewPiece();
+    if (!this.gameOver) {
+      this.selectNewPiece();
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
   };
 
   willCollide = (ledge) => {
@@ -208,7 +250,7 @@ class Tetris {
     }
   };
 
-  selectNewPiece = () => {
+  addPieceToQueue = () => {
     const generatedIndex = Math.floor(
       Math.random() * this.availablePieces.length
     );
@@ -230,14 +272,38 @@ class Tetris {
     } else if (pieceName === "zShape") {
       newPiece = new ZShape();
     }
+    this.pieceQueue.push(newPiece);
+  };
 
-    this.currentPiece = newPiece;
+  setPreviewOfNextPiece = () => {
+    const existingPreviewImg = previewImgContainer.children[0];
+    if (existingPreviewImg) {
+      previewImgContainer.removeChild(existingPreviewImg);
+    }
+    const previewImg = document.createElement("img");
+    previewImg.setAttribute(
+      "src",
+      `/images/${this.pieceQueue[0].shapeName}-preview.png`
+    );
+    previewImg.setAttribute("alt", "preview-of-next-shape");
+    previewImg.classList.add("preview-img");
+    previewImgContainer.appendChild(previewImg);
+  };
+
+  selectNewPiece = () => {
+    if (!this.pieceQueue.length) {
+      for (let i = 0; i < 2; i++) {
+        this.addPieceToQueue();
+      }
+    } else {
+      this.addPieceToQueue();
+    }
+
+    this.currentPiece = this.pieceQueue.shift();
+    this.setPreviewOfNextPiece();
 
     this.dropPiece();
   };
-
-  // TODOS
-  speedDown = () => {};
 }
 
 export default Tetris;
