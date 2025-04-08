@@ -165,13 +165,6 @@ class Tetris {
         this.game.determineRowAndColumn(currentBlock);
 
       if (
-        this.game.reachedTopOfGrid(currentRow) &&
-        (ledge === "left" || ledge === "right")
-      ) {
-        return;
-      }
-
-      if (
         ledge === "bottom" &&
         (this.game.reachedBottomOfGrid(currentRow) ||
           this.game.grid[currentRow + 1][currentCol])
@@ -264,8 +257,10 @@ class Tetris {
   pieceControllerEvents = (e) => {
     const keyName = e.key;
     if (keyName === "ArrowRight") {
+      if (this.currentPiece.anchorBlock.yCoordinate < 0) return;
       this.moveShape("right");
     } else if (keyName === "ArrowLeft") {
+      if (this.currentPiece.anchorBlock.yCoordinate < 0) return;
       this.moveShape("left");
     } else if (keyName === "r" || keyName === "ArrowUp") {
       this.rotatePiece();

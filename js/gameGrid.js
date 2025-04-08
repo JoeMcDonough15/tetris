@@ -14,8 +14,8 @@ class GameGrid {
   }
 
   determineRowAndColumn = (block) => {
-    const currentRow = block.yCoordinate / GRID_SPACE;
-    const currentCol = block.xCoordinate / GRID_SPACE;
+    const currentRow = Math.floor(block.yCoordinate / GRID_SPACE);
+    const currentCol = Math.floor(block.xCoordinate / GRID_SPACE);
     return [currentRow, currentCol];
   };
 
