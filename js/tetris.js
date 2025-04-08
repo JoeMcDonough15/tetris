@@ -16,6 +16,10 @@ const levelHeading = document.getElementById("level-heading");
 const totalScoreHeading = document.getElementById("total-score-heading");
 const rowsClearedHeading = document.getElementById("rows-cleared-heading");
 
+const soundPath = (soundEffect) => {
+  return `/sounds/${soundEffect}.mp3`;
+};
+
 class Tetris {
   constructor() {
     this.gameOver = false;
@@ -39,6 +43,9 @@ class Tetris {
     this.currentPiece = null;
     this.currentPiecePlaced = false;
     this.numRotations = 0;
+    this.blockSound = new Audio(soundPath("block-landing"));
+    this.rotateSound = new Audio(soundPath("rotate"));
+    this.clearedRowSound = new Audio(soundPath("cleared-row"));
   }
 
   // Game methods
@@ -112,6 +119,7 @@ class Tetris {
 
   updateRowsCleared = () => {
     if (!this.rowsCleared) return;
+    this.clearedRowSound.play();
     this.totalRowsCleared += this.rowsCleared;
     rowsClearedHeading.innerText = `Rows Cleared: ${this.totalRowsCleared}`;
     if (this.level < 9 && this.clearedTenRows()) {
@@ -140,6 +148,7 @@ class Tetris {
 
   placePiece = () => {
     document.removeEventListener("keydown", this.pieceControllerEvents);
+    this.blockSound.play();
     this.addBlocksToGrid();
     this.checkForClearedRows();
     this.updateRowsCleared();
@@ -250,6 +259,7 @@ class Tetris {
 
   rotatePiece = () => {
     if (!this.rotationPermitted()) return;
+    this.rotateSound.play();
     this.numRotations++;
     this.currentPiece.rotate(this.numRotations);
   };
