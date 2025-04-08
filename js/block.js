@@ -6,7 +6,7 @@ class Block {
     this.borderColor = "rgb(0 0 0)";
     this.fillColor = color;
     this.xCoordinate = Math.floor(canvas.width / 2 - GRID_SPACE);
-    this.yCoordinate = -20;
+    this.yCoordinate = 0;
     this.isBottomLedge = false;
     this.isLeftLedge = false;
     this.isRightLedge = false;

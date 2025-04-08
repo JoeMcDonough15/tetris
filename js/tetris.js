@@ -267,10 +267,8 @@ class Tetris {
   pieceControllerEvents = (e) => {
     const keyName = e.key;
     if (keyName === "ArrowRight") {
-      if (this.currentPiece.anchorBlock.yCoordinate < 0) return;
       this.moveShape("right");
     } else if (keyName === "ArrowLeft") {
-      if (this.currentPiece.anchorBlock.yCoordinate < 0) return;
       this.moveShape("left");
     } else if (keyName === "r" || keyName === "ArrowUp") {
       this.rotatePiece();
@@ -310,10 +308,7 @@ class Tetris {
       previewImgContainer.removeChild(existingPreviewImg);
     }
     const previewImg = document.createElement("img");
-    previewImg.setAttribute(
-      "src",
-      `/images/${this.pieceQueue[0].shapeName}-preview.png`
-    );
+    previewImg.setAttribute("src", this.pieceQueue[0].preview);
     previewImg.setAttribute("alt", "preview-of-next-shape");
     previewImg.classList.add("preview-img");
     previewImgContainer.appendChild(previewImg);
@@ -332,6 +327,8 @@ class Tetris {
     this.setPreviewOfNextPiece();
 
     this.currentPiecePlaced = false;
+    this.numRotations = 0;
+    this.currentPiece.drawShape();
     this.gravityDrop();
   };
 }
