@@ -23,6 +23,7 @@ const soundPath = (soundEffect) => {
 class Tetris {
   constructor() {
     this.gameOver = false;
+    this.gamePaused = false;
     this.gameSpeed = 400;
     this.level = 0;
     this.totalRowsCleared = 0;
@@ -49,6 +50,12 @@ class Tetris {
   }
 
   // Game methods
+
+  pauseGame = (e) => {
+    if (e.key === "p") {
+      this.gamePaused = !this.gamePaused;
+    }
+  };
 
   addBlocksToGrid = () => {
     this.currentPiece.blocks.forEach((block) => {
@@ -147,7 +154,7 @@ class Tetris {
   };
 
   placePiece = () => {
-    document.removeEventListener("keydown", this.pieceControllerEvents);
+    // document.removeEventListener("keydown", this.pieceControllerEvents);
     this.blockSound.play();
     this.addBlocksToGrid();
     this.checkForClearedRows();
@@ -211,10 +218,12 @@ class Tetris {
       this.moveShape("down");
     }, this.gameSpeed);
 
-    document.addEventListener("keydown", this.pieceControllerEvents);
+    // document.addEventListener("keydown", this.pieceControllerEvents);
   };
 
   moveShape = (direction) => {
+    if (this.gamePaused) return;
+
     if (this.willCollide(direction === "down" ? "bottom" : direction)) {
       if (direction === "down") {
         this.placePiece();
@@ -265,6 +274,7 @@ class Tetris {
   };
 
   pieceControllerEvents = (e) => {
+    if (this.gamePaused || this.currentPiecePlaced) return;
     const keyName = e.key;
     if (keyName === "ArrowRight") {
       this.moveShape("right");
