@@ -35,6 +35,10 @@ class Shape {
     this.rotation = this.availableRotations[rotationIndex];
     this.drawShape();
   };
+
+  previewImgPath = () => {
+    return `/images/${this.shapeName}-preview.png`;
+  };
 }
 
 export class Line extends Shape {
@@ -43,7 +47,7 @@ export class Line extends Shape {
     this.shapeName = "line";
     this.availableRotations = ["horizontal", "vertical"];
     this.rotation = this.availableRotations[0];
-    this.preview = "/images/Line-preview.png";
+    this.preview = this.previewImgPath();
   }
 
   drawShape = () => {
@@ -133,7 +137,7 @@ export class Square extends Shape {
   constructor() {
     super(BLUE);
     this.shapeName = "square";
-    this.preview = "/images/Square-preview.png";
+    this.preview = this.previewImgPath();
   }
 
   drawShape = () => {
@@ -170,6 +174,7 @@ export class TShape extends Shape {
     this.shapeName = "tShape";
     this.availableRotations = ["down", "left", "up", "right"];
     this.rotation = this.availableRotations[0];
+    this.preview = this.previewImgPath();
   }
 
   drawShape = () => {
@@ -350,6 +355,7 @@ export class LShape extends Shape {
     this.shapeName = "lShape";
     this.availableRotations = ["left", "up", "right", "down"];
     this.rotation = this.availableRotations[0];
+    this.preview = this.previewImgPath();
   }
 
   drawShape = () => {
@@ -526,6 +532,7 @@ export class JShape extends Shape {
     this.shapeName = "jShape";
     this.availableRotations = ["right", "down", "left", "up"];
     this.rotation = this.availableRotations[0];
+    this.preview = this.previewImgPath();
   }
 
   drawShape = () => {
@@ -703,6 +710,7 @@ export class SShape extends Shape {
     this.shapeName = "sShape";
     this.availableRotations = ["horizontal", "vertical"];
     this.rotation = this.availableRotations[0];
+    this.preview = this.previewImgPath();
   }
 
   drawShape = () => {
@@ -798,6 +806,7 @@ export class ZShape extends Shape {
     this.shapeName = "zShape";
     this.availableRotations = ["horizontal", "vertical"];
     this.rotation = this.availableRotations[0];
+    this.preview = this.previewImgPath();
   }
 
   drawShape = () => {

@@ -16,12 +16,19 @@ const levelHeading = document.getElementById("level-heading");
 const totalScoreHeading = document.getElementById("total-score-heading");
 const rowsClearedHeading = document.getElementById("rows-cleared-heading");
 
+const soundPath = (soundEffect) => {
+  return `/sounds/${soundEffect}.mp3`;
+};
+
 class Tetris {
   constructor() {
     this.gameOver = false;
+    this.gamePaused = false;
     this.gameSpeed = 400;
     this.level = 0;
     this.totalRowsCleared = 0;
+    this.softDropPoints = 0;
+    this.rowsCleared = 0;
     this.playerTotalScore = 0;
     this.game = new GameGrid(NUM_ROWS, NUM_COLS);
     this.availablePieces = [
@@ -35,16 +42,27 @@ class Tetris {
     ];
     this.pieceQueue = [];
     this.currentPiece = null;
+    this.currentPiecePlaced = false;
     this.numRotations = 0;
+    this.blockSound = new Audio(soundPath("block-landing"));
+    this.rotateSound = new Audio(soundPath("rotate"));
+    this.clearedRowSound = new Audio(soundPath("cleared-row"));
   }
 
   // Game methods
+
+  pauseGame = (e) => {
+    if (e.key === "p") {
+      this.gamePaused = !this.gamePaused;
+    }
+  };
 
   addBlocksToGrid = () => {
     this.currentPiece.blocks.forEach((block) => {
       const [currentRow, currentCol] = this.game.determineRowAndColumn(block);
       if (this.game.reachedTopOfGrid(currentRow)) {
         this.gameOver = true;
+        return;
       }
       this.game.grid[currentRow][currentCol] = block;
       const rowOfGrid = this.game.grid[currentRow];
@@ -55,7 +73,7 @@ class Tetris {
   destroyBlocksOfRow = (rowNum) => {
     const currentRow = this.game.grid[rowNum];
     currentRow.forEach((block, index) => {
-      if (index <= currentRow.length - 2) {
+      if (index < currentRow.length - 1) {
         block.clearBlock();
         this.game.grid[rowNum][index] = null;
       }
@@ -68,7 +86,7 @@ class Tetris {
     for (let rowNum = clearedRowNum - 1; rowNum >= 0; rowNum--) {
       const rowToMove = this.game.grid[rowNum];
       rowToMove.forEach((currentBlock, index) => {
-        if (index <= rowToMove.length - 2) {
+        if (index < rowToMove.length - 1) {
           if (currentBlock) {
             currentBlock.moveBlockDownOneRow();
             rowToMove[index] = null;
@@ -90,23 +108,26 @@ class Tetris {
     return this.totalRowsCleared >= 20 && this.totalRowsCleared % 20 === 0;
   };
 
-  awardPoints = (rows) => {
-    let awardedPoints;
-    if (rows === 1) {
-      awardedPoints = 40;
-    } else if (rows === 2) {
-      awardedPoints = 100;
-    } else if (rows === 3) {
-      awardedPoints = 300;
-    } else if (rows === 4) {
-      awardedPoints = 1200;
+  awardPoints = () => {
+    let awardedPoints = 0;
+    if (this.rowsCleared === 1) {
+      awardedPoints += 40;
+    } else if (this.rowsCleared === 2) {
+      awardedPoints += 100;
+    } else if (this.rowsCleared === 3) {
+      awardedPoints += 300;
+    } else if (this.rowsCleared === 4) {
+      awardedPoints += 1200;
     }
-    this.playerTotalScore += awardedPoints * (this.level + 1);
+    this.playerTotalScore +=
+      awardedPoints * (this.level + 1) + this.softDropPoints;
     totalScoreHeading.innerText = `Total Score: ${this.playerTotalScore}`;
   };
 
-  updateRowsCleared = (rows) => {
-    this.totalRowsCleared += rows;
+  updateRowsCleared = () => {
+    if (!this.rowsCleared) return;
+    this.clearedRowSound.play();
+    this.totalRowsCleared += this.rowsCleared;
     rowsClearedHeading.innerText = `Rows Cleared: ${this.totalRowsCleared}`;
     if (this.level < 9 && this.clearedTenRows()) {
       this.levelUp();
@@ -122,31 +143,26 @@ class Tetris {
   };
 
   checkForClearedRows = () => {
-    let rowsCleared = 0;
-    for (let rowNum = this.game.grid.length - 1; rowNum >= 0; rowNum--) {
+    for (let rowNum = NUM_ROWS - 1; rowNum >= 0; rowNum--) {
       const row = this.game.grid[rowNum];
       while (row[row.length - 1] === NUM_COLS) {
-        rowsCleared++;
+        this.rowsCleared++;
         this.destroyBlocksOfRow(rowNum);
         this.moveRemainingBlocksDown(rowNum);
       }
     }
-    if (rowsCleared) {
-      this.updateRowsCleared(rowsCleared);
-      this.awardPoints(rowsCleared);
-    }
   };
 
-  placePiece = (interval) => {
-    clearInterval(interval);
-    document.removeEventListener("keydown", this.pieceControllerEvents);
+  placePiece = () => {
+    // document.removeEventListener("keydown", this.pieceControllerEvents);
+    this.blockSound.play();
     this.addBlocksToGrid();
     this.checkForClearedRows();
-    if (!this.gameOver) {
-      this.selectNewPiece();
-    } else {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
+    this.updateRowsCleared();
+    this.awardPoints();
+    this.rowsCleared = 0;
+    this.softDropPoints = 0;
+    this.currentPiecePlaced = true;
   };
 
   willCollide = (ledge) => {
@@ -188,32 +204,49 @@ class Tetris {
     return false;
   };
 
-  dropPiece = () => {
+  gravityDrop = () => {
     const fallInterval = setInterval(() => {
-      if (this.willCollide("bottom")) {
-        this.placePiece(fallInterval);
+      if (this.currentPiecePlaced) {
+        clearInterval(fallInterval);
+        if (!this.gameOver) {
+          this.selectNewPiece();
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
         return;
       }
-      this.currentPiece.clearShape();
-      this.currentPiece.anchorBlock.yCoordinate += GRID_SPACE;
-      this.currentPiece.drawShape();
+      this.moveShape("down");
     }, this.gameSpeed);
 
-    document.addEventListener("keydown", this.pieceControllerEvents);
+    // document.addEventListener("keydown", this.pieceControllerEvents);
   };
 
-  movePieceLeft = () => {
-    if (this.willCollide("left")) return;
+  moveShape = (direction) => {
+    if (this.gamePaused) return;
+
+    if (this.willCollide(direction === "down" ? "bottom" : direction)) {
+      if (direction === "down") {
+        this.placePiece();
+      }
+      return;
+    }
     this.currentPiece.clearShape();
-    this.currentPiece.anchorBlock.xCoordinate -= GRID_SPACE;
+    if (direction === "left") {
+      this.currentPiece.anchorBlock.xCoordinate -= GRID_SPACE;
+    } else if (direction === "right") {
+      this.currentPiece.anchorBlock.xCoordinate += GRID_SPACE;
+    } else if (direction === "down") {
+      this.currentPiece.anchorBlock.yCoordinate += GRID_SPACE;
+    }
     this.currentPiece.drawShape();
   };
 
-  movePieceRight = () => {
-    if (this.willCollide("right")) return;
-    this.currentPiece.clearShape();
-    this.currentPiece.anchorBlock.xCoordinate += GRID_SPACE;
-    this.currentPiece.drawShape();
+  softDrop = () => {
+    if (this.currentPiecePlaced) {
+      return;
+    }
+    this.moveShape("down");
+    this.softDropPoints++;
   };
 
   rotationPermitted = () => {
@@ -235,18 +268,22 @@ class Tetris {
 
   rotatePiece = () => {
     if (!this.rotationPermitted()) return;
+    this.rotateSound.play();
     this.numRotations++;
     this.currentPiece.rotate(this.numRotations);
   };
 
   pieceControllerEvents = (e) => {
+    if (this.gamePaused || this.currentPiecePlaced) return;
     const keyName = e.key;
     if (keyName === "ArrowRight") {
-      this.movePieceRight();
+      this.moveShape("right");
     } else if (keyName === "ArrowLeft") {
-      this.movePieceLeft();
+      this.moveShape("left");
     } else if (keyName === "r" || keyName === "ArrowUp") {
       this.rotatePiece();
+    } else if (keyName === "ArrowDown") {
+      this.softDrop();
     }
   };
 
@@ -281,10 +318,7 @@ class Tetris {
       previewImgContainer.removeChild(existingPreviewImg);
     }
     const previewImg = document.createElement("img");
-    previewImg.setAttribute(
-      "src",
-      `/images/${this.pieceQueue[0].shapeName}-preview.png`
-    );
+    previewImg.setAttribute("src", this.pieceQueue[0].preview);
     previewImg.setAttribute("alt", "preview-of-next-shape");
     previewImg.classList.add("preview-img");
     previewImgContainer.appendChild(previewImg);
@@ -302,7 +336,10 @@ class Tetris {
     this.currentPiece = this.pieceQueue.shift();
     this.setPreviewOfNextPiece();
 
-    this.dropPiece();
+    this.currentPiecePlaced = false;
+    this.numRotations = 0;
+    this.currentPiece.drawShape();
+    this.gravityDrop();
   };
 }
 
