@@ -216,8 +216,6 @@ class Tetris {
       }
       this.moveShape("down");
     }, this.gameSpeed);
-
-    // document.addEventListener("keydown", this.pieceControllerEvents);
   };
 
   moveShape = (direction) => {
