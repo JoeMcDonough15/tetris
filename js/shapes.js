@@ -717,7 +717,7 @@ export class SShape extends Shape {
     this.blocks.forEach((block, index) => {
       if (this.rotation === "horizontal") {
         // handle ledges
-        if (index !== 2) {
+        if (index > 0) {
           block.isBottomLedge = true;
         }
         if (index === 0 || index === 3) {
