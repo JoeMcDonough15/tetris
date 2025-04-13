@@ -208,7 +208,7 @@ class Tetris {
       if (this.currentPiecePlaced) {
         clearInterval(fallInterval);
         if (!this.gameOver) {
-          this.selectNewPiece();
+          this.dequeuePiece();
         } else {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
@@ -286,7 +286,7 @@ class Tetris {
     }
   };
 
-  addPieceToQueue = () => {
+  selectNewPiece = () => {
     const generatedIndex = Math.floor(
       Math.random() * this.availablePieces.length
     );
@@ -309,6 +309,12 @@ class Tetris {
     } else if (pieceName === "zShape") {
       newPiece = new ZShape();
     }
+
+    return newPiece;
+  };
+
+  addPieceToQueue = () => {
+    const newPiece = this.selectNewPiece();
     this.pieceQueue.push(newPiece);
   };
 
@@ -324,7 +330,7 @@ class Tetris {
     previewImgContainer.appendChild(previewImg);
   };
 
-  selectNewPiece = () => {
+  dequeuePiece = () => {
     if (!this.pieceQueue.length) {
       for (let i = 0; i < 2; i++) {
         this.addPieceToQueue();
