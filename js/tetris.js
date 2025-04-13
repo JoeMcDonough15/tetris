@@ -154,7 +154,6 @@ class Tetris {
   };
 
   placePiece = () => {
-    // document.removeEventListener("keydown", this.pieceControllerEvents);
     this.blockSound.play();
     this.addBlocksToGrid();
     this.checkForClearedRows();
@@ -293,6 +292,7 @@ class Tetris {
     );
 
     const pieceName = this.availablePieces[generatedIndex];
+
     let newPiece;
     if (pieceName === "line") {
       newPiece = new Line();
