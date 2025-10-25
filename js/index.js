@@ -1,10 +1,10 @@
 import Tetris from "./tetris.js";
 
 const game = new Tetris();
-const upButton = document.getElementById("btn-up");
-const downButton = document.getElementById("btn-down");
-const leftButton = document.getElementById("btn-left");
-const rightButton = document.getElementById("btn-right");
+const rotateButton = document.getElementById("btn-up");
+const softDropButton = document.getElementById("btn-down");
+const moveLeftButton = document.getElementById("btn-left");
+const moveRightButton = document.getElementById("btn-right");
 const pauseButton = document.getElementById("btn-pause");
 
 // mouse events
@@ -13,12 +13,29 @@ pauseButton.addEventListener("click", () => {
   game.pauseGame();
 });
 
+rotateButton.addEventListener("click", () => {
+  game.rotatePiece();
+});
+
+moveLeftButton.addEventListener("click", () => {
+  game.moveShape("left");
+});
+
+moveRightButton.addEventListener("click", () => {
+  game.moveShape("right");
+});
+
+softDropButton.addEventListener("click", () => {
+  game.softDrop();
+});
+
 // key events
 window.addEventListener("keyup", (e) => {
   if (e.key === "p") {
     game.pauseGame();
   }
 });
+
 window.addEventListener("keydown", (e) => {
   if (game.gamePaused || game.currentPiecePlaced) return;
   const keyName = e.key;
