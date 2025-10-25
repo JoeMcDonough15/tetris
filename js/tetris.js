@@ -51,10 +51,8 @@ class Tetris {
 
   // Game methods
 
-  pauseGame = (e) => {
-    if (e.key === "p") {
-      this.gamePaused = !this.gamePaused;
-    }
+  pauseGame = () => {
+    this.gamePaused = !this.gamePaused;
   };
 
   addBlocksToGrid = () => {
@@ -268,20 +266,6 @@ class Tetris {
     this.rotateSound.play();
     this.numRotations++;
     this.currentPiece.rotate(this.numRotations);
-  };
-
-  pieceControllerEvents = (e) => {
-    if (this.gamePaused || this.currentPiecePlaced) return;
-    const keyName = e.key;
-    if (keyName === "ArrowRight") {
-      this.moveShape("right");
-    } else if (keyName === "ArrowLeft") {
-      this.moveShape("left");
-    } else if (keyName === "r" || keyName === "ArrowUp") {
-      this.rotatePiece();
-    } else if (keyName === "ArrowDown") {
-      this.softDrop();
-    }
   };
 
   selectNewPiece = () => {
