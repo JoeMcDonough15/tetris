@@ -13,23 +13,34 @@
     <title>Tetris</title>
   </head>
   <body>
+    <h1 class="main-header">Tetris</h1>
     <main class="main-container">
-      <section class="section-one">
-        <h1 class="main-header">Tetris</h1>
+      <section class="game-grid-container">
         <canvas id="canvas"></canvas>
       </section>
 
-      <section id="sub-headers-container" class="sub-headers-container">
-        <h3 id="level-heading">Level: 0</h3>
-        <h3 id="total-score-heading">Total Score: 0</h3>
-        <h3 id="rows-cleared-heading">Rows Cleared: 0</h3>
+      <section class="game-details-container">
+        <div class="sub-headers-container">
+          <h3 id="level-heading" class="level-heading">Level: 0</h3>
+          <h3 id="total-score-heading" class="total-score-heading">Score: 0</h3>
+          <h3 id="rows-cleared-heading" class="rows-cleared-heading">
+            Rows: 0
+          </h3>
+        </div>
+
         <div id="preview-img-container" class="preview-img-container"></div>
-        <div id="controller-container">
-          <button id="btn-pause">⏯️</button>
-          <button id="btn-up">⬆️</button>
-          <button id="btn-left">⬅️</button>
-          <button id="btn-right">➡️</button>
-          <button id="btn-down">⬇️</button>
+        <div class="controller-container">
+          <div class="controller-row-one">
+            <button id="btn-up" class="controller-button">⬆️</button>
+          </div>
+          <div class="controller-row-two">
+            <button id="btn-left" class="controller-button">⬅️</button>
+            <button id="btn-pause" class="controller-button">⏯️</button>
+            <button id="btn-right" class="controller-button">➡️</button>
+          </div>
+          <div class="controller-row-three">
+            <button id="btn-down" class="controller-button">⬇️</button>
+          </div>
         </div>
       </section>
     </main>

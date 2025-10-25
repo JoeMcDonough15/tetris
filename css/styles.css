@@ -7,38 +7,59 @@
 body {
   background: black;
   color: pink;
-  min-height: 100vh;
+  font-family: "Pixelify Sans", sans-serif;
 }
 
-.main-container,
-.sub-headers-container,
-.section-one {
-  align-items: center;
-  display: flex;
-  gap: 20px;
-  height: 100%;
-  justify-content: center;
-  margin: auto;
-  max-width: 600px;
-}
-
-.section-one,
-.sub-headers-container {
-  flex-direction: column;
+body,
+h3 {
+  font-size: min(4.5vw, 32px);
 }
 
 .main-header {
-  font-family: "Pixelify Sans", sans-serif;
   font-optical-sizing: auto;
-  font-size: 4rem;
+  font-size: clamp(64px, 18vw, 120px);
   font-style: normal;
   font-weight: 500;
-  margin-top: 0.5em;
+  margin: 0.25em auto;
+  width: fit-content;
 }
 
-.sub-headers-container {
-  align-items: flex-start;
+.main-container {
+  display: flex;
+  justify-content: center;
   margin: auto;
+  max-width: 600px;
+  width: 95%;
+}
+
+.game-grid-container,
+.game-details-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.game-details-container {
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3%;
+}
+
+.sub-headers-container,
+.controller-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+.level-heading,
+.total-score-heading,
+.rows-cleared-heading {
+  align-items: center;
+  display: flex;
+  justify-content: center;
   width: 100%;
 }
 
@@ -49,12 +70,65 @@ body {
 .preview-img-container {
   align-items: center;
   display: flex;
-  height: 100px;
+  flex-direction: column;
   justify-content: center;
-  width: 100px;
+  max-width: 170px;
+  width: 25vw;
 }
 
 .preview-img {
   object-fit: cover;
   width: 100%;
+}
+
+.controller-row-one,
+.controller-row-two,
+.controller-row-three {
+  display: flex;
+  width: 100%;
+}
+
+.controller-container {
+  gap: 10px;
+}
+
+.controller-row-one,
+.controller-row-three {
+  justify-content: center;
+}
+
+.controller-row-two {
+  justify-content: space-between;
+}
+
+.controller-button {
+  align-items: center;
+  border-radius: 100%;
+  display: flex;
+  font-size: inherit;
+  height: 9.375vw;
+  justify-content: center;
+  max-height: 70px;
+  max-width: 70px;
+  width: 9.375vw;
+}
+
+.controller-button:hover {
+  cursor: pointer;
+}
+
+@media screen and (max-width: 300px) {
+  .main-container {
+    width: 100%;
+  }
+
+  .game-details-container {
+    padding: 0;
+  }
+}
+
+@media screen and (min-width: 400px) {
+  .game-details-container {
+    padding: 0 7%;
+  }
 }

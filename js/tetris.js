@@ -119,14 +119,14 @@ class Tetris {
     }
     this.playerTotalScore +=
       awardedPoints * (this.level + 1) + this.softDropPoints;
-    totalScoreHeading.innerText = `Total Score: ${this.playerTotalScore}`;
+    totalScoreHeading.innerText = `Score: ${this.playerTotalScore}`;
   };
 
   updateRowsCleared = () => {
     if (!this.rowsCleared) return;
     this.clearedRowSound.play();
     this.totalRowsCleared += this.rowsCleared;
-    rowsClearedHeading.innerText = `Rows Cleared: ${this.totalRowsCleared}`;
+    rowsClearedHeading.innerText = `Rows: ${this.totalRowsCleared}`;
     if (this.level < 9 && this.clearedTenRows()) {
       this.levelUp();
     } else if (this.level >= 9 && this.clearedTwentyRows()) {
