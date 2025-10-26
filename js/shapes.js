@@ -37,7 +37,7 @@ class Shape {
   };
 
   previewImgPath = () => {
-    return `/images/${this.shapeName}-preview.png`;
+    return `/images/previews/${this.shapeName}-preview.png`;
   };
 }
 

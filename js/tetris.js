@@ -217,7 +217,9 @@ class Tetris {
   };
 
   moveShape = (direction) => {
-    if (this.gamePaused) return;
+    if (this.currentPiecePlaced || this.gamePaused) {
+      return;
+    }
 
     if (this.willCollide(direction === "down" ? "bottom" : direction)) {
       if (direction === "down") {
@@ -237,16 +239,13 @@ class Tetris {
   };
 
   softDrop = () => {
-    if (this.currentPiecePlaced) {
-      return;
-    }
     this.moveShape("down");
     this.softDropPoints++;
   };
 
   rotationPermitted = () => {
     const shapeName = this.currentPiece.shapeName;
-    if (shapeName === "square") {
+    if (shapeName === "square" || this.gamePaused || this.currentPiecePlaced) {
       return false;
     }
     const availableRotations = this.currentPiece.availableRotations;

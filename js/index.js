@@ -37,7 +37,6 @@ window.addEventListener("keyup", (e) => {
 });
 
 window.addEventListener("keydown", (e) => {
-  if (game.gamePaused || game.currentPiecePlaced) return;
   const keyName = e.key;
   if (keyName === "ArrowRight") {
     game.moveShape("right");

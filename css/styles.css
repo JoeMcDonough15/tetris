@@ -103,6 +103,7 @@ h3 {
 
 .controller-button {
   align-items: center;
+  background: pink;
   border-radius: 100%;
   display: flex;
   font-size: inherit;
@@ -115,6 +116,10 @@ h3 {
 
 .controller-button:hover {
   cursor: pointer;
+}
+
+.button-icon {
+  width: 50%;
 }
 
 @media screen and (max-width: 300px) {
