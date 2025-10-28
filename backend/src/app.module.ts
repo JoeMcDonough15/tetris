@@ -9,7 +9,7 @@ import { ScoresModule } from './scores/scores.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../../frontend'),
+      rootPath: join(__dirname, '../../frontend'),
       renderPath: '/',
     }),
     ConfigModule.forRoot(),

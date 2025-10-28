@@ -10,28 +10,28 @@ import {
 } from '@nestjs/common';
 import { ScoresService } from './scores.service';
 import type { UUID } from 'crypto';
-import { NewHighScore } from './dto/new-high-score.dto';
+import type { NewHighScoreDto } from './dto/new-high-score.dto';
+import type { HighScore } from 'generated/prisma';
 
 @Controller('scores')
 export class ScoresController {
   constructor(private readonly scoresService: ScoresService) {}
 
   @Get()
-  findAll() {
-    return [
-      { name: 'Bob', score: 200 },
-      { name: 'Mary', score: 300 },
-    ];
+  async findAll(): Promise<HighScore[]> {
+    return this.scoresService.findAll();
   }
 
   @Post()
-  createNewScore(@Body() newHighScore: NewHighScore) {
-    return {
-      ...newHighScore,
-    };
+  async createNewScore(
+    @Body() newHighScore: NewHighScoreDto,
+  ): Promise<HighScore> {
+    return this.scoresService.addHighScore(newHighScore);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteHighScore(@Param('id') id: UUID) {}
+  async deleteHighScore(@Param('id') id: UUID) {
+    await this.scoresService.deleteHighScore(id);
+  }
 }

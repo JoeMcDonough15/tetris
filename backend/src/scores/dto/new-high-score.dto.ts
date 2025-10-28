@@ -1,4 +1,4 @@
-export class NewHighScore {
+export interface NewHighScoreDto {
   name: string;
   score: number;
 }
