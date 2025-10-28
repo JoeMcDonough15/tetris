@@ -15,7 +15,7 @@ datasource db {
 }
 
 model HighScore {
-  id Int @default(autoincrement()) @id
+  id String @id @default(uuid())
   name String
   score Int
   createdAt DateTime @default(now())
