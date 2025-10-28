@@ -2,6 +2,8 @@
 
 A Tetris game to learn how to use the Canvas API.
 
+# Setup
+
 ## Run the app's server in development environment
 
 cd backend
