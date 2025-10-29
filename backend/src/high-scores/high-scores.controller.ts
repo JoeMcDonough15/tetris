@@ -7,10 +7,11 @@ import {
   HttpStatus,
   Param,
   Post,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { ScoresService } from './high-scores.service';
 import type { UUID } from 'crypto';
-import type { NewHighScoreDto } from './dto/new-high-score.dto';
+import { NewHighScoreDto } from './dto/new-high-score.dto';
 import type { HighScore } from 'generated/prisma';
 
 @Controller('api/high-scores')
@@ -29,9 +30,9 @@ export class ScoresController {
     return this.scoresService.addHighScore(newHighScore);
   }
 
-  @Delete(':id')
+  @Delete(':uuid')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteHighScore(@Param('id') id: UUID) {
+  async deleteHighScore(@Param('uuid', ParseUUIDPipe) id: UUID) {
     await this.scoresService.deleteHighScore(id);
   }
 }

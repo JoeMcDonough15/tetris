@@ -1,6 +1,6 @@
 # Tetris
 
-An object oriented Tetris game to learn how to use the Canvas API on the frontend combined with Nest.js on the backend and a PostgreSQL database to persist high scores using Prisma ORM.
+An object oriented Tetris game animated with the Canvas API on the frontend combined with Nest.js on the backend and a PostgreSQL database to persist high scores using Prisma ORM.
 
 # Setup
 
@@ -34,7 +34,14 @@ high scores: /high-scores
 
 # API Endpoints
 
-All database exceptions are status code 500
+All database exceptions:
+
+```json
+{
+  "statusCode": 500,
+  "message": "Internal server error"
+}
+```
 
 ## High Scores
 
@@ -43,6 +50,8 @@ All database exceptions are status code 500
 GET api/high-scores
 
 Request body: none
+
+Request headers: none
 
 Exceptions: none
 
@@ -53,19 +62,31 @@ Response body:
 ```json
 [
   {
-    "name": "Joe",
-    "score": 5000,
+    "id": "d07bb721-e921-47a4-92af-d1d3f126f53d",
+    "name": "Leila",
+    "score": 9000,
+    "createdAt": "2025-10-29T01:45:31.358Z"
   },
   {
-    "name": "Leila",
-    "score": 3500,
-  },
-];
+    "id": "edbda94c-acce-4131-90e9-31eb731bc95f",
+    "name": "Joe",
+    "score": 7000,
+    "createdAt": "2025-10-29T03:40:06.114Z"
+  }
+]
 ```
 
 ### Create a new high score
 
 POST api/high-scores
+
+Request headers:
+
+```json
+{
+  "Content-Type": "application/json"
+}
+```
 
 Request body:
 
@@ -78,7 +99,18 @@ Request body:
 
 Exceptions:
 
-Bad Request 400 if name is not a string that is at least 1 character long or if score is not a number or is a number less than 0.
+```json
+{
+  "message": [
+    "name must be a string",
+    "name should not be empty",
+    "score must be an integer number"
+    "score must be a positive number"
+  ],
+  "error": "Bad Request",
+  "statusCode": 400
+}
+```
 
 Response status: 201
 
@@ -86,8 +118,10 @@ Response body:
 
 ```json
 {
-  "name": "Joe",
-  "score": 5000
+  "id": "edbda94c-acce-4131-90e9-31eb731bc95f",
+  "name": "Mary",
+  "score": 1000,
+  "createdAt": "2025-10-29T03:40:06.114Z"
 }
 ```
 
@@ -97,9 +131,28 @@ DELETE api/high-scores/[:id]
 
 Request body: none
 
+Request headers: none
+
 Exceptions:
 
-Bad Request 400 if id is not a valid UUID or Resource Not Found 404 if a high-score by the provided id does not exist
+```json
+
+// uuid validation fail
+
+{
+  "message": "Validation failed (uuid is expected)",
+  "error": "Bad Request",
+  "statusCode": 400
+}
+
+// missing uuid or no high score found with that uuid
+
+{
+  "message":"Cannot DELETE /api/high-scores/",
+  "error":"Not Found",
+  "statusCode":404
+}
+```
 
 Response status: 204
 
