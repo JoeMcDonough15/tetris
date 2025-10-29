@@ -13,7 +13,7 @@ import type { UUID } from 'crypto';
 import type { NewHighScoreDto } from './dto/new-high-score.dto';
 import type { HighScore } from 'generated/prisma';
 
-@Controller('scores')
+@Controller('api/high-scores')
 export class ScoresController {
   constructor(private readonly scoresService: ScoresService) {}
 
