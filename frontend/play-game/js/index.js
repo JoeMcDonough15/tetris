@@ -1,4 +1,4 @@
-import Tetris from "./tetris.js";
+import Tetris from "./game/tetris.js";
 
 const game = new Tetris();
 const rotateButton = document.getElementById("btn-up");

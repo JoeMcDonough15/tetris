@@ -10,7 +10,9 @@ import { ScoresModule } from './high-scores/high-scores.module';
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../../frontend'),
-      renderPath: '/',
+      serveStaticOptions: {
+        fallthrough: true,
+      },
     }),
     ConfigModule.forRoot(),
     ScoresModule,

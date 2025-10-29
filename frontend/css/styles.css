@@ -15,21 +15,65 @@ h3 {
   font-size: min(4.5vw, 32px);
 }
 
+a,
+button {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  border: 0;
+}
+
 .main-header {
   font-optical-sizing: auto;
-  font-size: clamp(64px, 18vw, 120px);
+  font-size: clamp(50px, 18vw, 120px);
   font-style: normal;
   font-weight: 500;
   margin: 0.25em auto;
-  width: fit-content;
+  width: max-content;
 }
 
 .main-container {
-  display: flex;
-  justify-content: center;
   margin: auto;
   max-width: 600px;
   width: 95%;
+}
+
+.main-menu-container,
+.play-game-container,
+.high-scores-container {
+  display: flex;
+  justify-content: center;
+}
+
+.main-menu-container,
+.high-scores-container {
+  align-items: center;
+}
+
+.main-menu-container {
+  height: 100vh;
+}
+
+.nav-col {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.nav-button {
+  background: pink;
+}
+
+.nav-link {
+  display: inline-block;
+  padding: 50px;
+  width: 100%;
 }
 
 .game-grid-container,
