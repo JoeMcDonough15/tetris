@@ -8,7 +8,7 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
-import { ScoresService } from './scores.service';
+import { ScoresService } from './high-scores.service';
 import type { UUID } from 'crypto';
 import type { NewHighScoreDto } from './dto/new-high-score.dto';
 import type { HighScore } from 'generated/prisma';

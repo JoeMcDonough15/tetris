@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ScoresService } from './scores.service';
-import { ScoresController } from './scores.controller';
+import { ScoresService } from './high-scores.service';
+import { ScoresController } from './high-scores.controller';
 import { PrismaModule } from 'nestjs-prisma';
 
 @Module({
