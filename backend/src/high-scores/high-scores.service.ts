@@ -9,7 +9,9 @@ export class HighScoresService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(): Promise<HighScore[]> {
-    return this.prisma.highScore.findMany();
+    return this.prisma.highScore.findMany({
+      orderBy: [{ score: 'desc' }],
+    });
   }
 
   async addHighScore(data: NewHighScoreDto): Promise<HighScore> {
