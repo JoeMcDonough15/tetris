@@ -5,7 +5,7 @@ import { NewHighScoreDto } from './dto/new-high-score.dto';
 import { UUID } from 'crypto';
 
 @Injectable()
-export class ScoresService {
+export class HighScoresService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(): Promise<HighScore[]> {
@@ -19,6 +19,8 @@ export class ScoresService {
   }
 
   async deleteHighScore(id: UUID): Promise<void> {
-    await this.prisma.highScore.delete({ where: { id } });
+    await this.prisma.highScore.delete({
+      where: { id },
+    });
   }
 }

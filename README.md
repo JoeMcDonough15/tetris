@@ -100,6 +100,9 @@ Request body:
 Exceptions:
 
 ```json
+
+// request body validation fail (message array can include one or more of these strings)
+
 {
   "message": [
     "name must be a string",
@@ -137,6 +140,14 @@ Exceptions:
 
 ```json
 
+// missing uuid
+
+{
+  "message":"Cannot DELETE /api/high-scores/",
+  "error":"Not Found",
+  "statusCode":404
+}
+
 // uuid validation fail
 
 {
@@ -145,13 +156,6 @@ Exceptions:
   "statusCode": 400
 }
 
-// missing uuid or no high score found with that uuid
-
-{
-  "message":"Cannot DELETE /api/high-scores/",
-  "error":"Not Found",
-  "statusCode":404
-}
 ```
 
 Response status: 204

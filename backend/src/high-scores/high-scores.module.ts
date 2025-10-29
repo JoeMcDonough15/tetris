@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ScoresService } from './high-scores.service';
-import { ScoresController } from './high-scores.controller';
+import { HighScoresService } from './high-scores.service';
+import { HighScoresController } from './high-scores.controller';
 import { PrismaModule } from 'nestjs-prisma';
 
 @Module({
-  controllers: [ScoresController],
-  providers: [ScoresService],
+  controllers: [HighScoresController],
+  providers: [HighScoresService],
   imports: [
     PrismaModule.forRoot({
       prismaServiceOptions: {},

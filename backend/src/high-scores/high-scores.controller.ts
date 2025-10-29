@@ -9,30 +9,30 @@ import {
   Post,
   ParseUUIDPipe,
 } from '@nestjs/common';
-import { ScoresService } from './high-scores.service';
+import { HighScoresService } from './high-scores.service';
 import type { UUID } from 'crypto';
 import { NewHighScoreDto } from './dto/new-high-score.dto';
 import type { HighScore } from 'generated/prisma';
 
 @Controller('api/high-scores')
-export class ScoresController {
-  constructor(private readonly scoresService: ScoresService) {}
+export class HighScoresController {
+  constructor(private readonly highScoresService: HighScoresService) {}
 
   @Get()
   async findAll(): Promise<HighScore[]> {
-    return this.scoresService.findAll();
+    return this.highScoresService.findAll();
   }
 
   @Post()
   async createNewScore(
     @Body() newHighScore: NewHighScoreDto,
   ): Promise<HighScore> {
-    return this.scoresService.addHighScore(newHighScore);
+    return this.highScoresService.addHighScore(newHighScore);
   }
 
   @Delete(':uuid')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteHighScore(@Param('uuid', ParseUUIDPipe) id: UUID) {
-    await this.scoresService.deleteHighScore(id);
+    await this.highScoresService.deleteHighScore(id);
   }
 }
