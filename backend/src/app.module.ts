@@ -4,14 +4,16 @@ import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
+import { ScoresModule } from './high-scores/high-scores.module';
 
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../../frontend'),
+      rootPath: join(__dirname, '../../frontend'),
       renderPath: '/',
     }),
     ConfigModule.forRoot(),
+    ScoresModule,
   ],
   // controllers: [AppController],
   // providers: [AppService],
