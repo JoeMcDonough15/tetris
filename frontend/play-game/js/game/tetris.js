@@ -1,3 +1,4 @@
+import { GRID_SPACE, NUM_ROWS, NUM_COLS } from "./constants.js";
 import {
   Line,
   Square,
@@ -8,13 +9,14 @@ import {
   ZShape,
 } from "./shapes.js";
 import GameGrid from "./gameGrid.js";
-import { GRID_SPACE, NUM_ROWS, NUM_COLS } from "./constants.js";
+import HighScores from "../../../high-scores/js/api/highScoresApi.js";
 import { canvas, ctx } from "./canvas.js";
 
 const previewImgContainer = document.getElementById("preview-img-container");
 const levelHeading = document.getElementById("level-heading");
 const totalScoreHeading = document.getElementById("total-score-heading");
 const rowsClearedHeading = document.getElementById("rows-cleared-heading");
+const highScoresObj = new HighScores();
 
 const soundPath = (soundEffect) => {
   return `/sounds/${soundEffect}.mp3`;
@@ -51,6 +53,22 @@ class Tetris {
 
   // Game methods
 
+  endGame = () => {
+    this.gameOver = true;
+    this.checkForHighScore();
+  };
+
+  checkForHighScore = async () => {
+    const existingHighScores = await highScoresObj.getHighScores();
+    const lastPlaceScoreObj = existingHighScores[existingHighScores.length - 1];
+    const highScoreAchieved = this.playerTotalScore > lastPlaceScoreObj.score;
+    if (highScoreAchieved) {
+      // render a form to collect player's name
+      // on submit of that form, call highScoresObj.addScoreToHighScores() with the player details
+      // if existingHighScores.length === 10, remove the last score from existingHighScores
+    }
+  };
+
   pauseGame = () => {
     this.gamePaused = !this.gamePaused;
   };
@@ -59,7 +77,8 @@ class Tetris {
     this.currentPiece.blocks.forEach((block) => {
       const [currentRow, currentCol] = this.game.determineRowAndColumn(block);
       if (this.game.reachedTopOfGrid(currentRow)) {
-        this.gameOver = true;
+        this.endGame();
+        // this.gameOver = true;
         return;
       }
       this.game.grid[currentRow][currentCol] = block;
