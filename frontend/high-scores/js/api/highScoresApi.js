@@ -10,8 +10,6 @@ class HighScores {
 
   // add a player's score to the high scores.
   addScoreToHighScores = async (playerDetails) => {
-    // * playerDetails will be an object that matches the NewHighScoreDto
-    // 1. fetch with a post method to /api/high-scores to create a new high score
     return fetch("/api/high-scores", {
       method: "POST",
       headers: {
@@ -23,7 +21,6 @@ class HighScores {
 
   // remove a high score by id since we are only ever keeping 10 high scores
   removeHighScore = async (idOfScoreToRemove) => {
-    // 1. fetch with a delete method to /api/high-scores/idOfScoreToRemove
     return fetch(`/api/high-scores/${idOfScoreToRemove}`, {
       method: "DELETE",
     });

@@ -7,6 +7,9 @@ const moveLeftButton = document.getElementById("btn-left");
 const moveRightButton = document.getElementById("btn-right");
 const pauseButton = document.getElementById("btn-pause");
 
+const scoreHeading = document.getElementById("total-score-heading");
+scoreHeading.innerText = `Score: ${game.playerTotalScore}`;
+
 // mouse events
 
 pauseButton.addEventListener("click", () => {
