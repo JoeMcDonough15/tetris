@@ -10,39 +10,24 @@ import {
 } from "./shapes.js";
 import GameGrid from "./gameGrid.js";
 import HighScores from "../../../high-scores/js/api/highScoresApi.js";
-import { canvas, ctx } from "./canvas.js";
+import {
+  createNavButtons,
+  createPlayerNameForm,
+} from "../../../utils/index.js";
 
 const playGameContainer = document.getElementById("play-game-container");
 const gameGridContainer = document.getElementById("game-grid-container");
 const gameDetailsContainer = document.getElementById("game-details-container");
-
-// render a main menu or view high scores buttons options
-const navButtonsContainer = document.createElement("nav");
-const mainMenuButton = document.createElement("button");
-const highScoresButton = document.createElement("button");
-const mainMenuLink = document.createElement("a");
-const highScoresLink = document.createElement("a");
-mainMenuLink.setAttribute("href", "/");
-mainMenuLink.innerText = "Return to Main Menu";
-highScoresLink.setAttribute("href", "/high-scores");
-highScoresLink.innerText = "View High Scores";
-navButtonsContainer.classList.add("nav-buttons");
-mainMenuButton.classList.add("nav-button");
-mainMenuLink.classList.add("nav-link");
-highScoresButton.classList.add("nav-button");
-highScoresLink.classList.add("nav-link");
-
-// append links to buttons and buttons to nav
-mainMenuButton.appendChild(mainMenuLink);
-highScoresButton.appendChild(highScoresLink);
-navButtonsContainer.append(mainMenuButton, highScoresButton);
-
 const mainHeader = document.getElementById("main-header");
 const previewImgContainer = document.getElementById("preview-img-container");
 const levelHeading = document.getElementById("level-heading");
 const totalScoreHeading = document.getElementById("total-score-heading");
 const rowsClearedHeading = document.getElementById("rows-cleared-heading");
 const highScoresObj = new HighScores();
+const navButtons = createNavButtons(
+  { buttonDestination: "/", buttonText: "Return to Main Menu" },
+  { buttonDestination: "/high-scores", buttonText: "View High Scores" }
+);
 
 const soundPath = (soundEffect) => {
   return `/sounds/${soundEffect}.mp3`;
@@ -57,7 +42,7 @@ class Tetris {
     this.totalRowsCleared = 0;
     this.softDropPoints = 0;
     this.rowsCleared = 0;
-    this.playerTotalScore = 90000000;
+    this.playerTotalScore = 0;
     this.idOfScoreToRemove = "";
     this.game = new GameGrid(NUM_ROWS, NUM_COLS);
     this.availablePieces = [
@@ -81,52 +66,29 @@ class Tetris {
   // Game methods
 
   endGame = () => {
-    // set the gameOver state to true
     this.gameOver = true;
-    // clear the canvas, the game grid, and the game details
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
     gameGridContainer.remove();
     gameDetailsContainer.remove();
-    // TODO - replace the play-game-container's contents with a game over component
     mainHeader.innerText = "Game Over";
-    // check for high score
     this.checkForHighScore();
   };
 
   checkForHighScore = async () => {
     const existingHighScores = await highScoresObj.getHighScores();
     const lastPlaceScoreObj = existingHighScores[existingHighScores.length - 1];
-    const highScoreAchieved = this.playerTotalScore > lastPlaceScoreObj.score; // boolean
+    const highScoreAchieved =
+      existingHighScores.length < 10 ||
+      (lastPlaceScoreObj && this.playerTotalScore > lastPlaceScoreObj.score);
 
     if (highScoreAchieved) {
-      // render a form to collect player's name appended to the play-game-container element
-      const playerNameForm = document.createElement("form");
-      playerNameForm.setAttribute("id", "player-name-form");
-      playerNameForm.setAttribute("action", "");
-      playerNameForm.setAttribute("method", ""); // no action or method needed since we will call the api using our highScoresObj methods.
-      const playerNameLabel = document.createElement("label");
-      playerNameLabel.innerText = "Enter your name: ";
-      const playerNameInput = document.createElement("input");
-      const submitButton = document.createElement("button");
-      playerNameInput.setAttribute("type", "text");
-      playerNameInput.setAttribute("name", "player-name");
-      // ! require that the name text input not be empty when submitting the form
-      playerNameInput.setAttribute("required", true);
-      // submitButton.setAttribute("type", "submit");
-      submitButton.innerText = "Submit";
-      submitButton.addEventListener("click", (e) => {
-        e.preventDefault();
-        this.submitHighScore();
-      });
-
-      playerNameForm.append(playerNameLabel, playerNameInput, submitButton);
+      const playerNameForm = createPlayerNameForm(this.submitHighScore);
       playGameContainer.appendChild(playerNameForm);
 
       if (existingHighScores.length === 10) {
         this.idOfScoreToRemove = lastPlaceScoreObj.id; // never keep more than 10 high scores in the database
       }
     } else {
-      playGameContainer.appendChild(navButtonsContainer);
+      playGameContainer.appendChild(navButtons);
     }
   };
 
@@ -138,14 +100,15 @@ class Tetris {
       name: playerName,
       score: this.playerTotalScore,
     };
-    await highScoresObj.addScoreToHighScores(playerDetails);
 
     if (this.idOfScoreToRemove) {
       await highScoresObj.removeHighScore(this.idOfScoreToRemove);
     }
 
+    await highScoresObj.addScoreToHighScores(playerDetails);
+
     playGameContainer.removeChild(playerNameForm);
-    playGameContainer.appendChild(navButtonsContainer);
+    playGameContainer.appendChild(navButtons);
   };
 
   pauseGame = () => {
@@ -299,17 +262,16 @@ class Tetris {
   };
 
   gravityDrop = () => {
-    this.endGame();
-    // const fallInterval = setInterval(() => {
-    //   if (this.currentPiecePlaced) {
-    //     clearInterval(fallInterval);
-    //     if (!this.gameOver) {
-    //       this.dequeuePiece();
-    //     }
-    //     return;
-    //   }
-    //   this.moveShape("down");
-    // }, this.gameSpeed);
+    const fallInterval = setInterval(() => {
+      if (this.currentPiecePlaced) {
+        clearInterval(fallInterval);
+        if (!this.gameOver) {
+          this.dequeuePiece();
+        }
+        return;
+      }
+      this.moveShape("down");
+    }, this.gameSpeed);
   };
 
   moveShape = (direction) => {

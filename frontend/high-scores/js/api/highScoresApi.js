@@ -25,6 +25,15 @@ class HighScores {
       method: "DELETE",
     });
   };
+
+  // remove all scores to reset high scores
+  //! For testing only; any number of high scores below 11 should not be able to be removed
+  removeAllHighScores = async () => {
+    const allHighScores = await this.getHighScores();
+    for (const highScore of allHighScores) {
+      await this.removeHighScore(highScore.id);
+    }
+  };
 }
 
 export default HighScores;
