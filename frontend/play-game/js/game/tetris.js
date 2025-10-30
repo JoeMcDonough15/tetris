@@ -13,7 +13,7 @@ import HighScores from "../../../high-scores/js/api/highScoresApi.js";
 import {
   createNavButtons,
   createPlayerNameForm,
-} from "../../../utils/index.js";
+} from "../../../components/index.js";
 
 const playGameContainer = document.getElementById("play-game-container");
 const gameGridContainer = document.getElementById("game-grid-container");
