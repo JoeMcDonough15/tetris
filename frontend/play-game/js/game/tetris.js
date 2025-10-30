@@ -81,7 +81,10 @@ class Tetris {
       (lastPlaceScoreObj && this.playerTotalScore > lastPlaceScoreObj.score);
 
     if (this.playerTotalScore && highScoreAchieved) {
-      const playerNameForm = createPlayerNameForm(this.submitHighScore);
+      const playerNameForm = createPlayerNameForm(
+        this.submitHighScore,
+        this.playerTotalScore
+      );
       playGameContainer.appendChild(playerNameForm);
 
       if (existingHighScores.length === 10) {
@@ -262,7 +265,6 @@ class Tetris {
   };
 
   gravityDrop = () => {
-    return this.endGame();
     const fallInterval = setInterval(() => {
       if (this.currentPiecePlaced) {
         clearInterval(fallInterval);

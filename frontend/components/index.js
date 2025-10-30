@@ -23,7 +23,7 @@ export const createNavButtons = (...buttonObjs) => {
 };
 
 // render a player name form with a custom method to be called on submit
-export const createPlayerNameForm = (methodForSubmit) => {
+export const createPlayerNameForm = (methodForSubmit, playerScore) => {
   const existingForm = document.getElementById("player-name-form");
   if (existingForm) {
     existingForm.remove();
@@ -35,21 +35,45 @@ export const createPlayerNameForm = (methodForSubmit) => {
     methodForSubmit();
   });
 
+  const playerNameContainer = document.createElement("div");
+
   const playerNameLabel = document.createElement("label");
-  playerNameLabel.innerText = "Enter your name: ";
+  playerNameLabel.innerText = "Enter your name";
   playerNameLabel.setAttribute("for", "player-name");
 
   const playerNameInput = document.createElement("input");
   playerNameInput.setAttribute("id", "player-name");
   playerNameInput.setAttribute("type", "text");
   playerNameInput.setAttribute("name", "player-name");
+  // Player Name Client-Side Validation
   playerNameInput.setAttribute("required", true);
+  playerNameInput.setAttribute("maxLength", 18);
+
+  playerNameContainer.append(playerNameLabel, playerNameInput);
+
+  const playerScoreContainer = document.createElement("div");
+  playerScoreContainer.setAttribute("style", "pointer-events: none;");
+  const playerScoreLabel = document.createElement("label");
+  playerScoreLabel.innerText = "Your Score";
+  playerScoreLabel.setAttribute("for", "player-score");
+  const playerScoreInput = document.createElement("input");
+  playerScoreInput.setAttribute("id", "player-score");
+  playerScoreInput.setAttribute("type", "text");
+  playerScoreInput.setAttribute("name", "player-score");
+  playerScoreInput.setAttribute("readonly", true);
+  playerScoreInput.value = playerScore;
+
+  playerScoreContainer.append(playerScoreLabel, playerScoreInput);
 
   const submitButton = document.createElement("button");
   submitButton.setAttribute("type", "submit");
   submitButton.innerText = "Submit";
 
-  playerNameForm.append(playerNameLabel, playerNameInput, submitButton);
+  playerNameForm.append(
+    playerNameContainer,
+    playerScoreContainer,
+    submitButton
+  );
 
   return playerNameForm;
 };
