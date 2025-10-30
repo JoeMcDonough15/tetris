@@ -25,8 +25,8 @@ const totalScoreHeading = document.getElementById("total-score-heading");
 const rowsClearedHeading = document.getElementById("rows-cleared-heading");
 const highScoresObj = new HighScores();
 const navButtons = createNavButtons(
-  { buttonDestination: "/", buttonText: "Return to Main Menu" },
-  { buttonDestination: "/high-scores", buttonText: "View High Scores" }
+  { navDestination: "/", buttonText: "Return to Main Menu" },
+  { navDestination: "/high-scores", buttonText: "View High Scores" }
 );
 
 const soundPath = (soundEffect) => {
@@ -80,7 +80,7 @@ class Tetris {
       existingHighScores.length < 10 ||
       (lastPlaceScoreObj && this.playerTotalScore > lastPlaceScoreObj.score);
 
-    if (highScoreAchieved) {
+    if (this.playerTotalScore && highScoreAchieved) {
       const playerNameForm = createPlayerNameForm(this.submitHighScore);
       playGameContainer.appendChild(playerNameForm);
 
@@ -262,6 +262,7 @@ class Tetris {
   };
 
   gravityDrop = () => {
+    return this.endGame();
     const fallInterval = setInterval(() => {
       if (this.currentPiecePlaced) {
         clearInterval(fallInterval);

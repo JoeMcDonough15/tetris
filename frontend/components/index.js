@@ -1,31 +1,28 @@
-// render two navigation links wrapped inside buttons in a nav container
-
-export const createNavButtons = (firstButton, secondButton) => {
+// render a nav container with a custom number of buttons containing nav links
+export const createNavButtons = (...buttonObjs) => {
   const navButtonsContainer = document.createElement("nav");
-  const mainMenuButton = document.createElement("button");
-  const highScoresButton = document.createElement("button");
-  const mainMenuLink = document.createElement("a");
-  const highScoresLink = document.createElement("a");
-  mainMenuLink.setAttribute("href", firstButton.buttonDestination);
-  mainMenuLink.innerText = firstButton.buttonText;
-  highScoresLink.setAttribute("href", secondButton.buttonDestination);
-  highScoresLink.innerText = secondButton.buttonText;
   navButtonsContainer.classList.add("nav-buttons");
-  mainMenuButton.classList.add("nav-button");
-  mainMenuLink.classList.add("nav-link");
-  highScoresButton.classList.add("nav-button");
-  highScoresLink.classList.add("nav-link");
 
-  // append links to buttons and buttons to nav
-  mainMenuButton.appendChild(mainMenuLink);
-  highScoresButton.appendChild(highScoresLink);
-  navButtonsContainer.append(mainMenuButton, highScoresButton);
+  const navButtons = buttonObjs.map((buttonObj) => {
+    const navButton = document.createElement("button");
+    const navLink = document.createElement("a");
+    navButton.classList.add("nav-button");
+    navLink.classList.add("nav-link");
+    navLink.setAttribute("href", buttonObj.navDestination);
+    navLink.innerText = buttonObj.buttonText;
+    navButton.appendChild(navLink);
+
+    return navButton;
+  });
+
+  navButtons.forEach((navButton) => {
+    navButtonsContainer.appendChild(navButton);
+  });
 
   return navButtonsContainer;
 };
 
 // render a player name form with a custom method to be called on submit
-
 export const createPlayerNameForm = (methodForSubmit) => {
   const existingForm = document.getElementById("player-name-form");
   if (existingForm) {
@@ -55,4 +52,37 @@ export const createPlayerNameForm = (methodForSubmit) => {
   playerNameForm.append(playerNameLabel, playerNameInput, submitButton);
 
   return playerNameForm;
+};
+
+// render a table of existing high scores
+export const createHighScoresTable = (highScores) => {
+  const highScoresTable = document.createElement("table");
+  const highScoresTableHeader = document.createElement("thead");
+  const highScoresTableHeaderRow = document.createElement("tr");
+  const tableFields = ["No.", "Player", "Score"];
+  tableFields.forEach((fieldName) => {
+    const fieldDataCell = document.createElement("td");
+    fieldDataCell.innerText = fieldName;
+    highScoresTableHeaderRow.appendChild(fieldDataCell);
+  });
+  highScoresTableHeader.appendChild(highScoresTableHeaderRow);
+  const highScoresTableBody = document.createElement("tbody");
+  highScores.forEach((scoreObj, indexOfObj) => {
+    const highScoreBodyRow = document.createElement("tr");
+    for (let i = 0; i < tableFields.length; i++) {
+      const fieldDataCell = document.createElement("td");
+      if (i === 0) {
+        fieldDataCell.innerText = (indexOfObj + 1).toString();
+      } else if (i === 1) {
+        fieldDataCell.innerText = scoreObj.name;
+      } else {
+        fieldDataCell.innerText = scoreObj.score;
+      }
+      highScoreBodyRow.appendChild(fieldDataCell);
+    }
+
+    highScoresTableBody.appendChild(highScoreBodyRow);
+  });
+  highScoresTable.append(highScoresTableHeader, highScoresTableBody);
+  return highScoresTable;
 };

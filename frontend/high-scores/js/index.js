@@ -1,38 +1,19 @@
 import HighScores from "./api/highScoresApi.js";
+import {
+  createNavButtons,
+  createHighScoresTable,
+} from "../../components/index.js";
 
 const highScoresObj = new HighScores();
 const highScores = await highScoresObj.getHighScores();
+const highScoresContainer = document.getElementById("high-scores-container");
+const navButtons = [
+  { navDestination: "/play-game", buttonText: "New Game" },
+  { navDestination: "/", buttonText: "Main Menu" },
+];
 
-if (highScores.length > 0) {
-  const highScoresContainer = document.getElementById("high-scores-container");
-  const highScoresTable = document.createElement("table");
-  const highScoresTableHeader = document.createElement("thead");
-  const highScoresTableBody = document.createElement("tbody");
-  const highScoresTableHeaderRow = document.createElement("tr");
-  const highScoresTablePlayerNameHeader = document.createElement("td");
-  const highScoresTablePlayerScoreHeader = document.createElement("td");
-  highScoresTablePlayerNameHeader.innerText = "Player Name";
-  highScoresTablePlayerScoreHeader.innerText = "Score";
-  highScoresTableHeaderRow.append(
-    highScoresTablePlayerNameHeader,
-    highScoresTablePlayerScoreHeader
-  );
-  highScoresTableHeader.appendChild(highScoresTableHeaderRow);
+highScoresContainer.appendChild(createNavButtons(...navButtons));
 
-  highScores.forEach((scoreObj) => {
-    const highScoreBodyRow = document.createElement("tr");
-    const highScoreBodyRowPlayerName = document.createElement("td");
-    const highScoreBodyRowPlayerScore = document.createElement("td");
-    highScoreBodyRowPlayerName.innerText = scoreObj.name;
-    highScoreBodyRowPlayerScore.innerText = scoreObj.score;
-    highScoreBodyRow.append(
-      highScoreBodyRowPlayerName,
-      highScoreBodyRowPlayerScore
-    );
-
-    highScoresTableBody.appendChild(highScoreBodyRow);
-  });
-
-  highScoresTable.append(highScoresTableHeader, highScoresTableBody);
-  highScoresContainer.appendChild(highScoresTable);
+if (highScores.length) {
+  highScoresContainer.appendChild(createHighScoresTable(highScores));
 }
