@@ -110,3 +110,10 @@ export const createHighScoresTable = (highScores) => {
   highScoresTable.append(highScoresTableHeader, highScoresTableBody);
   return highScoresTable;
 };
+
+export const noHighScoresHeader = () => {
+  const noHighScoresHeader = document.createElement("h2");
+  noHighScoresHeader.classList.add("no-high-scores-header");
+  noHighScoresHeader.innerText = "No High Scores Yet";
+  return noHighScoresHeader;
+};

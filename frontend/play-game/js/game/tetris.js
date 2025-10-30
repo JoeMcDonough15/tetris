@@ -77,10 +77,11 @@ class Tetris {
     const existingHighScores = await highScoresObj.getHighScores();
     const lastPlaceScoreObj = existingHighScores[existingHighScores.length - 1];
     const highScoreAchieved =
-      existingHighScores.length < 10 ||
-      (lastPlaceScoreObj && this.playerTotalScore > lastPlaceScoreObj.score);
+      this.playerTotalScore &&
+      (existingHighScores.length < 10 ||
+        (lastPlaceScoreObj && this.playerTotalScore > lastPlaceScoreObj.score));
 
-    if (this.playerTotalScore && highScoreAchieved) {
+    if (highScoreAchieved) {
       const playerNameForm = createPlayerNameForm(
         this.submitHighScore,
         this.playerTotalScore

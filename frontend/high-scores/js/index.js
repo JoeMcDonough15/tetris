@@ -2,6 +2,7 @@ import HighScores from "./api/highScoresApi.js";
 import {
   createNavButtons,
   createHighScoresTable,
+  noHighScoresHeader,
 } from "../../components/index.js";
 
 const highScoresObj = new HighScores();
@@ -16,4 +17,6 @@ highScoresContainer.appendChild(createNavButtons(...navButtons));
 
 if (highScores.length) {
   highScoresContainer.appendChild(createHighScoresTable(highScores));
+} else {
+  highScoresContainer.appendChild(noHighScoresHeader());
 }
