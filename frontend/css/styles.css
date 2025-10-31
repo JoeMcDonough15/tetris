@@ -29,6 +29,20 @@ button {
   border: 0;
 }
 
+dialog.settings-modal {
+  border: 1px solid red;
+  height: 100px;
+  position: fixed;
+  margin: auto;
+  top: 50%;
+  width: 100vw;
+}
+
+::backdrop {
+  background-color: black;
+  opacity: 0.7;
+}
+
 .main-header {
   font-optical-sizing: auto;
   font-size: clamp(50px, 18vw, 120px);
@@ -54,9 +68,6 @@ button {
 .main-menu-container,
 .high-scores-container {
   align-items: center;
-}
-
-.high-scores-container {
   flex-direction: column;
 }
 
@@ -64,6 +75,7 @@ button {
   height: 100vh;
 }
 
+.main-menu-buttons,
 .nav-buttons {
   display: flex;
   flex-direction: column;

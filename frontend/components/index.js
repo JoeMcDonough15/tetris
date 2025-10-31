@@ -22,6 +22,19 @@ export const createNavButtons = (...buttonObjs) => {
   return navButtonsContainer;
 };
 
+export const createMenuButton = (buttonObj) => {
+  const button = document.createElement("button");
+  button.classList.add("nav-button");
+  const buttonContent = document.createElement("span");
+  buttonContent.innerText = buttonObj.buttonText;
+  buttonContent.classList.add("nav-link");
+  button.appendChild(buttonContent);
+  button.addEventListener("click", () => {
+    buttonObj.clickEventFunction();
+  });
+  return button;
+};
+
 // render a player name form with a custom method to be called on submit
 export const createPlayerNameForm = (methodForSubmit, playerScore) => {
   const existingForm = document.getElementById("player-name-form");
@@ -111,9 +124,40 @@ export const createHighScoresTable = (highScores) => {
   return highScoresTable;
 };
 
-export const noHighScoresHeader = () => {
-  const noHighScoresHeader = document.createElement("h2");
-  noHighScoresHeader.classList.add("no-high-scores-header");
-  noHighScoresHeader.innerText = "No High Scores Yet";
-  return noHighScoresHeader;
+// render a customizable heading of any level for use anywhere
+export const createCustomHeading = (headingLevel, headingText, ...classes) => {
+  const headingElement = document.createElement(headingLevel);
+  headingElement.innerText = headingText;
+  classes.forEach((className) => {
+    headingElement.classList.add(className);
+  });
+  return headingElement;
+};
+
+// render a main container to use for each page
+export const createMainContainer = (id) => {
+  const mainContainer = document.createElement("main");
+  mainContainer.setAttribute("id", id);
+  mainContainer.classList.add("main-container", id);
+  return mainContainer;
+};
+
+export const createSettingsModal = (closeModalButtonText, settingsObj) => {
+  const settingsModal = document.createElement("dialog");
+  settingsModal.classList.add("settings-modal");
+  settingsModal.setAttribute("id", "settings-modal");
+  const closeModalButton = document.createElement("button");
+  closeModalButton.innerText = closeModalButtonText;
+  closeModalButton.setAttribute("autofocus", true);
+  closeModalButton.addEventListener("click", () => {
+    settingsModal.close();
+  });
+
+  // add callbacks to buttons' event listeners that are settingsObj instance methods
+  // i.e. a controlSoundFxButton would use settingsObj.toggleSoundFxOnOff(), a selectMusicButton would use settingsObj.selectMusic(), a setColorPaletteButton would use settingsObj.setColorPalette(), etc.
+  // then, all of those buttons would be appended to the settingsModal
+
+  settingsModal.appendChild(closeModalButton);
+
+  return settingsModal;
 };
