@@ -2,6 +2,10 @@
 // * Do not instantiate a Settings object, just use the saved settings data (if it is there)
 // * to determine classes and input prefills/checked-states inside the update-settings-form.
 
+const savedSettings = JSON.parse(
+  window.sessionStorage.getItem("savedSettings")
+);
+
 // render a nav container with a custom number of buttons containing nav links
 export const createNavButtons = (...buttonObjs) => {
   const navButtonsContainer = document.createElement("nav");

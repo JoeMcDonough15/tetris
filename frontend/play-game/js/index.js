@@ -1,5 +1,24 @@
+import { createSettingsModal } from "../../components/index.js";
+import Settings from "../../settings.js";
 import Tetris from "./game/tetris.js";
 
+const settingsModal = createSettingsModal("Return to Game");
+const bodyArrayFromCollection = Array.from(
+  document.getElementsByTagName("body")
+);
+const body = bodyArrayFromCollection[0];
+body.appendChild(settingsModal);
+const updateSettingsForm = document.getElementById("update-settings-form");
+const savedSettings = JSON.parse(
+  window.sessionStorage.getItem("savedSettings")
+);
+
+const settingsObj = new Settings(
+  settingsModal,
+  updateSettingsForm,
+  savedSettings
+);
+settingsObj.prepareUpdateSettingsForm(); // add event listener for form submission to update settings
 const game = new Tetris();
 const rotateButton = document.getElementById("btn-up");
 const softDropButton = document.getElementById("btn-down");
