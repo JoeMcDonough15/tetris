@@ -19,6 +19,7 @@ const settingsObj = new Settings(
   savedSettings
 );
 settingsObj.prepareUpdateSettingsForm(); // add event listener for form submission to update settings
+
 const game = new Tetris();
 const rotateButton = document.getElementById("btn-up");
 const softDropButton = document.getElementById("btn-down");

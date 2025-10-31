@@ -1,7 +1,3 @@
-// TODO - check session storage for saved settings before building components.
-// * Do not instantiate a Settings object, just use the saved settings data (if it is there)
-// * to determine classes and input prefills/checked-states inside the update-settings-form.
-
 const savedSettings = JSON.parse(
   window.sessionStorage.getItem("savedSettings")
 );
@@ -168,7 +164,7 @@ const createUpdateSettingsForm = () => {
   soundFxOnRadio.setAttribute("type", "radio");
   soundFxOnRadio.setAttribute("name", "soundFx");
   soundFxOnRadio.setAttribute("value", "on");
-  soundFxOnRadio.setAttribute("checked", true);
+  // soundFxOnRadio.setAttribute("checked", true);
   soundFxOnContainer.append(soundFxOnLabel, soundFxOnRadio);
 
   const soundFxOffContainer = document.createElement("div");
@@ -181,6 +177,13 @@ const createUpdateSettingsForm = () => {
   soundFxOffRadio.setAttribute("name", "soundFx");
   soundFxOffRadio.setAttribute("value", "off");
   soundFxOffContainer.append(soundFxOffLabel, soundFxOffRadio);
+
+  // set checked state based on saved settings, if we have it from sessionStorage
+  if (savedSettings) {
+    savedSettings.soundFx === "on"
+      ? soundFxOnRadio.setAttribute("checked", true)
+      : soundFxOffRadio.setAttribute("checked", true);
+  }
 
   const soundFxOnOffContainer = document.createElement("div");
   soundFxOnOffContainer.classList.add("radio-options-container");
