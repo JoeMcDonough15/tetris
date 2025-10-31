@@ -111,9 +111,20 @@ export const createHighScoresTable = (highScores) => {
   return highScoresTable;
 };
 
-export const noHighScoresHeader = () => {
-  const noHighScoresHeader = document.createElement("h2");
-  noHighScoresHeader.classList.add("no-high-scores-header");
-  noHighScoresHeader.innerText = "No High Scores Yet";
-  return noHighScoresHeader;
+// render a customizable heading of any level for use anywhere
+export const createCustomHeading = (headingLevel, headingText, ...classes) => {
+  const headingElement = document.createElement(headingLevel);
+  headingElement.innerText = headingText;
+  classes.forEach((className) => {
+    headingElement.classList.add(className);
+  });
+  return headingElement;
+};
+
+// render a main container to use for each page
+export const createMainContainer = (id) => {
+  const mainContainer = document.createElement("main");
+  mainContainer.setAttribute("id", id);
+  mainContainer.classList.add("main-container", id);
+  return mainContainer;
 };
