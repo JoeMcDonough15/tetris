@@ -17,7 +17,7 @@ class Settings {
     this.soundFx = "off";
   };
 
-  prepareUpdateSettingsForm = () => {
+  listenForSettingsUpdates = () => {
     this.updateSettingsForm.addEventListener("submit", (e) => {
       e.preventDefault();
       this.updateSettings();

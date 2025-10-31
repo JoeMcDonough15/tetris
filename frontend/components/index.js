@@ -178,7 +178,7 @@ const createUpdateSettingsForm = () => {
   soundFxOffRadio.setAttribute("value", "off");
   soundFxOffContainer.append(soundFxOffLabel, soundFxOffRadio);
 
-  // set checked state based on saved settings, if we have it from sessionStorage
+  // set checked state based on saved settings, if we have it in sessionStorage
   if (savedSettings) {
     savedSettings.soundFx === "on"
       ? soundFxOnRadio.setAttribute("checked", true)
