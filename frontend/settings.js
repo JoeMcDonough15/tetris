@@ -1,5 +1,6 @@
 class Settings {
-  constructor(updateSettingsForm, savedSettings) {
+  constructor(settingsModal, updateSettingsForm, savedSettings) {
+    this.settingsModal = settingsModal;
     this.updateSettingsForm = updateSettingsForm;
     this.soundFx = savedSettings?.soundFx || "on";
     // music - off or on
@@ -30,6 +31,14 @@ class Settings {
     } else {
       this.turnSoundFxOff();
     }
+
+    const settingsJson = JSON.stringify({
+      soundFx: this.soundFx,
+    });
+
+    // save our newly updated settings to session storage
+    window.sessionStorage.setItem("savedSettings", settingsJson);
+    this.settingsModal.close();
   };
 }
 

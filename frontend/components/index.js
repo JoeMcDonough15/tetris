@@ -1,3 +1,7 @@
+// TODO - check session storage for saved settings before building components.
+// * Do not instantiate a Settings object, just use the saved settings data (if it is there)
+// * to determine classes and input prefills/checked-states inside the update-settings-form.
+
 // render a nav container with a custom number of buttons containing nav links
 export const createNavButtons = (...buttonObjs) => {
   const navButtonsContainer = document.createElement("nav");
@@ -158,7 +162,8 @@ const createUpdateSettingsForm = () => {
   const soundFxOnRadio = document.createElement("input");
   soundFxOnRadio.setAttribute("id", "sound-fx-on");
   soundFxOnRadio.setAttribute("type", "radio");
-  soundFxOnRadio.setAttribute("name", "sound-fx");
+  soundFxOnRadio.setAttribute("name", "soundFx");
+  soundFxOnRadio.setAttribute("value", "on");
   soundFxOnRadio.setAttribute("checked", true);
   soundFxOnContainer.append(soundFxOnLabel, soundFxOnRadio);
 
@@ -169,7 +174,8 @@ const createUpdateSettingsForm = () => {
   const soundFxOffRadio = document.createElement("input");
   soundFxOffRadio.setAttribute("id", "sound-fx-off");
   soundFxOffRadio.setAttribute("type", "radio");
-  soundFxOffRadio.setAttribute("name", "sound-fx");
+  soundFxOffRadio.setAttribute("name", "soundFx");
+  soundFxOffRadio.setAttribute("value", "off");
   soundFxOffContainer.append(soundFxOffLabel, soundFxOffRadio);
 
   const soundFxOnOffContainer = document.createElement("div");

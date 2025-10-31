@@ -43,5 +43,5 @@ mainMenuButtonsContainer.append(
 mainMenuContainer.appendChild(mainMenuButtonsContainer);
 
 const updateSettingsForm = document.getElementById("update-settings-form");
-const settingsObj = new Settings(updateSettingsForm);
+const settingsObj = new Settings(settingsModal, updateSettingsForm);
 settingsObj.prepareUpdateSettingsForm(); // add the event listener to the form for submission
