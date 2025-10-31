@@ -142,7 +142,51 @@ export const createMainContainer = (id) => {
   return mainContainer;
 };
 
-export const createSettingsModal = (closeModalButtonText, settingsObj) => {
+const createUpdateSettingsForm = () => {
+  const updateSettingsForm = document.createElement("form");
+  // the id will be used to pass a reference to this form element into the Settings object's constructor method
+  updateSettingsForm.setAttribute("id", "update-settings-form");
+
+  const soundFxContainer = document.createElement("fieldset");
+  const soundFxLegend = document.createElement("legend");
+  soundFxLegend.innerText = "Sound Fx";
+
+  const soundFxOnContainer = document.createElement("div");
+  const soundFxOnLabel = document.createElement("label");
+  soundFxOnLabel.setAttribute("for", "sound-fx-on");
+  soundFxOnLabel.innerText = "On";
+  const soundFxOnRadio = document.createElement("input");
+  soundFxOnRadio.setAttribute("id", "sound-fx-on");
+  soundFxOnRadio.setAttribute("type", "radio");
+  soundFxOnRadio.setAttribute("name", "sound-fx");
+  soundFxOnRadio.setAttribute("checked", true);
+  soundFxOnContainer.append(soundFxOnLabel, soundFxOnRadio);
+
+  const soundFxOffContainer = document.createElement("div");
+  const soundFxOffLabel = document.createElement("label");
+  soundFxOffLabel.setAttribute("for", "sound-fx-off");
+  soundFxOffLabel.innerText = "Off";
+  const soundFxOffRadio = document.createElement("input");
+  soundFxOffRadio.setAttribute("id", "sound-fx-off");
+  soundFxOffRadio.setAttribute("type", "radio");
+  soundFxOffRadio.setAttribute("name", "sound-fx");
+  soundFxOffContainer.append(soundFxOffLabel, soundFxOffRadio);
+
+  const soundFxOnOffContainer = document.createElement("div");
+  soundFxOnOffContainer.classList.add("radio-options-container");
+  soundFxOnOffContainer.append(soundFxOnContainer, soundFxOffContainer);
+
+  soundFxContainer.append(soundFxLegend, soundFxOnOffContainer);
+
+  const submitButton = document.createElement("button");
+  submitButton.setAttribute("type", "submit");
+  submitButton.innerText = "Apply Settings";
+
+  updateSettingsForm.append(soundFxContainer, submitButton);
+  return updateSettingsForm;
+};
+
+export const createSettingsModal = (closeModalButtonText) => {
   const settingsModal = document.createElement("dialog");
   settingsModal.classList.add("settings-modal");
   settingsModal.setAttribute("id", "settings-modal");
@@ -153,11 +197,9 @@ export const createSettingsModal = (closeModalButtonText, settingsObj) => {
     settingsModal.close();
   });
 
-  // add callbacks to buttons' event listeners that are settingsObj instance methods
-  // i.e. a controlSoundFxButton would use settingsObj.toggleSoundFxOnOff(), a selectMusicButton would use settingsObj.selectMusic(), a setColorPaletteButton would use settingsObj.setColorPalette(), etc.
-  // then, all of those buttons would be appended to the settingsModal
+  const updateSettingsForm = createUpdateSettingsForm();
 
-  settingsModal.appendChild(closeModalButton);
+  settingsModal.append(closeModalButton, updateSettingsForm);
 
   return settingsModal;
 };
