@@ -22,6 +22,19 @@ export const createNavButtons = (...buttonObjs) => {
   return navButtonsContainer;
 };
 
+export const createMenuButton = (buttonObj) => {
+  const button = document.createElement("button");
+  button.classList.add("nav-button");
+  const buttonContent = document.createElement("span");
+  buttonContent.innerText = buttonObj.buttonText;
+  buttonContent.classList.add("nav-link");
+  button.appendChild(buttonContent);
+  button.addEventListener("click", () => {
+    buttonObj.clickEventFunction();
+  });
+  return button;
+};
+
 // render a player name form with a custom method to be called on submit
 export const createPlayerNameForm = (methodForSubmit, playerScore) => {
   const existingForm = document.getElementById("player-name-form");
@@ -127,4 +140,24 @@ export const createMainContainer = (id) => {
   mainContainer.setAttribute("id", id);
   mainContainer.classList.add("main-container", id);
   return mainContainer;
+};
+
+export const createSettingsModal = (closeModalButtonText, settingsObj) => {
+  const settingsModal = document.createElement("dialog");
+  settingsModal.classList.add("settings-modal");
+  settingsModal.setAttribute("id", "settings-modal");
+  const closeModalButton = document.createElement("button");
+  closeModalButton.innerText = closeModalButtonText;
+  closeModalButton.setAttribute("autofocus", true);
+  closeModalButton.addEventListener("click", () => {
+    settingsModal.close();
+  });
+
+  // add callbacks to buttons' event listeners that are settingsObj instance methods
+  // i.e. a controlSoundFxButton would use settingsObj.toggleSoundFxOnOff(), a selectMusicButton would use settingsObj.selectMusic(), a setColorPaletteButton would use settingsObj.setColorPalette(), etc.
+  // then, all of those buttons would be appended to the settingsModal
+
+  settingsModal.appendChild(closeModalButton);
+
+  return settingsModal;
 };
