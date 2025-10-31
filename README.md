@@ -107,6 +107,7 @@ Exceptions:
   "message": [
     "name must be a string",
     "name should not be empty",
+    "name must be shorter than or equal to 18 characters",
     "score must be an integer number"
     "score must be a positive number"
   ],

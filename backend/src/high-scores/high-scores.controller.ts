@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   ParseUUIDPipe,
+  ValidationPipe,
 } from '@nestjs/common';
 import { HighScoresService } from './high-scores.service';
 import type { UUID } from 'crypto';
@@ -25,7 +26,7 @@ export class HighScoresController {
 
   @Post()
   async createNewScore(
-    @Body() newHighScore: NewHighScoreDto,
+    @Body(new ValidationPipe()) newHighScore: NewHighScoreDto,
   ): Promise<HighScore> {
     return this.highScoresService.addHighScore(newHighScore);
   }

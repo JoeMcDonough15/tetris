@@ -56,14 +56,18 @@ button {
   align-items: center;
 }
 
+.high-scores-container {
+  flex-direction: column;
+}
+
 .main-menu-container {
   height: 100vh;
 }
 
-.nav-col {
+.nav-buttons {
   display: flex;
   flex-direction: column;
-  gap: 50px;
+  gap: 20px;
 }
 
 .nav-button {
@@ -72,7 +76,7 @@ button {
 
 .nav-link {
   display: inline-block;
-  padding: 50px;
+  padding: 10px;
   width: 100%;
 }
 

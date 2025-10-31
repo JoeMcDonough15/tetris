@@ -1,3 +1,4 @@
+import { GRID_SPACE, NUM_ROWS, NUM_COLS } from "./constants.js";
 import {
   Line,
   Square,
@@ -8,13 +9,25 @@ import {
   ZShape,
 } from "./shapes.js";
 import GameGrid from "./gameGrid.js";
-import { GRID_SPACE, NUM_ROWS, NUM_COLS } from "./constants.js";
-import { canvas, ctx } from "./canvas.js";
+import HighScores from "../../../high-scores/js/api/highScoresApi.js";
+import {
+  createNavButtons,
+  createPlayerNameForm,
+} from "../../../components/index.js";
 
+const playGameContainer = document.getElementById("play-game-container");
+const gameGridContainer = document.getElementById("game-grid-container");
+const gameDetailsContainer = document.getElementById("game-details-container");
+const mainHeader = document.getElementById("main-header");
 const previewImgContainer = document.getElementById("preview-img-container");
 const levelHeading = document.getElementById("level-heading");
 const totalScoreHeading = document.getElementById("total-score-heading");
 const rowsClearedHeading = document.getElementById("rows-cleared-heading");
+const highScoresObj = new HighScores();
+const navButtons = createNavButtons(
+  { navDestination: "/", buttonText: "Return to Main Menu" },
+  { navDestination: "/high-scores", buttonText: "View High Scores" }
+);
 
 const soundPath = (soundEffect) => {
   return `/sounds/${soundEffect}.mp3`;
@@ -30,6 +43,7 @@ class Tetris {
     this.softDropPoints = 0;
     this.rowsCleared = 0;
     this.playerTotalScore = 0;
+    this.idOfScoreToRemove = "";
     this.game = new GameGrid(NUM_ROWS, NUM_COLS);
     this.availablePieces = [
       "line",
@@ -51,6 +65,56 @@ class Tetris {
 
   // Game methods
 
+  endGame = () => {
+    this.gameOver = true;
+    gameGridContainer.remove();
+    gameDetailsContainer.remove();
+    mainHeader.innerText = "Game Over";
+    this.checkForHighScore();
+  };
+
+  checkForHighScore = async () => {
+    const existingHighScores = await highScoresObj.getHighScores();
+    const lastPlaceScoreObj = existingHighScores[existingHighScores.length - 1];
+    const highScoreAchieved =
+      this.playerTotalScore &&
+      (existingHighScores.length < 10 ||
+        (lastPlaceScoreObj && this.playerTotalScore > lastPlaceScoreObj.score));
+
+    if (highScoreAchieved) {
+      const playerNameForm = createPlayerNameForm(
+        this.submitHighScore,
+        this.playerTotalScore
+      );
+      playGameContainer.appendChild(playerNameForm);
+
+      if (existingHighScores.length === 10) {
+        this.idOfScoreToRemove = lastPlaceScoreObj.id; // never keep more than 10 high scores in the database
+      }
+    } else {
+      playGameContainer.appendChild(navButtons);
+    }
+  };
+
+  submitHighScore = async () => {
+    const playerNameForm = document.getElementById("player-name-form");
+    const playerName = playerNameForm.elements["player-name"].value;
+
+    const playerDetails = {
+      name: playerName,
+      score: this.playerTotalScore,
+    };
+
+    if (this.idOfScoreToRemove) {
+      await highScoresObj.removeHighScore(this.idOfScoreToRemove);
+    }
+
+    await highScoresObj.addScoreToHighScores(playerDetails);
+
+    playGameContainer.removeChild(playerNameForm);
+    playGameContainer.appendChild(navButtons);
+  };
+
   pauseGame = () => {
     this.gamePaused = !this.gamePaused;
   };
@@ -59,7 +123,7 @@ class Tetris {
     this.currentPiece.blocks.forEach((block) => {
       const [currentRow, currentCol] = this.game.determineRowAndColumn(block);
       if (this.game.reachedTopOfGrid(currentRow)) {
-        this.gameOver = true;
+        this.endGame();
         return;
       }
       this.game.grid[currentRow][currentCol] = block;
@@ -207,8 +271,6 @@ class Tetris {
         clearInterval(fallInterval);
         if (!this.gameOver) {
           this.dequeuePiece();
-        } else {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
         return;
       }
