@@ -192,6 +192,7 @@ const createUpdateSettingsForm = () => {
   soundFxContainer.append(soundFxLegend, soundFxOnOffContainer);
 
   const submitButton = document.createElement("button");
+  submitButton.setAttribute("id", "update-settings-submit-button");
   submitButton.setAttribute("type", "submit");
   submitButton.innerText = "Apply Settings";
 
@@ -203,14 +204,11 @@ export const createSettingsModal = (closeModalButtonText) => {
   const settingsModal = document.createElement("dialog");
   settingsModal.classList.add("settings-modal");
   settingsModal.setAttribute("id", "settings-modal");
+  const updateSettingsForm = createUpdateSettingsForm();
   const closeModalButton = document.createElement("button");
   closeModalButton.innerText = closeModalButtonText;
   closeModalButton.setAttribute("autofocus", true);
-  closeModalButton.addEventListener("click", () => {
-    settingsModal.close();
-  });
-
-  const updateSettingsForm = createUpdateSettingsForm();
+  closeModalButton.setAttribute("id", "close-modal-button");
 
   settingsModal.append(closeModalButton, updateSettingsForm);
 

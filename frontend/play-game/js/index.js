@@ -20,7 +20,22 @@ const settingsObj = new Settings(
 );
 settingsObj.listenForSettingsUpdates(); // add event listener for form submission to update settings
 
-const game = new Tetris(settingsObj);
+const game = new Tetris(settingsObj, settingsModal);
+
+const updateSettingsSubmitButton = document.getElementById(
+  "update-settings-submit-button"
+);
+
+updateSettingsSubmitButton.addEventListener("click", () => {
+  game.togglePause();
+});
+
+const modalCloseButton = document.getElementById("close-modal-button");
+modalCloseButton.addEventListener("click", () => {
+  settingsModal.close();
+  game.togglePause();
+});
+
 const rotateButton = document.getElementById("btn-up");
 const softDropButton = document.getElementById("btn-down");
 const moveLeftButton = document.getElementById("btn-left");
@@ -33,7 +48,7 @@ scoreHeading.innerText = `Score: ${game.playerTotalScore}`;
 // mouse events
 
 pauseButton.addEventListener("click", () => {
-  game.pauseGame();
+  game.togglePause();
 });
 
 rotateButton.addEventListener("click", () => {
@@ -55,7 +70,7 @@ softDropButton.addEventListener("click", () => {
 // key events
 window.addEventListener("keyup", (e) => {
   if (e.key === "p") {
-    game.pauseGame();
+    game.togglePause();
   }
 });
 
@@ -69,6 +84,8 @@ window.addEventListener("keydown", (e) => {
     game.rotatePiece();
   } else if (keyName === "ArrowDown") {
     game.softDrop();
+  } else if (keyName === "Escape" && game.gamePaused) {
+    game.togglePause();
   }
 });
 

@@ -34,8 +34,9 @@ const soundPath = (soundEffect) => {
 };
 
 class Tetris {
-  constructor(gameSettings) {
+  constructor(gameSettings, settingsModal) {
     this.gameSettings = gameSettings;
+    this.settingsModal = settingsModal;
     this.gameOver = false;
     this.gamePaused = false;
     this.gameSpeed = 400;
@@ -116,7 +117,13 @@ class Tetris {
     playGameContainer.appendChild(navButtons);
   };
 
-  pauseGame = () => {
+  togglePause = () => {
+    if (!this.gamePaused) {
+      this.settingsModal.showModal();
+    } else {
+      this.settingsModal.close();
+    }
+
     this.gamePaused = !this.gamePaused;
   };
 
