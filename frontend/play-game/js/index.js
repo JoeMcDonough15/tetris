@@ -2,11 +2,11 @@ import {
   createControllerContainer,
   createControllerRow,
   createCustomHeading,
-  createPreviewImageContainer,
   createSectionContainer,
   createSettingsModal,
   createSubHeaders,
   createNavButtons,
+  createPreviewImgContainer,
 } from "../../components/index.js";
 import HighScores from "../../high-scores/js/api/highScoresApi.js";
 import Settings from "../../settings.js";
@@ -18,12 +18,12 @@ const bodyArrayFromCollection = Array.from(
   document.getElementsByTagName("body")
 );
 const body = bodyArrayFromCollection[0];
-body.prepend(createCustomHeading("h1", "Tetris", "main-header"));
+body.prepend(createCustomHeading("h1", "Tetris", "main-heading"));
 
 // target gameGridContainer to inject this UI after it
 const gameGridContainer = document.getElementById("game-grid-container");
 
-// build out the gameDetailsContainer
+// Build out the gameDetailsContainer
 const gameDetailsContainer = createSectionContainer("game-details-container");
 
 const subHeaders = [
@@ -33,9 +33,7 @@ const subHeaders = [
 ];
 const subHeadersContainer = createSubHeaders("h3", ...subHeaders);
 
-const previewImgContainer = createPreviewImageContainer(
-  "preview-img-container"
-);
+const previewImgContainer = createPreviewImgContainer("preview-img-container");
 
 const imageSrcPrefix = "/images/buttons/";
 const imageSrcSuffix = ".png";
@@ -103,20 +101,8 @@ gameDetailsContainer.append(
 const settingsModal = createSettingsModal("Return to Game");
 
 gameGridContainer.after(gameDetailsContainer, settingsModal);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 // Instantiate the Settings object
-
 const updateSettingsForm = document.getElementById("update-settings-form");
 const savedSettings = JSON.parse(
   window.sessionStorage.getItem("savedSettings")
@@ -130,13 +116,12 @@ const settingsObj = new Settings(
 settingsObj.listenForSettingsUpdates(); // adds event listener for form submission to update settings
 
 // Instantiate a high scores object for use inside the Tetris game
-
 const highScoresObj = new HighScores();
 
-// Instantiate the Tetris game
-
+// Target DOM Elements for use in Tetris game
 const playGameContainer = document.getElementById("play-game-container");
-const mainHeader = document.getElementById("main-header");
+const mainHeading = document.getElementById("main-heading");
+const previewImg = document.getElementById("preview-img");
 const levelHeading = document.getElementById("level-heading");
 const totalScoreHeading = document.getElementById("total-score-heading");
 const rowsClearedHeading = document.getElementById("rows-cleared-heading");
@@ -145,6 +130,7 @@ const postGameNavButtons = createNavButtons(
   { navDestination: "/high-scores", buttonText: "View High Scores" }
 );
 
+// Instantiate the Tetris game
 const game = new Tetris(
   settingsObj,
   highScoresObj,
@@ -152,8 +138,8 @@ const game = new Tetris(
   playGameContainer,
   gameGridContainer,
   gameDetailsContainer,
-  mainHeader,
-  previewImgContainer,
+  mainHeading,
+  previewImg,
   levelHeading,
   totalScoreHeading,
   rowsClearedHeading,
@@ -161,7 +147,6 @@ const game = new Tetris(
 );
 
 // Target Elements for Event Listeners
-
 const modalCloseButton = document.getElementById("close-modal-button");
 const rotateButton = document.getElementById("btn-up");
 const softDropButton = document.getElementById("btn-down");
@@ -175,8 +160,7 @@ const updateSettingsSubmitButton = document.getElementById(
 
 scoreHeading.innerText = `Score: ${game.playerTotalScore}`;
 
-// mouse events
-
+// Mouse Events
 updateSettingsSubmitButton.addEventListener("click", () => {
   game.togglePause();
 });
@@ -206,7 +190,7 @@ softDropButton.addEventListener("click", () => {
   game.softDrop();
 });
 
-// key events
+// Key Events
 window.addEventListener("keyup", (e) => {
   if (e.key === "p") {
     game.togglePause();
@@ -228,4 +212,4 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-game.dequeuePiece(); // begins game
+game.startGame();

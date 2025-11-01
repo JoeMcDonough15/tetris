@@ -13,7 +13,7 @@ const body = bodyArrayFromCollection[0];
 const highScoresContainer = createMainContainer("high-scores-container");
 
 body.prepend(
-  createCustomHeading("h1", "High Scores", "main-header"),
+  createCustomHeading("h1", "High Scores", "main-heading"),
   highScoresContainer
 );
 

@@ -177,11 +177,22 @@ export const createSubHeaders = (typeOfHeaders, ...headerObjs) => {
   return subHeadersContainer;
 };
 
-// render a preview image container for the next piece in the game queue
-export const createPreviewImageContainer = (id) => {
+// render a preview image of the next piece in the game queue
+const createPreviewImg = (id) => {
+  const previewImg = document.createElement("img");
+  previewImg.setAttribute("src", ""); // src will be assigned inside the instance method setPreviewOfNextPiece
+  previewImg.setAttribute("alt", `${id} of next shape`);
+  previewImg.setAttribute("id", id);
+  previewImg.classList.add(id);
+  return previewImg;
+};
+
+// render a preview image container for the preview image
+export const createPreviewImgContainer = (className) => {
   const previewImgContainer = document.createElement("div");
-  previewImgContainer.setAttribute("id", id);
-  previewImgContainer.classList.add(id);
+  previewImgContainer.classList.add(className);
+  const previewImg = createPreviewImg("preview-img");
+  previewImgContainer.appendChild(previewImg);
   return previewImgContainer;
 };
 

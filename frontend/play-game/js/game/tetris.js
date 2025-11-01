@@ -24,7 +24,7 @@ class Tetris {
     gameGridContainer,
     gameDetailsContainer,
     mainHeading,
-    previewImgContainer,
+    previewImg,
     levelHeading,
     totalScoreHeading,
     rowsClearedHeading,
@@ -39,7 +39,7 @@ class Tetris {
     this.gameGridContainer = gameGridContainer;
     this.gameDetailsContainer = gameDetailsContainer;
     this.mainHeading = mainHeading;
-    this.previewImgContainer = previewImgContainer;
+    this.previewImg = previewImg;
     this.levelHeading = levelHeading;
     this.totalScoreHeading = totalScoreHeading;
     this.rowsClearedHeading = rowsClearedHeading;
@@ -75,6 +75,10 @@ class Tetris {
   }
 
   // Game methods
+
+  startGame = () => {
+    this.dequeuePiece();
+  };
 
   endGame = () => {
     this.gameOver = true;
@@ -385,16 +389,7 @@ class Tetris {
   };
 
   setPreviewOfNextPiece = () => {
-    // TODO - refactor this to keep a previewImg on the page at all times, and just update its src with preview img of the next piece
-    const existingPreviewImg = this.previewImgContainer.children[0];
-    if (existingPreviewImg) {
-      this.previewImgContainer.removeChild(existingPreviewImg);
-    }
-    const previewImg = document.createElement("img");
-    previewImg.setAttribute("src", this.pieceQueue[0].preview);
-    previewImg.setAttribute("alt", "preview-of-next-shape");
-    previewImg.classList.add("preview-img");
-    this.previewImgContainer.appendChild(previewImg);
+    this.previewImg.setAttribute("src", this.pieceQueue[0].preview);
   };
 
   dequeuePiece = () => {
