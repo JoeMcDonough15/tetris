@@ -1,19 +1,59 @@
+import { createSettingsModal } from "../../components/index.js";
+import Settings from "../../settings.js";
 import Tetris from "./game/tetris.js";
 
-const game = new Tetris();
+// Build out the UI
+
+const settingsModal = createSettingsModal("Return to Game");
+const bodyArrayFromCollection = Array.from(
+  document.getElementsByTagName("body")
+);
+const body = bodyArrayFromCollection[0];
+body.appendChild(settingsModal);
+const updateSettingsForm = document.getElementById("update-settings-form");
+const savedSettings = JSON.parse(
+  window.sessionStorage.getItem("savedSettings")
+);
+
+// Instantiate the Settings object and the Tetris object
+
+const settingsObj = new Settings(
+  settingsModal,
+  updateSettingsForm,
+  savedSettings
+);
+settingsObj.listenForSettingsUpdates(); // adds event listener for form submission to update settings
+
+const game = new Tetris(settingsObj, settingsModal);
+
+// Target Elements for Event Listeners
+
+const modalCloseButton = document.getElementById("close-modal-button");
 const rotateButton = document.getElementById("btn-up");
 const softDropButton = document.getElementById("btn-down");
 const moveLeftButton = document.getElementById("btn-left");
 const moveRightButton = document.getElementById("btn-right");
 const pauseButton = document.getElementById("btn-pause");
-
 const scoreHeading = document.getElementById("total-score-heading");
+const updateSettingsSubmitButton = document.getElementById(
+  "update-settings-submit-button"
+);
+
 scoreHeading.innerText = `Score: ${game.playerTotalScore}`;
 
 // mouse events
 
+updateSettingsSubmitButton.addEventListener("click", () => {
+  game.togglePause();
+});
+
+modalCloseButton.addEventListener("click", () => {
+  settingsModal.close();
+  game.togglePause();
+});
+
 pauseButton.addEventListener("click", () => {
-  game.pauseGame();
+  game.togglePause();
 });
 
 rotateButton.addEventListener("click", () => {
@@ -35,7 +75,7 @@ softDropButton.addEventListener("click", () => {
 // key events
 window.addEventListener("keyup", (e) => {
   if (e.key === "p") {
-    game.pauseGame();
+    game.togglePause();
   }
 });
 
@@ -49,6 +89,8 @@ window.addEventListener("keydown", (e) => {
     game.rotatePiece();
   } else if (keyName === "ArrowDown") {
     game.softDrop();
+  } else if (keyName === "Escape" && game.gamePaused) {
+    game.togglePause();
   }
 });
 

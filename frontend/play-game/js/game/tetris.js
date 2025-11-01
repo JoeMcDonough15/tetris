@@ -34,7 +34,9 @@ const soundPath = (soundEffect) => {
 };
 
 class Tetris {
-  constructor() {
+  constructor(gameSettings, settingsModal) {
+    this.gameSettings = gameSettings;
+    this.settingsModal = settingsModal;
     this.gameOver = false;
     this.gamePaused = false;
     this.gameSpeed = 400;
@@ -115,7 +117,13 @@ class Tetris {
     playGameContainer.appendChild(navButtons);
   };
 
-  pauseGame = () => {
+  togglePause = () => {
+    if (!this.gamePaused) {
+      this.settingsModal.showModal();
+    } else {
+      this.settingsModal.close();
+    }
+
     this.gamePaused = !this.gamePaused;
   };
 
@@ -188,7 +196,9 @@ class Tetris {
 
   updateRowsCleared = () => {
     if (!this.rowsCleared) return;
-    this.clearedRowSound.play();
+    if (this.gameSettings.soundFx === "on") {
+      this.clearedRowSound.play();
+    }
     this.totalRowsCleared += this.rowsCleared;
     rowsClearedHeading.innerText = `Rows: ${this.totalRowsCleared}`;
     if (this.level < 9 && this.clearedTenRows()) {
@@ -216,7 +226,9 @@ class Tetris {
   };
 
   placePiece = () => {
-    this.blockSound.play();
+    if (this.gameSettings.soundFx === "on") {
+      this.blockSound.play();
+    }
     this.addBlocksToGrid();
     this.checkForClearedRows();
     this.updateRowsCleared();
@@ -324,7 +336,9 @@ class Tetris {
 
   rotatePiece = () => {
     if (!this.rotationPermitted()) return;
-    this.rotateSound.play();
+    if (this.gameSettings.soundFx === "on") {
+      this.rotateSound.play();
+    }
     this.numRotations++;
     this.currentPiece.rotate(this.numRotations);
   };

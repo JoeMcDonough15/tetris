@@ -7,14 +7,12 @@ import {
 } from "./components/index.js";
 import Settings from "./settings.js";
 
-const settingsObj = new Settings();
-
 const bodyArrayFromCollection = Array.from(
   document.getElementsByTagName("body")
 );
 const body = bodyArrayFromCollection[0];
 const mainMenuContainer = createMainContainer("main-menu-container");
-const settingsModal = createSettingsModal("Return to Main Menu", settingsObj);
+const settingsModal = createSettingsModal("Return to Main Menu");
 
 body.prepend(
   createCustomHeading("h1", "Main Menu", "main-header"),
@@ -43,3 +41,7 @@ mainMenuButtonsContainer.append(
 );
 
 mainMenuContainer.appendChild(mainMenuButtonsContainer);
+
+const updateSettingsForm = document.getElementById("update-settings-form");
+const settingsObj = new Settings(settingsModal, updateSettingsForm);
+settingsObj.listenForSettingsUpdates(); // add the event listener to the form for submission
