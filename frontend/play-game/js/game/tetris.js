@@ -9,34 +9,42 @@ import {
   ZShape,
 } from "./shapes.js";
 import GameGrid from "./gameGrid.js";
-import HighScores from "../../../high-scores/js/api/highScoresApi.js";
-import {
-  createNavButtons,
-  createPlayerNameForm,
-} from "../../../components/index.js";
-
-const playGameContainer = document.getElementById("play-game-container");
-const gameGridContainer = document.getElementById("game-grid-container");
-const gameDetailsContainer = document.getElementById("game-details-container");
-const mainHeader = document.getElementById("main-header");
-const previewImgContainer = document.getElementById("preview-img-container");
-const levelHeading = document.getElementById("level-heading");
-const totalScoreHeading = document.getElementById("total-score-heading");
-const rowsClearedHeading = document.getElementById("rows-cleared-heading");
-const highScoresObj = new HighScores();
-const navButtons = createNavButtons(
-  { navDestination: "/", buttonText: "Return to Main Menu" },
-  { navDestination: "/high-scores", buttonText: "View High Scores" }
-);
+import { createPlayerNameForm } from "../../../components/index.js";
 
 const soundPath = (soundEffect) => {
   return `/sounds/${soundEffect}.mp3`;
 };
 
 class Tetris {
-  constructor(gameSettings, settingsModal) {
-    this.gameSettings = gameSettings;
+  constructor(
+    gameSettingsObj,
+    highScoresObj,
+    settingsModal,
+    playGameContainer,
+    gameGridContainer,
+    gameDetailsContainer,
+    mainHeading,
+    previewImgContainer,
+    levelHeading,
+    totalScoreHeading,
+    rowsClearedHeading,
+    postGameNavButtons
+  ) {
+    // APIs for settings and high scores
+    this.gameSettings = gameSettingsObj;
+    this.highScoresObj = highScoresObj;
+    // DOM Elements
     this.settingsModal = settingsModal;
+    this.playGameContainer = playGameContainer;
+    this.gameGridContainer = gameGridContainer;
+    this.gameDetailsContainer = gameDetailsContainer;
+    this.mainHeading = mainHeading;
+    this.previewImgContainer = previewImgContainer;
+    this.levelHeading = levelHeading;
+    this.totalScoreHeading = totalScoreHeading;
+    this.rowsClearedHeading = rowsClearedHeading;
+    this.postGameNavButtons = postGameNavButtons;
+    // Game State
     this.gameOver = false;
     this.gamePaused = false;
     this.gameSpeed = 400;
@@ -60,6 +68,7 @@ class Tetris {
     this.currentPiece = null;
     this.currentPiecePlaced = false;
     this.numRotations = 0;
+    // Sound Fx Files
     this.blockSound = new Audio(soundPath("block-landing"));
     this.rotateSound = new Audio(soundPath("rotate"));
     this.clearedRowSound = new Audio(soundPath("cleared-row"));
@@ -69,14 +78,14 @@ class Tetris {
 
   endGame = () => {
     this.gameOver = true;
-    gameGridContainer.remove();
-    gameDetailsContainer.remove();
-    mainHeader.innerText = "Game Over";
+    this.gameGridContainer.remove();
+    this.gameDetailsContainer.remove();
+    this.mainHeading.innerText = "Game Over";
     this.checkForHighScore();
   };
 
   checkForHighScore = async () => {
-    const existingHighScores = await highScoresObj.getHighScores();
+    const existingHighScores = await this.highScoresObj.getHighScores();
     const lastPlaceScoreObj = existingHighScores[existingHighScores.length - 1];
     const highScoreAchieved =
       this.playerTotalScore &&
@@ -88,13 +97,13 @@ class Tetris {
         this.submitHighScore,
         this.playerTotalScore
       );
-      playGameContainer.appendChild(playerNameForm);
+      this.playGameContainer.appendChild(playerNameForm);
 
       if (existingHighScores.length === 10) {
         this.idOfScoreToRemove = lastPlaceScoreObj.id; // never keep more than 10 high scores in the database
       }
     } else {
-      playGameContainer.appendChild(navButtons);
+      this.playGameContainer.appendChild(this.postGameNavButtons);
     }
   };
 
@@ -108,13 +117,13 @@ class Tetris {
     };
 
     if (this.idOfScoreToRemove) {
-      await highScoresObj.removeHighScore(this.idOfScoreToRemove);
+      await this.highScoresObj.removeHighScore(this.idOfScoreToRemove);
     }
 
-    await highScoresObj.addScoreToHighScores(playerDetails);
+    await this.highScoresObj.addScoreToHighScores(playerDetails);
 
-    playGameContainer.removeChild(playerNameForm);
-    playGameContainer.appendChild(navButtons);
+    this.playGameContainer.removeChild(playerNameForm);
+    this.playGameContainer.appendChild(this.postGameNavButtons);
   };
 
   togglePause = () => {
@@ -191,7 +200,7 @@ class Tetris {
     }
     this.playerTotalScore +=
       awardedPoints * (this.level + 1) + this.softDropPoints;
-    totalScoreHeading.innerText = `Score: ${this.playerTotalScore}`;
+    this.totalScoreHeading.innerText = `Score: ${this.playerTotalScore}`;
   };
 
   updateRowsCleared = () => {
@@ -200,7 +209,7 @@ class Tetris {
       this.clearedRowSound.play();
     }
     this.totalRowsCleared += this.rowsCleared;
-    rowsClearedHeading.innerText = `Rows: ${this.totalRowsCleared}`;
+    this.rowsClearedHeading.innerText = `Rows: ${this.totalRowsCleared}`;
     if (this.level < 9 && this.clearedTenRows()) {
       this.levelUp();
     } else if (this.level >= 9 && this.clearedTwentyRows()) {
@@ -210,7 +219,7 @@ class Tetris {
 
   levelUp = () => {
     this.level++;
-    levelHeading.innerText = `Level: ${this.level}`;
+    this.levelHeading.innerText = `Level: ${this.level}`;
     this.gameSpeed -= 50;
   };
 
@@ -376,15 +385,16 @@ class Tetris {
   };
 
   setPreviewOfNextPiece = () => {
-    const existingPreviewImg = previewImgContainer.children[0];
+    // TODO - refactor this to keep a previewImg on the page at all times, and just update its src with preview img of the next piece
+    const existingPreviewImg = this.previewImgContainer.children[0];
     if (existingPreviewImg) {
-      previewImgContainer.removeChild(existingPreviewImg);
+      this.previewImgContainer.removeChild(existingPreviewImg);
     }
     const previewImg = document.createElement("img");
     previewImg.setAttribute("src", this.pieceQueue[0].preview);
     previewImg.setAttribute("alt", "preview-of-next-shape");
     previewImg.classList.add("preview-img");
-    previewImgContainer.appendChild(previewImg);
+    this.previewImgContainer.appendChild(previewImg);
   };
 
   dequeuePiece = () => {

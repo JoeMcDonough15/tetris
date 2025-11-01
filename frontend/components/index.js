@@ -146,6 +146,71 @@ export const createMainContainer = (id) => {
   return mainContainer;
 };
 
+// render a section element with an id and class that are the same
+export const createSectionContainer = (id) => {
+  const sectionContainer = document.createElement("section");
+  sectionContainer.setAttribute("id", id);
+  sectionContainer.classList.add(id);
+  return sectionContainer;
+};
+
+// render a canvas element for the game
+export const createCanvas = () => {
+  const canvas = document.createElement("canvas");
+  canvas.setAttribute("id", "canvas");
+  return canvas;
+};
+
+// render a section of n sub headers
+export const createSubHeaders = (typeOfHeaders, ...headerObjs) => {
+  const subHeadersContainer = document.createElement("div");
+  subHeadersContainer.classList.add("sub-headers-container");
+
+  headerObjs.forEach((headerObj) => {
+    // make a header and append it to the subHeadersContainer
+    const header = document.createElement(typeOfHeaders); // h3
+    header.innerText = headerObj.headerText;
+    header.setAttribute("id", headerObj.id);
+    header.classList.add(headerObj.id);
+    subHeadersContainer.append(header);
+  });
+  return subHeadersContainer;
+};
+
+// render a preview image container for the next piece in the game queue
+export const createPreviewImageContainer = (id) => {
+  const previewImgContainer = document.createElement("div");
+  previewImgContainer.setAttribute("id", id);
+  previewImgContainer.classList.add(id);
+  return previewImgContainer;
+};
+
+// render a controller container for the controller rows
+export const createControllerContainer = () => {
+  const controllerContainer = document.createElement("div");
+  controllerContainer.classList.add("controller-container");
+  return controllerContainer;
+};
+
+// render a row of user controls for click events
+export const createControllerRow = (containerClassName, ...controllerObjs) => {
+  const controllerRow = document.createElement("div");
+  controllerRow.classList.add(containerClassName);
+  controllerObjs.forEach((controllerObj) => {
+    const button = document.createElement("button");
+    button.setAttribute("id", controllerObj.id);
+    button.classList.add("controller-button");
+    const buttonImage = document.createElement("img");
+    buttonImage.setAttribute("src", controllerObj.imageSrc);
+    buttonImage.setAttribute("alt", controllerObj.imageAltText);
+    buttonImage.classList.add("button-icon");
+    button.appendChild(buttonImage);
+    controllerRow.appendChild(button);
+  });
+  return controllerRow;
+};
+
+// render a form to put inside the settingsModal in order to update settings
 const createUpdateSettingsForm = () => {
   const updateSettingsForm = document.createElement("form");
   // the id will be used to pass a reference to this form element into the Settings object's constructor method
@@ -200,6 +265,7 @@ const createUpdateSettingsForm = () => {
   return updateSettingsForm;
 };
 
+// render a settings modal that can be used as a dialog element for whenever user opens settings in main menu or pauses game during game play
 export const createSettingsModal = (closeModalButtonText) => {
   const settingsModal = document.createElement("dialog");
   settingsModal.classList.add("settings-modal");
