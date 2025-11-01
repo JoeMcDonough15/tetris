@@ -2,43 +2,6 @@ const savedSettings = JSON.parse(
   window.sessionStorage.getItem("savedSettings")
 );
 
-// render a nav container with a custom number of buttons containing nav links
-export const createNavButtons = (...buttonObjs) => {
-  const navButtonsContainer = document.createElement("nav");
-  navButtonsContainer.classList.add("nav-buttons");
-
-  const navButtons = buttonObjs.map((buttonObj) => {
-    const navButton = document.createElement("button");
-    const navLink = document.createElement("a");
-    navButton.classList.add("nav-button");
-    navLink.classList.add("nav-link");
-    navLink.setAttribute("href", buttonObj.navDestination);
-    navLink.innerText = buttonObj.buttonText;
-    navButton.appendChild(navLink);
-
-    return navButton;
-  });
-
-  navButtons.forEach((navButton) => {
-    navButtonsContainer.appendChild(navButton);
-  });
-
-  return navButtonsContainer;
-};
-
-export const createMenuButton = (buttonObj) => {
-  const button = document.createElement("button");
-  button.classList.add("nav-button");
-  const buttonContent = document.createElement("span");
-  buttonContent.innerText = buttonObj.buttonText;
-  buttonContent.classList.add("nav-link");
-  button.appendChild(buttonContent);
-  button.addEventListener("click", () => {
-    buttonObj.clickEventFunction();
-  });
-  return button;
-};
-
 // render a player name form with a custom method to be called on submit
 export const createPlayerNameForm = (methodForSubmit, playerScore) => {
   const existingForm = document.getElementById("player-name-form");
@@ -138,20 +101,55 @@ export const createCustomHeading = (headingLevel, headingText, ...classes) => {
   return headingElement;
 };
 
-// render a main container to use for each page
-export const createMainContainer = (id) => {
-  const mainContainer = document.createElement("main");
-  mainContainer.setAttribute("id", id);
-  mainContainer.classList.add("main-container", id);
-  return mainContainer;
+// render a custom container element with any number of classes and an optional id
+export const createContainer = (elementName, classNames, id = null) => {
+  const container = document.createElement(elementName);
+  if (id) container.setAttribute("id", id);
+  classNames.forEach((className) => {
+    container.classList.add(className);
+  });
+  return container;
 };
 
-// render a section element with an id and class that are the same
-export const createSectionContainer = (id) => {
-  const sectionContainer = document.createElement("section");
-  sectionContainer.setAttribute("id", id);
-  sectionContainer.classList.add(id);
-  return sectionContainer;
+// render one menu button that wraps either a navigation link or a span
+const createMenuButton = (buttonObj) => {
+  const button = document.createElement("button");
+  if (buttonObj.id) button.setAttribute("id", buttonObj.id);
+  button.classList.add("menu-button");
+  const buttonContent = document.createElement(
+    buttonObj.navLink ? "a" : "span"
+  );
+  buttonContent.innerText = buttonObj.buttonText;
+
+  if (buttonObj.navLink) {
+    buttonContent.setAttribute("href", buttonObj.navLink);
+  }
+  button.appendChild(buttonContent);
+  return button;
+};
+
+// render a container of menu buttons consisting of nav buttons first then any other menu buttons
+export const createMenuButtons = (containerObj, arrayOfButtonObjs) => {
+  const menuButtonsContainer = createContainer(
+    containerObj.elementName,
+    containerObj.classNames,
+    containerObj.id
+  );
+  // create nav buttons and place in their own separate nav tag
+  const navButtonsContainer = createContainer("nav", ["nav-buttons"]);
+  const navButtons = arrayOfButtonObjs
+    .filter((buttonObj) => buttonObj.navLink)
+    .map((buttonObj) => createMenuButton(buttonObj));
+  navButtonsContainer.append(...navButtons);
+
+  // create all non-nav buttons
+  const menuButtons = arrayOfButtonObjs
+    .filter((buttonObj) => !buttonObj.navLink)
+    .map((buttonObj) => createMenuButton(buttonObj));
+
+  menuButtonsContainer.append(navButtonsContainer, ...menuButtons);
+
+  return menuButtonsContainer;
 };
 
 // render a canvas element for the game
@@ -240,7 +238,6 @@ const createUpdateSettingsForm = () => {
   soundFxOnRadio.setAttribute("type", "radio");
   soundFxOnRadio.setAttribute("name", "soundFx");
   soundFxOnRadio.setAttribute("value", "on");
-  // soundFxOnRadio.setAttribute("checked", true);
   soundFxOnContainer.append(soundFxOnLabel, soundFxOnRadio);
 
   const soundFxOffContainer = document.createElement("div");
@@ -255,11 +252,9 @@ const createUpdateSettingsForm = () => {
   soundFxOffContainer.append(soundFxOffLabel, soundFxOffRadio);
 
   // set checked state based on saved settings, if we have it in sessionStorage
-  if (savedSettings) {
-    savedSettings.soundFx === "on"
-      ? soundFxOnRadio.setAttribute("checked", true)
-      : soundFxOffRadio.setAttribute("checked", true);
-  }
+  savedSettings && savedSettings.soundFx === "off"
+    ? soundFxOffRadio.setAttribute("checked", true)
+    : soundFxOnRadio.setAttribute("checked", true);
 
   const soundFxOnOffContainer = document.createElement("div");
   soundFxOnOffContainer.classList.add("radio-options-container");
@@ -283,6 +278,11 @@ export const createSettingsModal = (closeModalButtonText) => {
   settingsModal.setAttribute("id", "settings-modal");
   const updateSettingsForm = createUpdateSettingsForm();
   const closeModalButton = document.createElement("button");
+  // TODO once the pause menu is built, return the close modal event listener to this component; remove that
+  // TODO event listener from the /index.js and /play-game/index.js
+
+  // ? This is because, as of now, the close modal functionality also has to close the pause menu in play-game/index.js which
+  // ? is why it was removed from here and defined inside play-game/index.js
   closeModalButton.innerText = closeModalButtonText;
   closeModalButton.setAttribute("autofocus", true);
   closeModalButton.setAttribute("id", "close-modal-button");
