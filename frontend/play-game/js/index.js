@@ -16,8 +16,7 @@ import {
   postGameMenuButtonObjs,
   returnBody,
   controllerRowObjs,
-  keyControlPrefix,
-  validKeySelectInputIds,
+  settingsInputIds,
 } from "../../utils/index.js";
 import Tetris from "./game/tetris.js";
 
@@ -156,7 +155,9 @@ window.addEventListener("keyup", (e) => {
   const keyName = e.key;
   // Event Listeners For Updating Game Controls From Main Menu
   const activeElement = document.activeElement;
-  if (validKeySelectInputIds.includes(activeElement.getAttribute("id"))) {
+  if (
+    settingsInputIds.keyControlIds.includes(activeElement.getAttribute("id"))
+  ) {
     activeElement.value = keyName;
     return;
   }
