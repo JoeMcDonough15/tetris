@@ -42,6 +42,10 @@ class Settings {
     this.colorPaletteSelection = colorPaletteChoice;
   };
 
+  changeKeyControl = (keyToChange, newKeyChoice) => {
+    this.keyControls[keyToChange] = newKeyChoice;
+  };
+
   listenForSettingsUpdates = () => {
     this.updateSettingsForm.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -62,6 +66,13 @@ class Settings {
     const updateSoftDrop = this.updateSettingsForm.elements.softDrop.value;
     const updateTogglePause =
       this.updateSettingsForm.elements.togglePause.value;
+    const updatedKeyControlValues = [
+      updateRotateControl,
+      updateMoveLeft,
+      updateMoveRight,
+      updateSoftDrop,
+      updateTogglePause,
+    ];
 
     if (updateSoundFx === "on") {
       this.turnSoundFxOn();
@@ -76,11 +87,17 @@ class Settings {
     this.selectGameMusic(updateGameMusicSelection);
     this.selectColorPalette(updateColorPaletteSelection);
 
+    Object.keys(this.keyControls).forEach((keyControl, index) => {
+      const updatedValue = updatedKeyControlValues[index];
+      this.changeKeyControl(keyControl, updatedValue);
+    });
+
     const settingsJson = JSON.stringify({
       soundFx: this.soundFx,
       music: this.music,
       gameMusicSelection: this.gameMusicSelection,
       colorPaletteSelection: this.colorPaletteSelection,
+      keyControls: this.keyControls,
     });
 
     // save our newly updated settings to session storage
