@@ -71,11 +71,15 @@ export const createRadioOptions = (data) => {
   );
   radioOptionsLegend.innerText = data.fieldSetOptions.legendText;
 
-  const soundFxRadios = data.radioOptions.map((radioOption) =>
+  const radioOptions = quickElement("div", ["radio-options-container"]);
+
+  const radios = data.radioOptions.map((radioOption) =>
     createInputContainer(radioOption)
   );
 
-  radioOptionsFieldSet.append(radioOptionsLegend, ...soundFxRadios);
+  radioOptions.append(...radios);
+
+  radioOptionsFieldSet.append(radioOptionsLegend, radioOptions);
   return radioOptionsFieldSet;
 };
 
