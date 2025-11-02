@@ -30,10 +30,10 @@ button {
 }
 
 .settings-modal-container {
-  height: 40vh;
+  height: 50vh;
   position: fixed;
   margin: auto;
-  top: 50%;
+  top: 10%;
   width: 100vw;
 }
 

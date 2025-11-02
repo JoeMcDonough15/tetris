@@ -53,6 +53,15 @@ class Settings {
     });
   };
 
+  verifyUniqueKeyControls = (newKeyControls) => {
+    const CHAR_MAP = {};
+    for (const newKey of newKeyControls) {
+      if (CHAR_MAP[newKey]) return false;
+      CHAR_MAP[newKey] = true;
+    }
+    return true;
+  };
+
   updateSettings = () => {
     const updateSoundFx = this.updateSettingsForm.elements.soundFx.value;
     const updateMusicOnOff = this.updateSettingsForm.elements.music.value;
@@ -74,6 +83,16 @@ class Settings {
       updateTogglePause,
     ];
 
+    // before updating any settings, verify that none of the values
+    // inside keyControlValues are the same
+
+    if (!this.verifyUniqueKeyControls(updatedKeyControlValues)) {
+      // provide some sort of feedback to the user
+      console.log("duplicate values detected");
+      return;
+    }
+
+    // update all settings
     if (updateSoundFx === "on") {
       this.turnSoundFxOn();
     } else {
