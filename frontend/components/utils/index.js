@@ -39,7 +39,8 @@ export const createInputContainer = (data, customValue = null) => {
   if (data.input.type === "radio") {
     if (
       (savedSettings && savedSettings[data.input.name] === data.input.value) ||
-      data.input.value === "on"
+      data.input.value === "on" ||
+      data.input.value === "theme-1"
     ) {
       input.setAttribute("checked", true);
     }
@@ -94,14 +95,75 @@ export const createPreviewImg = (id) => {
 // UI Data
 export const updateSettingsFormData = {
   settingsOptions: {
-    musicOnOff: {},
-    musicSelection: {},
+    musicOnOff: {
+      fieldSetOptions: {
+        containerClasses: [],
+        legendText: "Music",
+        legendClasses: [],
+      },
+      radioOptions: [
+        {
+          containerClasses: ["radio-option"],
+          labelText: "On",
+          input: { id: "music-on", type: "radio", name: "music", value: "on" },
+        },
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Off",
+          input: {
+            id: "music-off",
+            type: "radio",
+            name: "music",
+            value: "off",
+          },
+        },
+      ],
+    },
+    musicSelect: {
+      fieldSetOptions: {
+        containerClasses: [],
+        legendText: "Music Select",
+        legendClasses: [],
+      },
+      radioOptions: [
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Theme One",
+          input: {
+            id: "music-theme-one",
+            type: "radio",
+            name: "gameMusicSelection",
+            value: "theme-1",
+          },
+        },
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Theme Two",
+          input: {
+            id: "music-theme-two",
+            type: "radio",
+            name: "gameMusicSelection",
+            value: "theme-2",
+          },
+        },
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Theme Three",
+          input: {
+            id: "music-theme-three",
+            type: "radio",
+            name: "gameMusicSelection",
+            value: "theme-3",
+          },
+        },
+      ],
+    },
     colorPalette: {},
     keyControls: {},
     soundFxOnOff: {
       fieldSetOptions: {
         containerClasses: [],
-        legendText: "",
+        legendText: "Sound FX",
         legendClasses: [],
       },
       radioOptions: [

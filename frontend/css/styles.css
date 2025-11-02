@@ -30,7 +30,7 @@ button {
 }
 
 .settings-modal-container {
-  height: 100px;
+  height: 40vh;
   position: fixed;
   margin: auto;
   top: 50%;

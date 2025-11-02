@@ -165,15 +165,26 @@ export const createControllerRow = (containerClassName, controllerObjs) => {
 // render a form to put inside the settingsModal in order to update settings
 const createUpdateSettingsForm = () => {
   const updateSettingsForm = quickElement("form", [], "update-settings-form");
-  const soundFxOptions = createRadioOptions(
+  const soundFxOnOffOptions = createRadioOptions(
     updateSettingsFormData.settingsOptions.soundFxOnOff
+  );
+  const musicOnOffOptions = createRadioOptions(
+    updateSettingsFormData.settingsOptions.musicOnOff
+  );
+  const musicSelectOptions = createRadioOptions(
+    updateSettingsFormData.settingsOptions.musicSelect
   );
   const submitButton = createSubmitButton({
     id: "update-settings-submit-button",
     buttonText: updateSettingsFormData.submitButtonText,
   });
 
-  updateSettingsForm.append(soundFxOptions, submitButton);
+  updateSettingsForm.append(
+    soundFxOnOffOptions,
+    musicOnOffOptions,
+    musicSelectOptions,
+    submitButton
+  );
   return updateSettingsForm;
 };
 
