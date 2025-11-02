@@ -217,3 +217,13 @@ export const createSettingsModal = (closeModalButtonText) => {
 
   return settingsModal;
 };
+
+export const createErrorMessage = (id) => {
+  const existingError = document.getElementById(id);
+  if (existingError) {
+    existingError.remove();
+  }
+  const error = quickElement("p", ["error-message"], id);
+  error.innerText = "key controls must be unique!";
+  return error;
+};

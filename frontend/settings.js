@@ -1,4 +1,4 @@
-import { quickElement } from "./components/utils/index.js";
+import { createErrorMessage } from "./components/index.js";
 
 class Settings {
   constructor(settingsModal, updateSettingsForm) {
@@ -91,18 +91,8 @@ class Settings {
 
     // Validation for Key Controls
     if (!this.verifyUniqueKeyControls(updatedKeyControlValues)) {
-      const existingError = document.getElementById("settings-error-message");
-      if (existingError) {
-        existingError.remove();
-      }
-      const error = quickElement(
-        "p",
-        ["error-message"],
-        "settings-error-message"
-      );
-      error.innerText = "key controls must be unique!";
+      const error = createErrorMessage("settings-error-message");
       this.updateSettingsForm.append(error);
-
       return;
     }
 
