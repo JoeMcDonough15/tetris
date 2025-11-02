@@ -9,6 +9,8 @@ import {
   menuButtonsContainerObj,
   mainMenuButtonObjs,
   returnBody,
+  keyControlPrefix,
+  validKeySelectInputIds,
 } from "./utils/index.js";
 
 // Build out the UI
@@ -40,6 +42,17 @@ document.getElementById("close-modal-button").addEventListener("click", () => {
   settingsModal.close();
 });
 
-// Target the updateSettingsForm and instantiate a Settings object for changing settings
+// Target the updateSettingsForm and Instantiate a Settings Object
 const updateSettingsForm = document.getElementById("update-settings-form");
 new Settings(settingsModal, updateSettingsForm);
+
+// Event Listeners For Updating Game Controls From Main Menu
+window.addEventListener("keyup", (e) => {
+  const keyName = e.key;
+  const activeElement = document.activeElement;
+  if (!validKeySelectInputIds.includes(activeElement.getAttribute("id"))) {
+    return;
+  }
+
+  activeElement.value = keyName;
+});

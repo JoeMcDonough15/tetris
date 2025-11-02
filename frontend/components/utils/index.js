@@ -39,7 +39,9 @@ export const createInputContainer = (data, customValue = null) => {
   if (data.input.type === "radio") {
     if (
       (savedSettings && savedSettings[data.input.name] === data.input.value) ||
-      data.input.value === "on"
+      data.input.value === "on" ||
+      data.input.value === "theme-1" ||
+      data.input.value === "classic"
     ) {
       input.setAttribute("checked", true);
     }
@@ -94,14 +96,169 @@ export const createPreviewImg = (id) => {
 // UI Data
 export const updateSettingsFormData = {
   settingsOptions: {
-    musicOnOff: {},
-    musicSelection: {},
-    colorPalette: {},
-    keyControls: {},
+    musicOnOff: {
+      fieldSetOptions: {
+        containerClasses: [],
+        legendText: "Music",
+        legendClasses: [],
+      },
+      radioOptions: [
+        {
+          containerClasses: ["radio-option"],
+          labelText: "On",
+          input: { id: "music-on", type: "radio", name: "music", value: "on" },
+        },
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Off",
+          input: {
+            id: "music-off",
+            type: "radio",
+            name: "music",
+            value: "off",
+          },
+        },
+      ],
+    },
+    musicSelect: {
+      fieldSetOptions: {
+        containerClasses: [],
+        legendText: "Music Theme",
+        legendClasses: [],
+      },
+      radioOptions: [
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Theme One",
+          input: {
+            id: "music-theme-one",
+            type: "radio",
+            name: "gameMusicSelection",
+            value: "theme-1",
+          },
+        },
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Theme Two",
+          input: {
+            id: "music-theme-two",
+            type: "radio",
+            name: "gameMusicSelection",
+            value: "theme-2",
+          },
+        },
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Theme Three",
+          input: {
+            id: "music-theme-three",
+            type: "radio",
+            name: "gameMusicSelection",
+            value: "theme-3",
+          },
+        },
+      ],
+    },
+    colorPaletteSelect: {
+      fieldSetOptions: {
+        containerClasses: [],
+        legendText: "Color Palette",
+        legendClasses: [],
+      },
+      radioOptions: [
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Classic",
+          input: {
+            id: "color-palette-classic",
+            type: "radio",
+            name: "colorPaletteSelection",
+            value: "classic",
+          },
+        },
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Two",
+          input: {
+            id: "color-palette-two",
+            type: "radio",
+            name: "colorPaletteSelection",
+            value: "two",
+          },
+        },
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Three",
+          input: {
+            id: "color-palette-three",
+            type: "radio",
+            name: "colorPaletteSelection",
+            value: "three",
+          },
+        },
+      ],
+    },
+    keyControls: {
+      rotate: {
+        containerClasses: [],
+        labelText: "Rotate Shape",
+        input: {
+          id: "key-control-rotate",
+          type: "text",
+          name: "rotate",
+          value: savedSettings?.keyControls.softDrop || "ArrowUp",
+          required: true,
+        },
+      },
+      moveLeft: {
+        containerClasses: [],
+        labelText: "Move Left",
+        input: {
+          id: "key-control-move-left",
+          type: "text",
+          name: "moveLeft",
+          value: savedSettings?.keyControls.softDrop || "ArrowLeft",
+          required: true,
+        },
+      },
+      moveRight: {
+        containerClasses: [],
+        labelText: "Move Right",
+        input: {
+          id: "key-control-move-right",
+          type: "text",
+          name: "moveRight",
+          value: savedSettings?.keyControls.softDrop || "ArrowRight",
+          required: true,
+        },
+      },
+      softDrop: {
+        containerClasses: [],
+        labelText: "Soft Drop Shape",
+        input: {
+          id: "key-control-soft-drop",
+          type: "text",
+          name: "softDrop",
+          value: savedSettings?.keyControls.softDrop || "ArrowDown",
+          required: true,
+        },
+      },
+      togglePause: {
+        containerClasses: [],
+        labelText: "Pause/Unpause Game",
+        input: {
+          id: "key-control-toggle-pause",
+          type: "text",
+          name: "togglePause",
+          value: savedSettings?.keyControls.softDrop || "p",
+          required: true,
+        },
+      },
+    },
     soundFxOnOff: {
       fieldSetOptions: {
         containerClasses: [],
-        legendText: "",
+        legendText: "Sound FX",
         legendClasses: [],
       },
       radioOptions: [
@@ -138,7 +295,7 @@ export const highScoresFormData = {
     input: {
       id: "player-name",
       type: "text",
-      name: "player-name",
+      name: "playerName",
       required: true,
       maxLength: 18,
     },
@@ -149,7 +306,7 @@ export const highScoresFormData = {
     input: {
       id: "player-score",
       type: "text",
-      name: "player-score",
+      name: "playerScore",
       readonly: true,
     },
   },

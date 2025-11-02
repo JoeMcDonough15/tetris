@@ -101,11 +101,12 @@ class Tetris {
 
   submitHighScore = async () => {
     const playerNameForm = document.getElementById("player-name-form");
-    const playerName = playerNameForm.elements["player-name"].value;
+    const playerName = playerNameForm.element.playerName.value;
+    const playerScore = playerNameForm.elements.playerScore.value;
 
     const playerDetails = {
       name: playerName,
-      score: this.playerTotalScore,
+      score: playerScore,
     };
 
     if (this.idOfScoreToRemove) {
