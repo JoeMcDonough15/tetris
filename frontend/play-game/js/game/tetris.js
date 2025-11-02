@@ -127,7 +127,6 @@ class Tetris {
 
   togglePause = () => {
     if (!this.gamePaused) {
-      // Update all values of settings inputs to match current settings
       displayCurrentSettingsOnForm(this.gameSettings);
       this.settingsModal.showModal();
     } else {

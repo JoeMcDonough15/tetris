@@ -18,7 +18,7 @@ class Settings {
       softDrop: "ArrowDown",
       togglePause: "p",
     };
-
+    this.settingsAppliedSuccessfully = false;
     this.listenForSettingsUpdates();
   }
 
@@ -122,6 +122,8 @@ class Settings {
       colorPaletteSelection: this.colorPaletteSelection,
       keyControls: this.keyControls,
     });
+
+    this.settingsAppliedSuccessfully = true;
 
     // save our newly updated settings to session storage
     window.sessionStorage.setItem("savedSettings", settingsJson);

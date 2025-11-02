@@ -122,7 +122,12 @@ scoreHeading.innerText = `Score: ${game.playerTotalScore}`;
 
 // Mouse Events
 updateSettingsSubmitButton.addEventListener("click", () => {
-  game.togglePause();
+  setTimeout(() => {
+    if (settingsObj.settingsAppliedSuccessfully) {
+      game.togglePause();
+      settingsObj.settingsAppliedSuccessfully = false;
+    }
+  }, 150);
 });
 
 modalCloseButton.addEventListener("click", () => {
