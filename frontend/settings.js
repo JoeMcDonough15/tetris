@@ -1,3 +1,5 @@
+import { quickElement } from "./components/utils/index.js";
+
 class Settings {
   constructor(settingsModal, updateSettingsForm) {
     this.savedSettings = JSON.parse(
@@ -87,16 +89,24 @@ class Settings {
       updateTogglePause,
     ];
 
-    // before updating any settings, verify that none of the values
-    // inside keyControlValues are the same
-
+    // Validation for Key Controls
     if (!this.verifyUniqueKeyControls(updatedKeyControlValues)) {
-      // provide some sort of feedback to the user
-      console.log("duplicate values detected");
+      const existingError = document.getElementById("settings-error-message");
+      if (existingError) {
+        existingError.remove();
+      }
+      const error = quickElement(
+        "p",
+        ["error-message"],
+        "settings-error-message"
+      );
+      error.innerText = "key controls must be unique!";
+      this.updateSettingsForm.append(error);
+
       return;
     }
 
-    // update all settings
+    // Update All Settings
     if (updateSoundFx === "on") {
       this.turnSoundFxOn();
     } else {

@@ -10,10 +10,6 @@ import {
   updateSettingsFormData,
 } from "./utils/index.js";
 
-// const savedSettings = JSON.parse(
-//   window.sessionStorage.getItem("savedSettings")
-// );
-
 // render a player name form with a custom method to be called on submit
 export const createPlayerNameForm = (methodForSubmit, playerScore) => {
   // ! Why do we need these lines that remove an existing form?

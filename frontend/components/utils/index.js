@@ -1,7 +1,3 @@
-const savedSettings = JSON.parse(
-  window.sessionStorage.getItem("savedSettings")
-);
-
 // UI Helpers
 
 // create any element with any number of classes and an optional id
@@ -112,7 +108,7 @@ export const updateSettingsFormData = {
     musicSelect: {
       fieldSetOptions: {
         containerClasses: [],
-        legendText: "Music Theme",
+        legendText: "Select Game Music",
         legendClasses: [],
       },
       radioOptions: [
@@ -151,7 +147,7 @@ export const updateSettingsFormData = {
     colorPaletteSelect: {
       fieldSetOptions: {
         containerClasses: [],
-        legendText: "Color Palette",
+        legendText: "Select Color Palette",
         legendClasses: [],
       },
       radioOptions: [

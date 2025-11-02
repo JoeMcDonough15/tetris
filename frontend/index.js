@@ -41,6 +41,7 @@ const settingsObj = new Settings(settingsModal, updateSettingsForm);
 // Add Event Listeners
 document.getElementById("open-modal-button").addEventListener("click", () => {
   displayCurrentSettingsOnForm(settingsObj);
+  // TODO remove  "settings-error-message" if it exists
   settingsModal.showModal();
 });
 document.getElementById("close-modal-button").addEventListener("click", () => {
