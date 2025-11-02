@@ -29,7 +29,7 @@ button {
   border: 0;
 }
 
-dialog.settings-modal {
+.settings-modal-container {
   height: 100px;
   position: fixed;
   margin: auto;
@@ -185,6 +185,10 @@ dialog.settings-modal {
 
 .button-icon {
   width: 50%;
+}
+
+.player-score-container {
+  pointer-events: none;
 }
 
 @media screen and (max-width: 300px) {

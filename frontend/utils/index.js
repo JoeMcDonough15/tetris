@@ -10,7 +10,7 @@ export const returnBody = () => {
 // Menu Buttons
 export const mainMenuButtonsContainerObj = {
   elementName: "div",
-  classNames: ["menu-buttons"],
+  classes: ["menu-buttons"],
 };
 
 export const mainMenuButtonObjs = [
