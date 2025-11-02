@@ -56,6 +56,13 @@ class Settings {
       this.updateSettingsForm.elements.gameMusicSelection.value;
     const updateColorPaletteSelection =
       this.updateSettingsForm.elements.colorPaletteSelection.value;
+    const updateRotateControl = this.updateSettingsForm.elements.rotate.value;
+    const updateMoveLeft = this.updateSettingsForm.elements.moveLeft.value;
+    const updateMoveRight = this.updateSettingsForm.elements.moveRight.value;
+    const updateSoftDrop = this.updateSettingsForm.elements.softDrop.value;
+    const updateTogglePause =
+      this.updateSettingsForm.elements.togglePause.value;
+
     if (updateSoundFx === "on") {
       this.turnSoundFxOn();
     } else {

@@ -40,7 +40,8 @@ export const createInputContainer = (data, customValue = null) => {
     if (
       (savedSettings && savedSettings[data.input.name] === data.input.value) ||
       data.input.value === "on" ||
-      data.input.value === "theme-1"
+      data.input.value === "theme-1" ||
+      data.input.value === "classic"
     ) {
       input.setAttribute("checked", true);
     }
@@ -197,7 +198,58 @@ export const updateSettingsFormData = {
         },
       ],
     },
-    keyControls: {},
+    keyControls: {
+      rotate: {
+        containerClasses: [],
+        labelText: "Rotate Shape",
+        input: {
+          id: "key-control-rotate",
+          type: "text",
+          name: "rotate",
+          required: true,
+        },
+      },
+      moveLeft: {
+        containerClasses: [],
+        labelText: "Move Left",
+        input: {
+          id: "key-control-move-left",
+          type: "text",
+          name: "moveLeft",
+          required: true,
+        },
+      },
+      moveRight: {
+        containerClasses: [],
+        labelText: "Move Right",
+        input: {
+          id: "key-control-move-right",
+          type: "text",
+          name: "moveRight",
+          required: true,
+        },
+      },
+      softDrop: {
+        containerClasses: [],
+        labelText: "Soft Drop Shape",
+        input: {
+          id: "key-control-soft-drop",
+          type: "text",
+          name: "softDrop",
+          required: true,
+        },
+      },
+      togglePause: {
+        containerClasses: [],
+        labelText: "Pause/Unpause Game",
+        input: {
+          id: "key-control-toggle-pause",
+          type: "text",
+          name: "togglePause",
+          required: true,
+        },
+      },
+    },
     soundFxOnOff: {
       fieldSetOptions: {
         containerClasses: [],
@@ -238,7 +290,7 @@ export const highScoresFormData = {
     input: {
       id: "player-name",
       type: "text",
-      name: "player-name",
+      name: "playerName",
       required: true,
       maxLength: 18,
     },
@@ -249,7 +301,7 @@ export const highScoresFormData = {
     input: {
       id: "player-score",
       type: "text",
-      name: "player-score",
+      name: "playerScore",
       readonly: true,
     },
   },

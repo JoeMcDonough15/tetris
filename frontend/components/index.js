@@ -177,6 +177,14 @@ const createUpdateSettingsForm = () => {
   const colorPaletteSelectOptions = createRadioOptions(
     updateSettingsFormData.settingsOptions.colorPaletteSelect
   );
+  const keyControlSelectOptionsContainer = quickElement("div", []);
+
+  const keyControlSelectOptions = Object.values(
+    updateSettingsFormData.settingsOptions.keyControls
+  ).map((keyControlObj) => createInputContainer(keyControlObj));
+
+  keyControlSelectOptionsContainer.append(...keyControlSelectOptions);
+
   const submitButton = createSubmitButton({
     id: "update-settings-submit-button",
     buttonText: updateSettingsFormData.submitButtonText,
@@ -187,6 +195,7 @@ const createUpdateSettingsForm = () => {
     musicOnOffOptions,
     musicSelectOptions,
     colorPaletteSelectOptions,
+    keyControlSelectOptionsContainer,
     submitButton
   );
   return updateSettingsForm;

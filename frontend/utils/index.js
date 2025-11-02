@@ -1,11 +1,9 @@
-// Constants
-
+// Game Grid Values
 export const NUM_ROWS = 18;
 export const NUM_COLS = 10;
 export const GRID_SPACE = 20;
 
-// Shape Colors
-
+// Available Shapes
 export const availableShapes = [
   "line",
   "square",
@@ -16,6 +14,7 @@ export const availableShapes = [
   "zShape",
 ];
 
+// Shape Colors
 export const shapeColors = {
   green: "rgb(0 255 0)",
   blue: "rgb(0 100 255)",
@@ -42,14 +41,6 @@ export const previewImgPathObj = {
   suffix: "-preview.png",
 };
 
-export const generatePreviewImgPath = (shapeName) => {
-  return `${previewImgPathObj.prefix}${shapeName}${previewImgPathObj.suffix}`;
-};
-
-export const generateSoundPath = (soundEffect) => {
-  return `${gameSoundsPathObj.prefix}${soundEffect}${gameSoundsPathObj.suffix}`;
-};
-
 // Utility Functions
 export const returnBody = () => {
   const bodyArrayFromCollection = Array.from(
@@ -57,6 +48,13 @@ export const returnBody = () => {
   );
   const body = bodyArrayFromCollection[0];
   return body;
+};
+export const generatePreviewImgPath = (shapeName) => {
+  return `${previewImgPathObj.prefix}${shapeName}${previewImgPathObj.suffix}`;
+};
+
+export const generateSoundPath = (soundEffect) => {
+  return `${gameSoundsPathObj.prefix}${soundEffect}${gameSoundsPathObj.suffix}`;
 };
 
 // Menu Buttons
@@ -87,14 +85,14 @@ export const postGameMenuButtonObjs = [
   { navLink: "/high-scores", buttonText: "View High Scores" },
 ];
 
-// Tetris Sub Headers
-
+// Game State Sub Headers
 export const playGameSubHeaders = [
   { headerText: "Level: 0", id: "level-heading" },
   { headerText: "Score: 0", id: "total-score-heading" },
   { headerText: "Rows: 0", id: "rows-cleared-heading" },
 ];
 
+// Game Controller Buttons
 export const controllerRowObjs = {
   rowOne: [
     {
@@ -128,3 +126,13 @@ export const controllerRowObjs = {
     },
   ],
 };
+
+// Key Control Values For Keydown Event Listeners
+export const keyControlPrefix = "key-control-";
+export const validKeySelectInputIds = [
+  `${keyControlPrefix}rotate`,
+  `${keyControlPrefix}move-left`,
+  `${keyControlPrefix}move-right`,
+  `${keyControlPrefix}soft-drop`,
+  `${keyControlPrefix}toggle-pause`,
+];

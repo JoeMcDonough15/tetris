@@ -16,6 +16,7 @@ import {
   postGameMenuButtonObjs,
   returnBody,
   controllerRowObjs,
+  keyControlPrefix,
 } from "../../utils/index.js";
 import Tetris from "./game/tetris.js";
 
@@ -163,8 +164,26 @@ window.addEventListener("keyup", (e) => {
   }
 });
 
+// Inputs For Changing Key Controls
+const selectRotateKeyInput = document.getElementById(
+  `${keyControlPrefix}rotate`
+);
+const selectMoveLeftKeyInput = document.getElementById(
+  `${keyControlPrefix}move-left`
+);
+const selectMoveRightKeyInput = document.getElementById(
+  `${keyControlPrefix}move-right`
+);
+const selectSoftDropKeyInput = document.getElementById(
+  `${keyControlPrefix}soft-drop`
+);
+const selectTogglePause = document.getElementById(
+  `${keyControlPrefix}toggle-pause`
+);
+
 window.addEventListener("keydown", (e) => {
   const keyName = e.key;
+  console.log(keyName);
   if (keyName === settingsObj.keyControls.rotate) {
     game.rotatePiece();
   } else if (keyName === settingsObj.keyControls.moveLeft) {
