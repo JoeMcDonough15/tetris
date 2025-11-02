@@ -122,7 +122,7 @@ export const updateSettingsFormData = {
     musicSelect: {
       fieldSetOptions: {
         containerClasses: [],
-        legendText: "Music Select",
+        legendText: "Music Theme",
         legendClasses: [],
       },
       radioOptions: [
@@ -158,7 +158,45 @@ export const updateSettingsFormData = {
         },
       ],
     },
-    colorPalette: {},
+    colorPaletteSelect: {
+      fieldSetOptions: {
+        containerClasses: [],
+        legendText: "Color Palette",
+        legendClasses: [],
+      },
+      radioOptions: [
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Classic",
+          input: {
+            id: "color-palette-classic",
+            type: "radio",
+            name: "colorPaletteSelection",
+            value: "classic",
+          },
+        },
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Two",
+          input: {
+            id: "color-palette-two",
+            type: "radio",
+            name: "colorPaletteSelection",
+            value: "two",
+          },
+        },
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Three",
+          input: {
+            id: "color-palette-three",
+            type: "radio",
+            name: "colorPaletteSelection",
+            value: "three",
+          },
+        },
+      ],
+    },
     keyControls: {},
     soundFxOnOff: {
       fieldSetOptions: {

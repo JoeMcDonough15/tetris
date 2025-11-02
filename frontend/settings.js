@@ -54,8 +54,8 @@ class Settings {
     const updateMusicOnOff = this.updateSettingsForm.elements.music.value;
     const updateGameMusicSelection =
       this.updateSettingsForm.elements.gameMusicSelection.value;
-    // const updateColorPaletteSelection =
-    //   this.updateSettingsForm.elements.colorPaletteSelection.value;
+    const updateColorPaletteSelection =
+      this.updateSettingsForm.elements.colorPaletteSelection.value;
     if (updateSoundFx === "on") {
       this.turnSoundFxOn();
     } else {
@@ -67,13 +67,13 @@ class Settings {
       this.turnMusicOff();
     }
     this.selectGameMusic(updateGameMusicSelection);
-    // this.selectColorPalette(updateColorPaletteSelection);
+    this.selectColorPalette(updateColorPaletteSelection);
 
     const settingsJson = JSON.stringify({
       soundFx: this.soundFx,
       music: this.music,
       gameMusicSelection: this.gameMusicSelection,
-      // colorPaletteSelection: this.colorPaletteSelection,
+      colorPaletteSelection: this.colorPaletteSelection,
     });
 
     // save our newly updated settings to session storage

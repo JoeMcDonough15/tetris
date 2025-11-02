@@ -174,6 +174,9 @@ const createUpdateSettingsForm = () => {
   const musicSelectOptions = createRadioOptions(
     updateSettingsFormData.settingsOptions.musicSelect
   );
+  const colorPaletteSelectOptions = createRadioOptions(
+    updateSettingsFormData.settingsOptions.colorPaletteSelect
+  );
   const submitButton = createSubmitButton({
     id: "update-settings-submit-button",
     buttonText: updateSettingsFormData.submitButtonText,
@@ -183,6 +186,7 @@ const createUpdateSettingsForm = () => {
     soundFxOnOffOptions,
     musicOnOffOptions,
     musicSelectOptions,
+    colorPaletteSelectOptions,
     submitButton
   );
   return updateSettingsForm;
