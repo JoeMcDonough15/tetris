@@ -158,20 +158,20 @@ softDropButton.addEventListener("click", () => {
 
 // Key Events
 window.addEventListener("keyup", (e) => {
-  if (e.key === "p") {
+  if (e.key === settingsObj.keyControls.togglePause) {
     game.togglePause();
   }
 });
 
 window.addEventListener("keydown", (e) => {
   const keyName = e.key;
-  if (keyName === "ArrowRight") {
-    game.moveShape("right");
-  } else if (keyName === "ArrowLeft") {
-    game.moveShape("left");
-  } else if (keyName === "r" || keyName === "ArrowUp") {
+  if (keyName === settingsObj.keyControls.rotate) {
     game.rotatePiece();
-  } else if (keyName === "ArrowDown") {
+  } else if (keyName === settingsObj.keyControls.moveLeft) {
+    game.moveShape("left");
+  } else if (keyName === settingsObj.keyControls.moveRight) {
+    game.moveShape("right");
+  } else if (keyName === settingsObj.keyControls.softDrop) {
     game.softDrop();
   } else if (keyName === "Escape" && game.gamePaused) {
     game.togglePause();

@@ -3,11 +3,18 @@ class Settings {
     this.settingsModal = settingsModal;
     this.updateSettingsForm = updateSettingsForm;
     this.soundFx = savedSettings?.soundFx || "on";
+    this.music = savedSettings?.music || "on";
+    this.gameMusicSelection = savedSettings?.gameMusicSelection || "theme-1";
+    this.colorPalette = savedSettings?.colorPalette || "classic";
+    this.keyControls = savedSettings?.keyControls || {
+      rotate: "ArrowUp",
+      moveLeft: "ArrowLeft",
+      moveRight: "ArrowRight",
+      softDrop: "ArrowDown",
+      togglePause: "p",
+    };
+
     this.listenForSettingsUpdates();
-    // music - off or on
-    // music selection for in game play
-    // color scheme
-    // player controls
   }
 
   turnSoundFxOn = () => {
