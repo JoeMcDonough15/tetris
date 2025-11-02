@@ -1,4 +1,4 @@
-import { GRID_SPACE } from "./constants.js";
+import { GRID_SPACE } from "../../../utils/index.js";
 import { canvas, ctx } from "./canvas.js";
 
 class Block {

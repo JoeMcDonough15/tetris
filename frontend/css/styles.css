@@ -29,7 +29,7 @@ button {
   border: 0;
 }
 
-dialog.settings-modal {
+.settings-modal-container {
   height: 100px;
   position: fixed;
   margin: auto;
@@ -78,18 +78,20 @@ dialog.settings-modal {
   height: 100vh;
 }
 
-.main-menu-buttons,
+/* menu buttons that exist on any page, not just on the main menu. */
+.menu-buttons,
 .nav-buttons {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.nav-button {
+.menu-button {
   background: pink;
 }
 
-.nav-link {
+.menu-button > a,
+.menu-button > span {
   display: inline-block;
   padding: 10px;
   width: 100%;
@@ -183,6 +185,10 @@ dialog.settings-modal {
 
 .button-icon {
   width: 50%;
+}
+
+.player-score-container {
+  pointer-events: none;
 }
 
 @media screen and (max-width: 300px) {

@@ -1,17 +1,23 @@
 import {
+  createContainer,
   createCustomHeading,
-  createMainContainer,
-  createMenuButton,
-  createNavButtons,
+  createMenuButtons,
   createSettingsModal,
 } from "./components/index.js";
 import Settings from "./settings.js";
+import {
+  menuButtonsContainerObj,
+  mainMenuButtonObjs,
+  returnBody,
+} from "./utils/index.js";
 
-const bodyArrayFromCollection = Array.from(
-  document.getElementsByTagName("body")
+// Build out the UI
+const body = returnBody();
+const mainMenuContainer = createContainer(
+  "main",
+  ["main-container", "main-menu-container"],
+  "main-menu-container"
 );
-const body = bodyArrayFromCollection[0];
-const mainMenuContainer = createMainContainer("main-menu-container");
 const settingsModal = createSettingsModal("Return to Main Menu");
 
 body.prepend(
@@ -20,28 +26,20 @@ body.prepend(
   settingsModal
 );
 
-const navButtons = [
-  { navDestination: "/play-game", buttonText: "Start Game" },
-  { navDestination: "/high-scores", buttonText: "View High Scores" },
-];
-
-const settingsButton = {
-  buttonText: "Settings",
-  clickEventFunction: () => {
-    settingsModal.showModal();
-  },
-};
-
-const mainMenuButtonsContainer = document.createElement("div");
-mainMenuButtonsContainer.classList.add("main-menu-buttons");
-
-mainMenuButtonsContainer.append(
-  createNavButtons(...navButtons),
-  createMenuButton(settingsButton)
+const mainMenuButtons = createMenuButtons(
+  menuButtonsContainerObj,
+  mainMenuButtonObjs
 );
+mainMenuContainer.appendChild(mainMenuButtons);
 
-mainMenuContainer.appendChild(mainMenuButtonsContainer);
+// Add Event Listeners
+document.getElementById("open-modal-button").addEventListener("click", () => {
+  settingsModal.showModal();
+});
+document.getElementById("close-modal-button").addEventListener("click", () => {
+  settingsModal.close();
+});
 
+// Target the updateSettingsForm and instantiate a Settings object for changing settings
 const updateSettingsForm = document.getElementById("update-settings-form");
-const settingsObj = new Settings(settingsModal, updateSettingsForm);
-settingsObj.listenForSettingsUpdates(); // add the event listener to the form for submission
+new Settings(settingsModal, updateSettingsForm);

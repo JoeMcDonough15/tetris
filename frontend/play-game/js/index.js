@@ -2,88 +2,55 @@ import {
   createControllerContainer,
   createControllerRow,
   createCustomHeading,
-  createSectionContainer,
+  createContainer,
   createSettingsModal,
   createSubHeaders,
-  createNavButtons,
+  createMenuButtons,
   createPreviewImgContainer,
 } from "../../components/index.js";
 import HighScores from "../../high-scores/js/api/highScoresApi.js";
 import Settings from "../../settings.js";
+import {
+  menuButtonsContainerObj,
+  playGameSubHeaders,
+  postGameMenuButtonObjs,
+  returnBody,
+  controllerRowObjs,
+} from "../../utils/index.js";
 import Tetris from "./game/tetris.js";
 
 // Build out the UI
 
-const bodyArrayFromCollection = Array.from(
-  document.getElementsByTagName("body")
-);
-const body = bodyArrayFromCollection[0];
+const body = returnBody();
 body.prepend(createCustomHeading("h1", "Tetris", "main-heading"));
 
 // target gameGridContainer to inject this UI after it
 const gameGridContainer = document.getElementById("game-grid-container");
 
 // Build out the gameDetailsContainer
-const gameDetailsContainer = createSectionContainer("game-details-container");
+const gameDetailsContainer = createContainer(
+  "section",
+  ["game-details-container"],
+  "game-details-container"
+);
 
-const subHeaders = [
-  { headerText: "Level: 0", id: "level-heading" },
-  { headerText: "Score: 0", id: "total-score-heading" },
-  { headerText: "Rows: 0", id: "rows-cleared-heading" },
-];
-const subHeadersContainer = createSubHeaders("h3", ...subHeaders);
+const subHeadersContainer = createSubHeaders("h3", playGameSubHeaders);
 
 const previewImgContainer = createPreviewImgContainer("preview-img-container");
-
-const imageSrcPrefix = "/images/buttons/";
-const imageSrcSuffix = ".png";
-const controllerRowOneObjs = [
-  {
-    id: "btn-up",
-    imageSrc: `${imageSrcPrefix}rotate${imageSrcSuffix}`,
-    imageAltText: "button to rotate shape clockwise",
-  },
-];
-
-const controllerRowTwoObjs = [
-  {
-    id: "btn-left",
-    imageSrc: `${imageSrcPrefix}left-arrow${imageSrcSuffix}`,
-    imageAltText: "a button to move the piece to the left",
-  },
-  {
-    id: "btn-pause",
-    imageSrc: `${imageSrcPrefix}pause-play${imageSrcSuffix}`,
-    imageAltText: "a button to toggle the play/pause state",
-  },
-  {
-    id: "btn-right",
-    imageSrc: `${imageSrcPrefix}right-arrow${imageSrcSuffix}`,
-    imageAltText: "a button to move the piece to the right",
-  },
-];
-
-const controllerRowThreeObjs = [
-  {
-    id: "btn-down",
-    imageSrc: `${imageSrcPrefix}down-arrow${imageSrcSuffix}`,
-    imageAltText: "a button to soft drop the piece",
-  },
-];
 
 const controllerContainer = createControllerContainer();
 
 const controllerRowOne = createControllerRow(
   "controller-row-one",
-  ...controllerRowOneObjs
+  controllerRowObjs.rowOne
 );
 const controllerRowTwo = createControllerRow(
   "controller-row-two",
-  ...controllerRowTwoObjs
+  controllerRowObjs.rowTwo
 );
 const controllerRowThree = createControllerRow(
   "controller-row-three",
-  ...controllerRowThreeObjs
+  controllerRowObjs.rowThree
 );
 
 controllerContainer.append(
@@ -113,7 +80,6 @@ const settingsObj = new Settings(
   updateSettingsForm,
   savedSettings
 );
-settingsObj.listenForSettingsUpdates(); // adds event listener for form submission to update settings
 
 // Instantiate a high scores object for use inside the Tetris game
 const highScoresObj = new HighScores();
@@ -125,9 +91,9 @@ const previewImg = document.getElementById("preview-img");
 const levelHeading = document.getElementById("level-heading");
 const totalScoreHeading = document.getElementById("total-score-heading");
 const rowsClearedHeading = document.getElementById("rows-cleared-heading");
-const postGameNavButtons = createNavButtons(
-  { navDestination: "/", buttonText: "Return to Main Menu" },
-  { navDestination: "/high-scores", buttonText: "View High Scores" }
+const postGameMenuButtons = createMenuButtons(
+  menuButtonsContainerObj,
+  postGameMenuButtonObjs
 );
 
 // Instantiate the Tetris game
@@ -143,7 +109,7 @@ const game = new Tetris(
   levelHeading,
   totalScoreHeading,
   rowsClearedHeading,
-  postGameNavButtons
+  postGameMenuButtons
 );
 
 // Target Elements for Event Listeners

@@ -3,6 +3,7 @@ class Settings {
     this.settingsModal = settingsModal;
     this.updateSettingsForm = updateSettingsForm;
     this.soundFx = savedSettings?.soundFx || "on";
+    this.listenForSettingsUpdates();
     // music - off or on
     // music selection for in game play
     // color scheme

@@ -1,17 +1,21 @@
-import {
-  createCanvas,
-  createMainContainer,
-  createSectionContainer,
-} from "../../../components/index.js";
-import { NUM_ROWS, NUM_COLS, GRID_SPACE } from "./constants.js";
+import { createCanvas, createContainer } from "../../../components/index.js";
+import { NUM_ROWS, NUM_COLS, GRID_SPACE } from "../../../utils/index.js";
 
 const bodyArrayFromCollection = Array.from(
   document.getElementsByTagName("body")
 );
 const body = bodyArrayFromCollection[0];
 
-const mainContainer = createMainContainer("play-game-container");
-const gameGridContainer = createSectionContainer("game-grid-container");
+const mainContainer = createContainer(
+  "main",
+  ["play-game-container"],
+  "play-game-container"
+);
+const gameGridContainer = createContainer(
+  "section",
+  ["game-grid-container"],
+  "game-grid-container"
+);
 
 export const canvas = createCanvas("canvas");
 canvas.width = NUM_COLS * GRID_SPACE;

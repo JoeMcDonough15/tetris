@@ -1,16 +1,20 @@
 import HighScores from "./api/highScoresApi.js";
 import {
-  createMainContainer,
-  createNavButtons,
+  createContainer,
+  createMenuButtons,
   createHighScoresTable,
   createCustomHeading,
 } from "../../components/index.js";
+import {
+  menuButtonsContainerObj,
+  highScoresMenuButtonObjs,
+} from "../../utils/index.js";
 
 const bodyArrayFromCollection = Array.from(
   document.getElementsByTagName("body")
 );
 const body = bodyArrayFromCollection[0];
-const highScoresContainer = createMainContainer("high-scores-container");
+const highScoresContainer = createContainer("main", ["high-scores-container"]);
 
 body.prepend(
   createCustomHeading("h1", "High Scores", "main-heading"),
@@ -20,12 +24,9 @@ body.prepend(
 const highScoresObj = new HighScores();
 const highScores = await highScoresObj.getHighScores();
 
-const navButtons = [
-  { navDestination: "/play-game", buttonText: "New Game" },
-  { navDestination: "/", buttonText: "Main Menu" },
-];
-
-highScoresContainer.appendChild(createNavButtons(...navButtons));
+highScoresContainer.appendChild(
+  createMenuButtons(menuButtonsContainerObj, highScoresMenuButtonObjs)
+);
 
 if (highScores.length) {
   highScoresContainer.appendChild(createHighScoresTable(highScores));
