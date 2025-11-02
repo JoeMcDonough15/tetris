@@ -1,14 +1,6 @@
+import { generatePreviewImgPath, shapeColors } from "../../../utils/index.js";
 import Block from "./block.js";
-import { GRID_SPACE } from "./constants.js";
-
-// Colors
-const GREEN = "rgb(0 255 0)";
-const BLUE = "rgb(0 100 255)";
-const RED = "rgb(255 0 0)";
-const YELLOW = "rgb(255 255 0)";
-const ORANGE = "rgb(255 127 0)";
-const PINK = "rgb(255 0 255)";
-const PURPLE = "rgb(127 0 127)";
+import { GRID_SPACE } from "../../../utils/index.js";
 
 class Shape {
   constructor(colorString) {
@@ -35,19 +27,15 @@ class Shape {
     this.rotation = this.availableRotations[rotationIndex];
     this.drawShape();
   };
-
-  previewImgPath = () => {
-    return `/images/previews/${this.shapeName}-preview.png`;
-  };
 }
 
 export class Line extends Shape {
   constructor() {
-    super(GREEN);
+    super(shapeColors.green);
     this.shapeName = "line";
     this.availableRotations = ["horizontal", "vertical"];
     this.rotation = this.availableRotations[0];
-    this.preview = this.previewImgPath();
+    this.preview = generatePreviewImgPath(this.shapeName);
   }
 
   drawShape = () => {
@@ -135,9 +123,9 @@ export class Line extends Shape {
 
 export class Square extends Shape {
   constructor() {
-    super(BLUE);
+    super(shapeColors.blue);
     this.shapeName = "square";
-    this.preview = this.previewImgPath();
+    this.preview = generatePreviewImgPath(this.shapeName);
   }
 
   drawShape = () => {
@@ -170,11 +158,11 @@ export class Square extends Shape {
 
 export class TShape extends Shape {
   constructor() {
-    super(RED);
+    super(shapeColors.red);
     this.shapeName = "tShape";
     this.availableRotations = ["down", "left", "up", "right"];
     this.rotation = this.availableRotations[0];
-    this.preview = this.previewImgPath();
+    this.preview = generatePreviewImgPath(this.shapeName);
   }
 
   drawShape = () => {
@@ -351,11 +339,11 @@ export class TShape extends Shape {
 
 export class LShape extends Shape {
   constructor() {
-    super(ORANGE);
+    super(shapeColors.orange);
     this.shapeName = "lShape";
     this.availableRotations = ["left", "up", "right", "down"];
     this.rotation = this.availableRotations[0];
-    this.preview = this.previewImgPath();
+    this.preview = generatePreviewImgPath(this.shapeName);
   }
 
   drawShape = () => {
@@ -528,11 +516,11 @@ export class LShape extends Shape {
 
 export class JShape extends Shape {
   constructor() {
-    super(YELLOW);
+    super(shapeColors.yellow);
     this.shapeName = "jShape";
     this.availableRotations = ["right", "down", "left", "up"];
     this.rotation = this.availableRotations[0];
-    this.preview = this.previewImgPath();
+    this.preview = generatePreviewImgPath(this.shapeName);
   }
 
   drawShape = () => {
@@ -706,11 +694,11 @@ export class JShape extends Shape {
 
 export class SShape extends Shape {
   constructor() {
-    super(PINK);
+    super(shapeColors.pink);
     this.shapeName = "sShape";
     this.availableRotations = ["horizontal", "vertical"];
     this.rotation = this.availableRotations[0];
-    this.preview = this.previewImgPath();
+    this.preview = generatePreviewImgPath(this.shapeName);
   }
 
   drawShape = () => {
@@ -802,11 +790,11 @@ export class SShape extends Shape {
 
 export class ZShape extends Shape {
   constructor() {
-    super(PURPLE);
+    super(shapeColors.purple);
     this.shapeName = "zShape";
     this.availableRotations = ["horizontal", "vertical"];
     this.rotation = this.availableRotations[0];
-    this.preview = this.previewImgPath();
+    this.preview = generatePreviewImgPath(this.shapeName);
   }
 
   drawShape = () => {

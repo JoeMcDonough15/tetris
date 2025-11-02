@@ -8,7 +8,7 @@ const savedSettings = JSON.parse(
 export const quickElement = (elementName, classes, id = null) => {
   const element = document.createElement(elementName);
   if (id) element.setAttribute("id", id);
-  element.classList.add(...classes);
+  if (classes.length) element.classList.add(...classes);
   return element;
 };
 

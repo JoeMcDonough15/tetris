@@ -80,7 +80,6 @@ export const createCustomHeading = (headingLevel, headingText, ...classes) => {
   return headingElement;
 };
 
-// TODO Do I want to remove createContainer and just use quickElement in all UI building index.js files?
 // render a custom container element with any number of classes and an optional id
 export const createContainer = (elementName, classes, id = null) => {
   const container = quickElement(elementName, classes, id);
@@ -118,7 +117,7 @@ export const createCanvas = () => {
 };
 
 // render a section of n sub headers
-export const createSubHeaders = (typeOfHeaders, ...headerObjs) => {
+export const createSubHeaders = (typeOfHeaders, headerObjs) => {
   const subHeadersContainer = quickElement("div", ["sub-headers-container"]);
 
   headerObjs.forEach((headerObj) => {
@@ -145,7 +144,7 @@ export const createControllerContainer = () => {
 };
 
 // render a row of user controls for click events
-export const createControllerRow = (containerClassName, ...controllerObjs) => {
+export const createControllerRow = (containerClassName, controllerObjs) => {
   const controllerRow = quickElement("div", [containerClassName]);
 
   controllerObjs.forEach((controllerObj) => {
