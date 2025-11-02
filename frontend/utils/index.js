@@ -8,7 +8,7 @@ export const returnBody = () => {
 };
 
 // Menu Buttons
-export const mainMenuButtonsContainerObj = {
+export const menuButtonsContainerObj = {
   elementName: "div",
   classes: ["menu-buttons"],
 };
@@ -23,4 +23,9 @@ export const mainMenuButtonObjs = [
     buttonText: "Settings",
     id: "open-modal-button",
   },
+];
+
+export const highScoresMenuButtonObjs = [
+  { navLink: "/play-game", buttonText: "New Game" },
+  { navLink: "/", buttonText: "Main Menu" },
 ];
