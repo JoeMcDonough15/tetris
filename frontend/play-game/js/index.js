@@ -17,6 +17,7 @@ import {
   returnBody,
   controllerRowObjs,
   keyControlPrefix,
+  validKeySelectInputIds,
 } from "../../utils/index.js";
 import Tetris from "./game/tetris.js";
 
@@ -159,31 +160,22 @@ softDropButton.addEventListener("click", () => {
 
 // Key Events
 window.addEventListener("keyup", (e) => {
-  if (e.key === settingsObj.keyControls.togglePause) {
+  const keyName = e.key;
+  // Event Listeners For Updating Game Controls From Main Menu
+  const activeElement = document.activeElement;
+  if (validKeySelectInputIds.includes(activeElement.getAttribute("id"))) {
+    activeElement.value = keyName;
+    return;
+  }
+
+  // Event Listener for Pause Button During Gameplay
+  if (keyName === settingsObj.keyControls.togglePause) {
     game.togglePause();
   }
 });
 
-// Inputs For Changing Key Controls
-const selectRotateKeyInput = document.getElementById(
-  `${keyControlPrefix}rotate`
-);
-const selectMoveLeftKeyInput = document.getElementById(
-  `${keyControlPrefix}move-left`
-);
-const selectMoveRightKeyInput = document.getElementById(
-  `${keyControlPrefix}move-right`
-);
-const selectSoftDropKeyInput = document.getElementById(
-  `${keyControlPrefix}soft-drop`
-);
-const selectTogglePause = document.getElementById(
-  `${keyControlPrefix}toggle-pause`
-);
-
 window.addEventListener("keydown", (e) => {
   const keyName = e.key;
-  console.log(keyName);
   if (keyName === settingsObj.keyControls.rotate) {
     game.rotatePiece();
   } else if (keyName === settingsObj.keyControls.moveLeft) {

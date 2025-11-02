@@ -44,10 +44,10 @@ document.getElementById("close-modal-button").addEventListener("click", () => {
 
 // Target the updateSettingsForm and Instantiate a Settings Object
 const updateSettingsForm = document.getElementById("update-settings-form");
-const settingsObj = new Settings(settingsModal, updateSettingsForm);
+new Settings(settingsModal, updateSettingsForm);
 
 // Event Listeners For Updating Game Controls From Main Menu
-window.addEventListener("keydown", (e) => {
+window.addEventListener("keyup", (e) => {
   const keyName = e.key;
   const activeElement = document.activeElement;
   if (!validKeySelectInputIds.includes(activeElement.getAttribute("id"))) {
