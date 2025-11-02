@@ -1,4 +1,11 @@
-import { GRID_SPACE, NUM_ROWS, NUM_COLS } from "../../../utils/index.js";
+import {
+  GRID_SPACE,
+  NUM_ROWS,
+  NUM_COLS,
+  displayCurrentSettingsOnForm,
+  availableShapes,
+  generateSoundPath,
+} from "../../../utils/index.js";
 import {
   Line,
   Square,
@@ -10,7 +17,6 @@ import {
 } from "./shapes.js";
 import GameGrid from "./gameGrid.js";
 import { createPlayerNameForm } from "../../../components/index.js";
-import { availableShapes, generateSoundPath } from "../../../utils/index.js";
 
 class Tetris {
   constructor(
@@ -121,6 +127,8 @@ class Tetris {
 
   togglePause = () => {
     if (!this.gamePaused) {
+      // Update all values of settings inputs to match current settings
+      displayCurrentSettingsOnForm(this.gameSettings);
       this.settingsModal.showModal();
     } else {
       this.settingsModal.close();

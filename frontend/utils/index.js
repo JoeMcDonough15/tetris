@@ -136,3 +136,33 @@ export const validKeySelectInputIds = [
   `${keyControlPrefix}soft-drop`,
   `${keyControlPrefix}toggle-pause`,
 ];
+
+// All Settings Input ID's
+const settingsInputIds = {
+  radioIds: [
+    "sound-fx-on",
+    "sound-fx-off",
+    "music-on",
+    "music-off",
+    "music-theme-one",
+    "music-theme-two",
+    "music-theme-three",
+    "color-palette-classic",
+    "color-palette-two",
+    "color-palette-three",
+  ],
+
+  textIds: validKeySelectInputIds,
+};
+
+export const displayCurrentSettingsOnForm = (settingsObj) => {
+  settingsInputIds.radioIds.forEach((radioId) => {
+    const currentRadio = document.getElementById(radioId);
+    const nameOfCurrentRadio = currentRadio.name;
+    const valueOfCurrentRadio = currentRadio.value;
+    if (settingsObj[nameOfCurrentRadio] === valueOfCurrentRadio) {
+      currentRadio.checked = true;
+    }
+  });
+  // set all text input fields to the correct value that matches what's in settings
+};

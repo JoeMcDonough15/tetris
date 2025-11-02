@@ -73,15 +73,8 @@ gameGridContainer.after(gameDetailsContainer, settingsModal);
 
 // Instantiate the Settings object
 const updateSettingsForm = document.getElementById("update-settings-form");
-const savedSettings = JSON.parse(
-  window.sessionStorage.getItem("savedSettings")
-);
 
-const settingsObj = new Settings(
-  settingsModal,
-  updateSettingsForm,
-  savedSettings
-);
+const settingsObj = new Settings(settingsModal, updateSettingsForm);
 
 // Instantiate a high scores object for use inside the Tetris game
 const highScoresObj = new HighScores();
@@ -98,7 +91,7 @@ const postGameMenuButtons = createMenuButtons(
   postGameMenuButtonObjs
 );
 
-// Instantiate the Tetris game
+// Instantiate the Tetris Game
 const game = new Tetris(
   settingsObj,
   highScoresObj,

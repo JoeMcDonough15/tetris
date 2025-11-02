@@ -11,6 +11,7 @@ import {
   returnBody,
   keyControlPrefix,
   validKeySelectInputIds,
+  displayCurrentSettingsOnForm,
 } from "./utils/index.js";
 
 // Build out the UI
@@ -42,9 +43,31 @@ document.getElementById("close-modal-button").addEventListener("click", () => {
   settingsModal.close();
 });
 
-// Target the updateSettingsForm and Instantiate a Settings Object
+// Instantiate a Settings object
 const updateSettingsForm = document.getElementById("update-settings-form");
-new Settings(settingsModal, updateSettingsForm);
+const settingsObj = new Settings(settingsModal, updateSettingsForm);
+
+// // Target Radio Inputs to Set Values Based on Settings Object
+// const soundFxOnRadio = document.getElementById("sound-fx-on");
+// const soundFxOffRadio = document.getElementById("sound-fx-off");
+// const musicOnRadio = document.getElementById("music-on");
+// const musicOffRadio = document.getElementById("music-off");
+// const musicThemeOneRadio = document.getElementById("music-theme-one");
+// const musicThemeTwoRadio = document.getElementById("music-theme-two");
+// const musicThemeThreeRadio = document.getElementById("music-theme-three");
+// const colorPaletteClassicRadio = document.getElementById(
+//   "color-palette-classic"
+// );
+// const colorPaletteTwoRadio = document.getElementById("color-palette-two");
+// const colorPaletteThreeRadio = document.getElementById("color-palette-three");
+
+// // Key Controller Inputs to Set Values Based on Settings Object
+// const keyControlRotateInput = document.getElementById("key-control-rotate");
+// const keyControlMoveLeftInput = document.getElementById("key-control-rotate");
+// const keyControlMoveRightInput = document.getElementById("key-control-rotate");
+// const keyControlSoftDropInput = document.getElementById("key-control-rotate");
+// const keyControlTogglePauseInput =
+//   document.getElementById("key-control-rotate");
 
 // Event Listeners For Updating Game Controls From Main Menu
 window.addEventListener("keyup", (e) => {

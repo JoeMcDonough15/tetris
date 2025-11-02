@@ -1,13 +1,17 @@
 class Settings {
-  constructor(settingsModal, updateSettingsForm, savedSettings) {
+  constructor(settingsModal, updateSettingsForm) {
+    this.savedSettings = JSON.parse(
+      window.sessionStorage.getItem("savedSettings") // possibly null
+    );
     this.settingsModal = settingsModal;
     this.updateSettingsForm = updateSettingsForm;
-    this.soundFx = savedSettings?.soundFx || "on";
-    this.music = savedSettings?.music || "on";
-    this.gameMusicSelection = savedSettings?.gameMusicSelection || "theme-1";
+    this.soundFx = this.savedSettings?.soundFx || "on";
+    this.music = this.savedSettings?.music || "on";
+    this.gameMusicSelection =
+      this.savedSettings?.gameMusicSelection || "theme-1";
     this.colorPaletteSelection =
-      savedSettings?.colorPaletteSelection || "classic";
-    this.keyControls = savedSettings?.keyControls || {
+      this.savedSettings?.colorPaletteSelection || "classic";
+    this.keyControls = this.savedSettings?.keyControls || {
       rotate: "ArrowUp",
       moveLeft: "ArrowLeft",
       moveRight: "ArrowRight",
