@@ -21,7 +21,7 @@ export const createMenuButton = (buttonObj) => {
 };
 
 // create a div element with a label and input
-export const createInputContainer = (data, readOnlyValue = null) => {
+export const createInputContainer = (data) => {
   const inputContainer = quickElement("div", data.containerClasses);
   const label = quickElement("label", []);
   label.innerText = data.labelText;
@@ -31,10 +31,6 @@ export const createInputContainer = (data, readOnlyValue = null) => {
   attributes.forEach((attribute) => {
     input.setAttribute(attribute, data.input[attribute]);
   });
-
-  if (readOnlyValue) {
-    input.value = readOnlyValue;
-  }
 
   inputContainer.append(label, input);
   return inputContainer;
@@ -269,7 +265,7 @@ export const updateSettingsFormData = {
 };
 
 export const highScoresFormData = {
-  formContainerClasses: [],
+  formContainerClasses: ["player-name-form", "no-display"],
   formContainerId: "player-name-form",
   playerName: {
     containerClasses: [],

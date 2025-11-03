@@ -6,6 +6,8 @@ import {
   generateSoundPath,
   updateElementTextById,
   updateImageSrcById,
+  toggleDisplayById,
+  injectValueToInputById,
 } from "../../../utils/index.js";
 import {
   Line,
@@ -17,27 +19,13 @@ import {
   ZShape,
 } from "./shapes.js";
 import GameGrid from "./gameGrid.js";
-import { createPlayerNameForm } from "../../../components/index.js";
-import HighScores from "../../../high-scores/js/api/highScoresApi.js";
 
 class Tetris {
-  constructor(
-    gameSettingsObj,
-    settingsModal,
-    playGameContainer,
-    gameGridContainer,
-    gameDetailsContainer,
-    postGameMenuButtons
-  ) {
+  constructor(gameSettingsObj, highScoresObj) {
     // APIs for settings and high scores
     this.gameSettings = gameSettingsObj;
-    this.highScoresObj = new HighScores();
-    // DOM Elements
-    this.settingsModal = settingsModal;
-    this.playGameContainer = playGameContainer;
-    this.gameGridContainer = gameGridContainer;
-    this.gameDetailsContainer = gameDetailsContainer;
-    this.postGameMenuButtons = postGameMenuButtons;
+    this.highScoresObj = highScoresObj;
+
     // Game State
     this.gameOver = false;
     this.gamePaused = false;
@@ -45,15 +33,15 @@ class Tetris {
     this.level = 0;
     this.totalRowsCleared = 0;
     this.softDropPoints = 0;
-    this.rowsCleared = 19;
-    this.playerTotalScore = 0;
+    this.rowsCleared = 0;
+    this.playerTotalScore = 20000;
     this.idOfScoreToRemove = "";
     this.game = new GameGrid(NUM_ROWS, NUM_COLS);
     this.pieceQueue = [];
     this.currentPiece = null;
     this.currentPiecePlaced = false;
     this.numRotations = 0;
-    // Sound Fx Files
+    // Sound Fx Files // TODO move to utils
     this.blockSound = new Audio(generateSoundPath("block-landing"));
     this.rotateSound = new Audio(generateSoundPath("rotate"));
     this.clearedRowSound = new Audio(generateSoundPath("cleared-row"));
@@ -67,8 +55,7 @@ class Tetris {
 
   endGame = () => {
     this.gameOver = true;
-    this.gameGridContainer.remove();
-    this.gameDetailsContainer.remove();
+    toggleDisplayById("game-grid-container", "game-details-container");
     updateElementTextById("main-heading", "Game Over");
     this.checkForHighScore();
   };
@@ -82,38 +69,15 @@ class Tetris {
         (lastPlaceScoreObj && this.playerTotalScore > lastPlaceScoreObj.score));
 
     if (highScoreAchieved) {
-      const playerNameForm = createPlayerNameForm(
-        this.submitHighScore,
-        this.playerTotalScore
-      );
-      this.playGameContainer.prepend(playerNameForm);
+      toggleDisplayById("player-name-form");
+      injectValueToInputById("player-score", this.playerTotalScore);
 
       if (existingHighScores.length === 10) {
         this.idOfScoreToRemove = lastPlaceScoreObj.id; // never keep more than 10 high scores in the database
       }
     } else {
-      this.playGameContainer.prepend(this.postGameMenuButtons);
+      toggleDisplayById("post-game-menu-buttons");
     }
-  };
-
-  submitHighScore = async () => {
-    const playerNameForm = document.getElementById("player-name-form");
-    const playerName = playerNameForm.element.playerName.value;
-    const playerScore = playerNameForm.elements.playerScore.value;
-
-    const playerDetails = {
-      name: playerName,
-      score: playerScore,
-    };
-
-    if (this.idOfScoreToRemove) {
-      await this.highScoresObj.removeHighScore(this.idOfScoreToRemove);
-    }
-
-    await this.highScoresObj.addScoreToHighScores(playerDetails);
-
-    this.playGameContainer.removeChild(playerNameForm);
-    this.playGameContainer.appendChild(this.postGameMenuButtons);
   };
 
   togglePause = () => {
@@ -277,6 +241,8 @@ class Tetris {
   };
 
   gravityDrop = () => {
+    this.endGame();
+    return;
     const fallInterval = setInterval(() => {
       if (this.currentPiecePlaced) {
         clearInterval(fallInterval);

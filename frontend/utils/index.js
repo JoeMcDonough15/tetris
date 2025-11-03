@@ -63,6 +63,12 @@ export const menuButtonsContainerObj = {
   classes: ["menu-buttons"],
 };
 
+export const postGameMenuButtonsContainerObj = {
+  elementName: "div",
+  classes: ["menu-buttons", "no-display"],
+  id: "post-game-menu-buttons",
+};
+
 export const mainMenuButtonObjs = [
   { buttonText: "Start Game", navLink: "/play-game" },
   {
@@ -181,4 +187,16 @@ export const updateElementTextById = (id, newVal) => {
 export const updateImageSrcById = (id, newSrc) => {
   const imageElement = document.getElementById(id);
   imageElement.src = newSrc;
+};
+
+export const toggleDisplayById = (...ids) => {
+  ids.forEach((id) => {
+    const element = document.getElementById(id);
+    element.classList.toggle("no-display");
+  });
+};
+
+export const injectValueToInputById = (id, valueToInject) => {
+  const element = document.getElementById(id);
+  element.value = valueToInject;
 };

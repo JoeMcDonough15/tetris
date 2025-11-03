@@ -11,26 +11,23 @@ import {
 } from "./utils/index.js";
 
 // render a player name form with a custom method to be called on submit
-export const createPlayerNameForm = (methodForSubmit, playerScoreFromGame) => {
+export const createPlayerNameForm = () => {
   const existingForm = document.getElementById("player-name-form");
+  // ! We won't need this
   if (existingForm) {
     existingForm.remove();
   }
+  // !
   const playerNameForm = quickElement(
     "form",
     highScoresFormData.formContainerClasses,
     highScoresFormData.formContainerId
   );
-  playerNameForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    methodForSubmit();
-  });
   const playerNameContainer = createInputContainer(
     highScoresFormData.playerName
   );
   const playerScoreContainer = createInputContainer(
-    highScoresFormData.playerScore,
-    playerScoreFromGame
+    highScoresFormData.playerScore
   );
   const submitButton = createSubmitButton({
     buttonText: "Submit",

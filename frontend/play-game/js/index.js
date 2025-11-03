@@ -8,16 +8,19 @@ import {
   createMenuButtons,
   createPreviewImgContainer,
   createErrorMessage,
+  createPlayerNameForm,
 } from "../../components/index.js";
+import HighScores from "../../high-scores/js/api/highScoresApi.js";
 import Settings from "../../settings.js";
 import {
-  menuButtonsContainerObj,
   playGameSubHeaders,
   postGameMenuButtonObjs,
   returnBody,
   controllerRowObjs,
   settingsInputIds,
   displayCurrentSettingsOnForm,
+  postGameMenuButtonsContainerObj,
+  toggleDisplayById,
 } from "../../utils/index.js";
 import Tetris from "./game/tetris.js";
 
@@ -70,32 +73,30 @@ gameDetailsContainer.append(
 
 const settingsModal = createSettingsModal("Return to Game");
 
-gameGridContainer.after(gameDetailsContainer, settingsModal);
-
-// Instantiate the Settings object
-const settingsObj = new Settings();
-
-//! Functions to move to utils
-
-//!
-
-// Target DOM Elements for use in Tetris game
-const playGameContainer = document.getElementById("play-game-container");
-const playerNameForm = document.getElementById("player-name-form");
+const playerNameForm = createPlayerNameForm();
 const postGameMenuButtons = createMenuButtons(
-  menuButtonsContainerObj,
+  postGameMenuButtonsContainerObj,
   postGameMenuButtonObjs
 );
 
-// Instantiate the Tetris Game
-const game = new Tetris(
-  settingsObj,
-  settingsModal,
-  playGameContainer,
-  gameGridContainer,
+gameGridContainer.after(
   gameDetailsContainer,
-  postGameMenuButtons
+  playerNameForm,
+  postGameMenuButtons,
+  settingsModal
 );
+
+// Instantiate the Settings object
+const settingsObj = new Settings();
+const highScoresObj = new HighScores();
+
+// TODO Functions to move to utils
+
+// 1. Reuse function that can target an input by id and inject a value into it when populating the Settings input fields whenever we showModal()
+// 2. Clean up updateSettingsForm submit event handler - see what helper functions can get fleshed out and moved to utils
+
+// Instantiate the Tetris Game
+const game = new Tetris(settingsObj, highScoresObj);
 
 // Target Elements for Event Listeners
 const modalCloseButton = document.getElementById("close-modal-button");
@@ -104,11 +105,33 @@ const softDropButton = document.getElementById("btn-down");
 const moveLeftButton = document.getElementById("btn-left");
 const moveRightButton = document.getElementById("btn-right");
 const pauseButton = document.getElementById("btn-pause");
-const scoreHeading = document.getElementById("total-score-heading");
 
-scoreHeading.innerText = `Score: ${game.playerTotalScore}`;
+//! Do I need this?
+// const scoreHeading = document.getElementById("total-score-heading");
+// scoreHeading.innerText = `Score: ${game.playerTotalScore}`;
+//!
 
-// Mouse Events
+// Form Submit Events
+
+playerNameForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const playerName = playerNameForm.elements.playerName.value;
+  const playerScore = playerNameForm.elements.playerScore.value;
+  const playerDetails = {
+    name: playerName,
+    score: Number(playerScore),
+  };
+
+  if (game.idOfScoreToRemove) {
+    await highScoresObj.removeHighScore(game.idOfScoreToRemove);
+  }
+
+  await highScoresObj.addScoreToHighScores(playerDetails);
+
+  toggleDisplayById("player-name-form");
+  toggleDisplayById("post-game-menu-buttons");
+});
+
 const updateSettingsForm = document.getElementById("update-settings-form");
 updateSettingsForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -162,6 +185,7 @@ updateSettingsForm.addEventListener("submit", (e) => {
   game.togglePause();
 });
 
+// Mouse Events
 modalCloseButton.addEventListener("click", () => {
   settingsModal.close();
   game.togglePause();
@@ -192,6 +216,7 @@ softDropButton.addEventListener("click", () => {
 
 // Key Events
 window.addEventListener("keyup", (e) => {
+  if (game.gameOver) return;
   const keyName = e.key;
   // Event Listeners For Updating Game Controls From Main Menu
   const activeElement = document.activeElement;
@@ -216,6 +241,7 @@ window.addEventListener("keyup", (e) => {
 });
 
 window.addEventListener("keydown", (e) => {
+  if (game.gameOver) return;
   const keyName = e.key;
   if (keyName === settingsObj.keyControls.rotate) {
     game.rotatePiece();
