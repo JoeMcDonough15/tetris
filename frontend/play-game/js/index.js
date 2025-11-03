@@ -92,11 +92,12 @@ const highScoresObj = new HighScores();
 
 // TODO Functions to move to utils
 
-// 1. Reuse function that can target an input by id and inject a value into it when populating the Settings input fields whenever we showModal()
+// 1. Reuse injectValueToInputById() from utils.  It can target an input by id and inject a value into it when populating the Settings input fields whenever we showModal()
 // 2. Clean up updateSettingsForm submit event handler - see what helper functions can get fleshed out and moved to utils.
-// 3. Make it so that any errors on the updateSettingsForm go away when you close and reopen the modal.
-// 4. Only render one single error message and use toggleDisplayById() to make it appear/disappear when needed.
-// 5. Move sound FX files to utils and out of the Tetris constructor
+// 3. Make it so that any errors on the updateSettingsForm go away when you close and reopen the modal.  Do this across here and the homepage.
+// 4. Only render one single error message and use toggleDisplayById() to make it appear/disappear when needed.  Do this across here and the homepage.
+// 5. Move sound FX files to utils and out of the Tetris constructor.  Import them instead.
+// 6. Write a function that handles all the tasks necessary when opening the modal.  Prefilling inputs, removing error message if it's there, and showModal().
 
 // Instantiate the Tetris Game
 const game = new Tetris(settingsObj, highScoresObj);
