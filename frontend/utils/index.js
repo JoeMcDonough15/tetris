@@ -201,24 +201,23 @@ export const injectValueToInputById = (id, valueToInject) => {
   const element = document.getElementById(id);
   element.value = valueToInject;
 };
-// A helper function that can convert string Id's that are sword-case to camelCase
+
+// A helper function that can convert string Id's that are sword-case to camelCase - // O(n) Time, O(n) Space
 const convertSwordToCamel = (str) => {
-  // O(n) Time, O(1) Space
-  for (let i = 0; i < str.length; i++) {
-    let currentChar = str[i];
+  let camelStr = "";
+  let i = 0;
+  while (i < str.length) {
+    const currentChar = str[i];
     if (currentChar === "-") {
-      // O(1) Time, O(1) Space
-      for (let j = 0; j < 2; j++) {
-        if (j === 0) {
-          str = str.replace(currentChar, ""); // O(n) Time, O(1) Space
-          currentChar = str[i];
-        } else {
-          str = str.replace(currentChar, str[i].toUpperCase()); // O(n) Time, O(1) Space
-        }
-      }
+      const nextChar = str[i + 1].toUpperCase();
+      camelStr += nextChar;
+      i += 2;
+    } else {
+      camelStr += currentChar;
+      i++;
     }
   }
-  return str;
+  return camelStr;
 };
 
 // write a function that can grab elements from a passed in form and return an object of all its inputs
