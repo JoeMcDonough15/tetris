@@ -34,7 +34,7 @@ class Tetris {
     this.totalRowsCleared = 0;
     this.softDropPoints = 0;
     this.rowsCleared = 0;
-    this.playerTotalScore = 20000;
+    this.playerTotalScore = 0;
     this.idOfScoreToRemove = "";
     this.game = new GameGrid(NUM_ROWS, NUM_COLS);
     this.pieceQueue = [];
@@ -241,8 +241,6 @@ class Tetris {
   };
 
   gravityDrop = () => {
-    this.endGame();
-    return;
     const fallInterval = setInterval(() => {
       if (this.currentPiecePlaced) {
         clearInterval(fallInterval);

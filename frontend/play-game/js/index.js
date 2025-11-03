@@ -86,14 +86,17 @@ gameGridContainer.after(
   settingsModal
 );
 
-// Instantiate the Settings object
+// Instantiate the Settings object and the HighScores object
 const settingsObj = new Settings();
 const highScoresObj = new HighScores();
 
 // TODO Functions to move to utils
 
 // 1. Reuse function that can target an input by id and inject a value into it when populating the Settings input fields whenever we showModal()
-// 2. Clean up updateSettingsForm submit event handler - see what helper functions can get fleshed out and moved to utils
+// 2. Clean up updateSettingsForm submit event handler - see what helper functions can get fleshed out and moved to utils.
+// 3. Make it so that any errors on the updateSettingsForm go away when you close and reopen the modal.
+// 4. Only render one single error message and use toggleDisplayById() to make it appear/disappear when needed.
+// 5. Move sound FX files to utils and out of the Tetris constructor
 
 // Instantiate the Tetris Game
 const game = new Tetris(settingsObj, highScoresObj);
@@ -106,13 +109,7 @@ const moveLeftButton = document.getElementById("btn-left");
 const moveRightButton = document.getElementById("btn-right");
 const pauseButton = document.getElementById("btn-pause");
 
-//! Do I need this?
-// const scoreHeading = document.getElementById("total-score-heading");
-// scoreHeading.innerText = `Score: ${game.playerTotalScore}`;
-//!
-
 // Form Submit Events
-
 playerNameForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const playerName = playerNameForm.elements.playerName.value;

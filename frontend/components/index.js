@@ -12,12 +12,6 @@ import {
 
 // render a player name form with a custom method to be called on submit
 export const createPlayerNameForm = () => {
-  const existingForm = document.getElementById("player-name-form");
-  // ! We won't need this
-  if (existingForm) {
-    existingForm.remove();
-  }
-  // !
   const playerNameForm = quickElement(
     "form",
     highScoresFormData.formContainerClasses,
@@ -212,11 +206,6 @@ export const createSettingsModal = (closeModalButtonText) => {
   );
   const updateSettingsForm = createUpdateSettingsForm();
   const closeModalButton = quickElement("button", [], "close-modal-button");
-  // TODO once the pause menu is built, return the close modal event listener to this component; remove that
-  // TODO event listener from the /index.js and /play-game/index.js
-
-  // ? This is because, as of now, the close modal functionality also has to close the pause menu in play-game/index.js which
-  // ? is why it was removed from here and defined inside play-game/index.js
   closeModalButton.innerText = closeModalButtonText;
   closeModalButton.setAttribute("autofocus", true);
   settingsModal.append(closeModalButton, updateSettingsForm);
@@ -225,10 +214,12 @@ export const createSettingsModal = (closeModalButtonText) => {
 };
 
 export const createErrorMessage = (id) => {
+  //! We should not need this if we use toggleDisplayById utility function instead of creating new error messages
   const existingError = document.getElementById(id);
   if (existingError) {
     existingError.remove();
   }
+  //!
   const error = quickElement("p", ["error-message"], id);
   error.innerText = "key controls must be unique!";
   return error;
