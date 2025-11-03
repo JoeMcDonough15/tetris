@@ -23,7 +23,7 @@ const mainMenuContainer = createContainer(
 const settingsModal = createSettingsModal("Return to Main Menu");
 
 body.prepend(
-  createCustomHeading("h1", "Main Menu", "main-heading"),
+  createCustomHeading("h1", "Main Menu", ["main-heading"], "main-heading"),
   mainMenuContainer,
   settingsModal
 );

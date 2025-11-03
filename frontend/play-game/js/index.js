@@ -23,8 +23,9 @@ import Tetris from "./game/tetris.js";
 // Build out the UI
 
 const body = returnBody();
-body.prepend(createCustomHeading("h1", "Tetris", "main-heading"));
-
+body.prepend(
+  createCustomHeading("h1", "Tetris", ["main-heading"], "main-heading")
+);
 // target gameGridContainer to inject this UI after it
 const gameGridContainer = document.getElementById("game-grid-container");
 
@@ -85,6 +86,7 @@ const previewImg = document.getElementById("preview-img");
 const levelHeading = document.getElementById("level-heading");
 const totalScoreHeading = document.getElementById("total-score-heading");
 const rowsClearedHeading = document.getElementById("rows-cleared-heading");
+const playerNameForm = document.getElementById("player-name-form");
 const postGameMenuButtons = createMenuButtons(
   menuButtonsContainerObj,
   postGameMenuButtonObjs

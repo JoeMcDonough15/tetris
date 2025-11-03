@@ -41,7 +41,7 @@ export const createInputContainer = (data, readOnlyValue = null) => {
 };
 
 export const createSubmitButton = (buttonObj) => {
-  const submit = quickElement("button", [], buttonObj.id);
+  const submit = quickElement("button", buttonObj.classes, buttonObj.id);
   submit.setAttribute("type", "submit");
   submit.innerText = buttonObj.buttonText;
   return submit;
@@ -269,6 +269,8 @@ export const updateSettingsFormData = {
 };
 
 export const highScoresFormData = {
+  formContainerClasses: [],
+  formContainerId: "player-name-form",
   playerName: {
     containerClasses: [],
     labelText: "Enter your name",
