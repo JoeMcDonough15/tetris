@@ -126,14 +126,6 @@ class Tetris {
   };
 
   togglePause = () => {
-    // if (!this.gamePaused) {
-    //   displayCurrentSettingsOnForm(this.gameSettings);
-    //   // TODO clear any error state
-    //   this.settingsModal.showModal();
-    // } else {
-    //   this.settingsModal.close();
-    // }
-
     this.gamePaused = !this.gamePaused;
   };
 

@@ -74,8 +74,6 @@ const settingsModal = createSettingsModal("Return to Game");
 gameGridContainer.after(gameDetailsContainer, settingsModal);
 
 // Instantiate the Settings object
-
-// const settingsObj = new Settings(settingsModal, updateSettingsForm);
 const settingsObj = new Settings();
 
 // Instantiate a high scores object for use inside the Tetris game
@@ -118,24 +116,12 @@ const moveLeftButton = document.getElementById("btn-left");
 const moveRightButton = document.getElementById("btn-right");
 const pauseButton = document.getElementById("btn-pause");
 const scoreHeading = document.getElementById("total-score-heading");
-const updateSettingsSubmitButton = document.getElementById(
-  "update-settings-submit-button"
-);
 
 scoreHeading.innerText = `Score: ${game.playerTotalScore}`;
 
 // Mouse Events
-// updateSettingsSubmitButton.addEventListener("click", () => {
-//   setTimeout(() => {
-//     if (settingsObj.settingsAppliedSuccessfully) {
-//       game.togglePause();
-//       settingsObj.settingsAppliedSuccessfully = false;
-//     }
-//   }, 150);
-// });
 const updateSettingsForm = document.getElementById("update-settings-form");
 updateSettingsForm.addEventListener("submit", (e) => {
-  console.log("running inside handle submit");
   e.preventDefault();
   // grab elements from form
   const updateSoundFxOnOff = updateSettingsForm.elements.soundFx.value;
@@ -229,6 +215,13 @@ window.addEventListener("keyup", (e) => {
 
   // Event Listener for Pause Button During Gameplay
   if (keyName === settingsObj.keyControls.togglePause) {
+    if (settingsModal.open) {
+      settingsModal.close();
+    } else {
+      displayCurrentSettingsOnForm(settingsObj);
+      // TODO clear any error state
+      settingsModal.showModal();
+    }
     game.togglePause();
   }
 });
