@@ -92,7 +92,6 @@ const highScoresObj = new HighScores();
 
 // TODO Functions to move to utils
 
-// 1. Reuse injectValueToInputById() from utils.  It can target an input by id and inject a value into it when populating the Settings input fields whenever we showModal()
 // 2. Clean up updateSettingsForm submit event handler - see what helper functions can get fleshed out and moved to utils.
 // 3. Make it so that any errors on the updateSettingsForm go away when you close and reopen the modal.  Do this across here and the homepage.
 // 4. Only render one single error message and use toggleDisplayById() to make it appear/disappear when needed.  Do this across here and the homepage.

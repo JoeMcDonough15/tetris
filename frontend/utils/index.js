@@ -161,19 +161,20 @@ export const settingsInputIds = {
 };
 
 export const displayCurrentSettingsOnForm = (settingsObj) => {
-  const allIds = Object.values(settingsInputIds);
-  allIds.forEach((arrayOfIds) => {
+  const arraysOfIds = Object.values(settingsInputIds);
+  arraysOfIds.forEach((arrayOfIds) => {
     arrayOfIds.forEach((id) => {
       const currentInput = document.getElementById(id);
       const nameOfCurrentInput = currentInput.name;
-      if (currentInput.type === "radio") {
+      const typeOfInput = currentInput.type;
+      if (typeOfInput === "radio") {
         const currentSetting = settingsObj[nameOfCurrentInput];
         if (currentSetting === currentInput.value) {
           currentInput.checked = true;
         }
-      } else {
+      } else if (typeOfInput === "text") {
         const currentSetting = settingsObj.keyControls[nameOfCurrentInput];
-        currentInput.value = currentSetting;
+        injectValueToInputById(currentInput.id, currentSetting);
       }
     });
   });
