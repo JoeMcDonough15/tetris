@@ -21,6 +21,8 @@ import {
   displayCurrentSettingsOnForm,
   postGameMenuButtonsContainerObj,
   toggleDisplayById,
+  grabInputsFromForm,
+  verifyUniqueStrings,
 } from "../../utils/index.js";
 import Tetris from "./game/tetris.js";
 
@@ -132,39 +134,34 @@ playerNameForm.addEventListener("submit", async (e) => {
 const updateSettingsForm = document.getElementById("update-settings-form");
 updateSettingsForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  // grab elements from form
-  const updateSoundFxOnOff = updateSettingsForm.elements.soundFx.value;
-  const updateMusicOnOff = updateSettingsForm.elements.music.value;
-  const updateGameMusicSelection =
-    updateSettingsForm.elements.gameMusicSelection.value;
-  const updateColorPaletteSelection =
-    updateSettingsForm.elements.colorPaletteSelection.value;
-  const updateRotateControl = updateSettingsForm.elements.rotate.value;
-  const updateMoveLeft = updateSettingsForm.elements.moveLeft.value;
-  const updateMoveRight = updateSettingsForm.elements.moveRight.value;
-  const updateSoftDrop = updateSettingsForm.elements.softDrop.value;
-  const updateTogglePause = updateSettingsForm.elements.togglePause.value;
-  const updatedKeyControlValues = [
-    updateRotateControl,
-    updateMoveLeft,
-    updateMoveRight,
-    updateSoftDrop,
-    updateTogglePause,
-  ];
+  const inputsObj = grabInputsFromForm(updateSettingsForm); // key value pairs of name/id and value {"music", "on", "soundFx": "off", "keyControlRotate": "r", }
+  // const updateSoundFxOnOff = updateSettingsForm.elements.soundFx.value;
+  // const updateMusicOnOff = updateSettingsForm.elements.music.value;
+  // const updateGameMusicSelection =
+  //   updateSettingsForm.elements.gameMusicSelection.value;
+  // const updateColorPaletteSelection =
+  //   updateSettingsForm.elements.colorPaletteSelection.value;
+  // const updateRotateControl = updateSettingsForm.elements.rotate.value;
+  // const updateMoveLeft = updateSettingsForm.elements.moveLeft.value;
+  // const updateMoveRight = updateSettingsForm.elements.moveRight.value;
+  // const updateSoftDrop = updateSettingsForm.elements.softDrop.value;
+  // const updateTogglePause = updateSettingsForm.elements.togglePause.value;
+  // const updatedKeyControlValues = [
+  //   updateRotateControl,
+  //   updateMoveLeft,
+  //   updateMoveRight,
+  //   updateSoftDrop,
+  //   updateTogglePause,
+  // ];
+  const keyControlInputVals = Object.values(inputsObj.keyControls);
 
   // helper function to verify unique inputs for key controls
-  const verifyUniqueKeyControls = (newKeyControls) => {
-    const CHAR_MAP = {};
-    for (const newKey of newKeyControls) {
-      if (CHAR_MAP[newKey]) return false;
-      CHAR_MAP[newKey] = true;
-    }
-    return true;
-  };
+  const allUniqueKeyControlVals = verifyUniqueStrings(keyControlInputVals);
 
   // add error to form and return early if verification failed
-  if (!verifyUniqueKeyControls(updatedKeyControlValues)) {
+  if (!allUniqueKeyControlVals) {
     const error = createErrorMessage("settings-error-message");
+    // instead of creating the error, let's target it with a utils function and toggle the display
     updateSettingsForm.append(error);
     return;
   }

@@ -201,3 +201,53 @@ export const injectValueToInputById = (id, valueToInject) => {
   const element = document.getElementById(id);
   element.value = valueToInject;
 };
+// A helper function that can convert string Id's that are sword-case to camelCase
+const convertSwordToCamel = (str) => {
+  // O(n) Time, O(1) Space
+  for (let i = 0; i < str.length; i++) {
+    let currentChar = str[i];
+    if (currentChar === "-") {
+      // O(1) Time, O(1) Space
+      for (let j = 0; j < 2; j++) {
+        if (j === 0) {
+          str = str.replace(currentChar, ""); // O(n) Time, O(1) Space
+          currentChar = str[i];
+        } else {
+          str = str.replace(currentChar, str[i].toUpperCase()); // O(n) Time, O(1) Space
+        }
+      }
+    }
+  }
+  return str;
+};
+
+// write a function that can grab elements from a passed in form and return an object of all its inputs
+export const grabInputsFromForm = (formElement) => {
+  const inputs = formElement.elements; // array of input elements
+  // put the values of these inputs into an object with keys that use the specific inputs' ids (converted to camelCase)
+  const inputsFromForm = { keyControls: {} };
+  // handle radio inputs
+  for (const input of inputs) {
+    const newVal = input.value;
+    if (input.type === "radio") {
+      // ignore if this is not checked
+      if (!input.checked) continue;
+      const inputName = input.name; // already camelCase
+      inputsFromForm[inputName] = newVal;
+    } else {
+      // handle text inputs
+      const camelCasedIdOfInput = convertSwordToCamel(input.id); // use each text input's id, converted to camelCase, as the newKey for our inputFromForm
+      inputsFromForm.keyControls[camelCasedIdOfInput] = newVal;
+    }
+  }
+  return inputsFromForm;
+};
+
+export const verifyUniqueStrings = (strArray) => {
+  const CHAR_MAP = {};
+  for (const str of strArray) {
+    if (CHAR_MAP[str]) return false;
+    CHAR_MAP[str] = true;
+  }
+  return true;
+};
