@@ -9,7 +9,6 @@ import {
   createPreviewImgContainer,
   createErrorMessage,
 } from "../../components/index.js";
-import HighScores from "../../high-scores/js/api/highScoresApi.js";
 import Settings from "../../settings.js";
 import {
   menuButtonsContainerObj,
@@ -76,16 +75,12 @@ gameGridContainer.after(gameDetailsContainer, settingsModal);
 // Instantiate the Settings object
 const settingsObj = new Settings();
 
-// Instantiate a high scores object for use inside the Tetris game
-const highScoresObj = new HighScores();
+//! Functions to move to utils
+
+//!
 
 // Target DOM Elements for use in Tetris game
 const playGameContainer = document.getElementById("play-game-container");
-const mainHeading = document.getElementById("main-heading");
-const previewImg = document.getElementById("preview-img");
-const levelHeading = document.getElementById("level-heading");
-const totalScoreHeading = document.getElementById("total-score-heading");
-const rowsClearedHeading = document.getElementById("rows-cleared-heading");
 const playerNameForm = document.getElementById("player-name-form");
 const postGameMenuButtons = createMenuButtons(
   menuButtonsContainerObj,
@@ -95,16 +90,10 @@ const postGameMenuButtons = createMenuButtons(
 // Instantiate the Tetris Game
 const game = new Tetris(
   settingsObj,
-  highScoresObj,
   settingsModal,
   playGameContainer,
   gameGridContainer,
   gameDetailsContainer,
-  mainHeading,
-  previewImg,
-  levelHeading,
-  totalScoreHeading,
-  rowsClearedHeading,
   postGameMenuButtons
 );
 

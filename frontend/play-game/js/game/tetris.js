@@ -2,9 +2,10 @@ import {
   GRID_SPACE,
   NUM_ROWS,
   NUM_COLS,
-  displayCurrentSettingsOnForm,
   availableShapes,
   generateSoundPath,
+  updateElementTextById,
+  updateImageSrcById,
 } from "../../../utils/index.js";
 import {
   Line,
@@ -17,35 +18,25 @@ import {
 } from "./shapes.js";
 import GameGrid from "./gameGrid.js";
 import { createPlayerNameForm } from "../../../components/index.js";
+import HighScores from "../../../high-scores/js/api/highScoresApi.js";
 
 class Tetris {
   constructor(
     gameSettingsObj,
-    highScoresObj,
     settingsModal,
     playGameContainer,
     gameGridContainer,
     gameDetailsContainer,
-    mainHeading,
-    previewImg,
-    levelHeading,
-    totalScoreHeading,
-    rowsClearedHeading,
     postGameMenuButtons
   ) {
     // APIs for settings and high scores
     this.gameSettings = gameSettingsObj;
-    this.highScoresObj = highScoresObj;
+    this.highScoresObj = new HighScores();
     // DOM Elements
     this.settingsModal = settingsModal;
     this.playGameContainer = playGameContainer;
     this.gameGridContainer = gameGridContainer;
     this.gameDetailsContainer = gameDetailsContainer;
-    this.mainHeading = mainHeading;
-    this.previewImg = previewImg;
-    this.levelHeading = levelHeading;
-    this.totalScoreHeading = totalScoreHeading;
-    this.rowsClearedHeading = rowsClearedHeading;
     this.postGameMenuButtons = postGameMenuButtons;
     // Game State
     this.gameOver = false;
@@ -54,7 +45,7 @@ class Tetris {
     this.level = 0;
     this.totalRowsCleared = 0;
     this.softDropPoints = 0;
-    this.rowsCleared = 0;
+    this.rowsCleared = 19;
     this.playerTotalScore = 0;
     this.idOfScoreToRemove = "";
     this.game = new GameGrid(NUM_ROWS, NUM_COLS);
@@ -78,7 +69,7 @@ class Tetris {
     this.gameOver = true;
     this.gameGridContainer.remove();
     this.gameDetailsContainer.remove();
-    this.mainHeading.innerText = "Game Over";
+    updateElementTextById("main-heading", "Game Over");
     this.checkForHighScore();
   };
 
@@ -181,7 +172,6 @@ class Tetris {
   };
 
   awardPoints = () => {
-    return;
     let awardedPoints = 0;
     if (this.rowsCleared === 1) {
       awardedPoints += 40;
@@ -194,7 +184,10 @@ class Tetris {
     }
     this.playerTotalScore +=
       awardedPoints * (this.level + 1) + this.softDropPoints;
-    this.totalScoreHeading.innerText = `Score: ${this.playerTotalScore}`;
+    updateElementTextById(
+      "total-score-heading",
+      `Score: ${this.playerTotalScore}`
+    );
   };
 
   updateRowsCleared = () => {
@@ -203,7 +196,10 @@ class Tetris {
       this.clearedRowSound.play();
     }
     this.totalRowsCleared += this.rowsCleared;
-    this.rowsClearedHeading.innerText = `Rows: ${this.totalRowsCleared}`;
+    updateElementTextById(
+      "rows-cleared-heading",
+      `Rows: ${this.totalRowsCleared}`
+    );
     if (this.level < 9 && this.clearedTenRows()) {
       this.levelUp();
     } else if (this.level >= 9 && this.clearedTwentyRows()) {
@@ -213,7 +209,7 @@ class Tetris {
 
   levelUp = () => {
     this.level++;
-    this.levelHeading.innerText = `Level: ${this.level}`;
+    updateElementTextById("level-heading", `Level: ${this.level}`);
     this.gameSpeed -= 50;
   };
 
@@ -376,10 +372,6 @@ class Tetris {
     this.pieceQueue.push(newPiece);
   };
 
-  setPreviewOfNextPiece = () => {
-    this.previewImg.setAttribute("src", this.pieceQueue[0].preview);
-  };
-
   dequeuePiece = () => {
     if (!this.pieceQueue.length) {
       for (let i = 0; i < 2; i++) {
@@ -390,7 +382,8 @@ class Tetris {
     }
 
     this.currentPiece = this.pieceQueue.shift();
-    this.setPreviewOfNextPiece();
+    const nextPieceInQueue = this.pieceQueue[0];
+    updateImageSrcById("preview-img", nextPieceInQueue.preview);
 
     this.currentPiecePlaced = false;
     this.numRotations = 0;

@@ -172,3 +172,13 @@ export const displayCurrentSettingsOnForm = (settingsObj) => {
     });
   });
 };
+
+export const updateElementTextById = (id, newVal) => {
+  const element = document.getElementById(id);
+  element.innerText = newVal;
+};
+
+export const updateImageSrcById = (id, newSrc) => {
+  const imageElement = document.getElementById(id);
+  imageElement.src = newSrc;
+};
