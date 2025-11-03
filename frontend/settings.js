@@ -1,12 +1,12 @@
-import { createErrorMessage } from "./components/index.js";
+// import { createErrorMessage } from "./components/index.js";
 
 class Settings {
   constructor(settingsModal, updateSettingsForm) {
     this.savedSettings = JSON.parse(
       window.sessionStorage.getItem("savedSettings") // possibly null
     );
-    this.settingsModal = settingsModal;
-    this.updateSettingsForm = updateSettingsForm;
+    // this.settingsModal = settingsModal;
+    // this.updateSettingsForm = updateSettingsForm;
     this.soundFx = this.savedSettings?.soundFx || "on";
     this.music = this.savedSettings?.music || "on";
     this.gameMusicSelection =
@@ -20,8 +20,8 @@ class Settings {
       softDrop: "ArrowDown",
       togglePause: "p",
     };
-    this.settingsAppliedSuccessfully = false;
-    this.listenForSettingsUpdates();
+    // this.settingsUpdated = false;
+    // this.listenForSettingsUpdates();
   }
 
   turnSoundFxOn = () => {
@@ -52,52 +52,67 @@ class Settings {
     this.keyControls[keyToChange] = newKeyChoice;
   };
 
-  listenForSettingsUpdates = () => {
-    this.updateSettingsForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      this.updateSettings();
-    });
-  };
+  // listenForSettingsUpdates = () => {
+  //   this.updateSettingsForm.addEventListener("submit", (e) => {
+  //     e.preventDefault();
+  //     this.updateSettings();
+  //   });
+  // };
 
-  verifyUniqueKeyControls = (newKeyControls) => {
-    const CHAR_MAP = {};
-    for (const newKey of newKeyControls) {
-      if (CHAR_MAP[newKey]) return false;
-      CHAR_MAP[newKey] = true;
-    }
-    return true;
-  };
+  // verifyUniqueKeyControls = (newKeyControls) => {
+  //   const CHAR_MAP = {};
+  //   for (const newKey of newKeyControls) {
+  //     if (CHAR_MAP[newKey]) return false;
+  //     CHAR_MAP[newKey] = true;
+  //   }
+  //   return true;
+  // };
 
-  updateSettings = () => {
-    const updateSoundFx = this.updateSettingsForm.elements.soundFx.value;
-    const updateMusicOnOff = this.updateSettingsForm.elements.music.value;
-    const updateGameMusicSelection =
-      this.updateSettingsForm.elements.gameMusicSelection.value;
-    const updateColorPaletteSelection =
-      this.updateSettingsForm.elements.colorPaletteSelection.value;
-    const updateRotateControl = this.updateSettingsForm.elements.rotate.value;
-    const updateMoveLeft = this.updateSettingsForm.elements.moveLeft.value;
-    const updateMoveRight = this.updateSettingsForm.elements.moveRight.value;
-    const updateSoftDrop = this.updateSettingsForm.elements.softDrop.value;
-    const updateTogglePause =
-      this.updateSettingsForm.elements.togglePause.value;
-    const updatedKeyControlValues = [
-      updateRotateControl,
-      updateMoveLeft,
-      updateMoveRight,
-      updateSoftDrop,
-      updateTogglePause,
-    ];
+  updateSettings = ({
+    updateSoundFxOnOff,
+    updateMusicOnOff,
+    updateGameMusicSelection,
+    updateColorPaletteSelection,
+    updatedKeyControlValues,
+  }) => {
+    // const updateSoundFx = this.updateSettingsForm.elements.soundFx.value;
+    // const updateMusicOnOff = this.updateSettingsForm.elements.music.value;
+    // const updateGameMusicSelection =
+    //   this.updateSettingsForm.elements.gameMusicSelection.value;
+    // const updateColorPaletteSelection =
+    //   this.updateSettingsForm.elements.colorPaletteSelection.value;
+    // const updateRotateControl = this.updateSettingsForm.elements.rotate.value;
+    // const updateMoveLeft = this.updateSettingsForm.elements.moveLeft.value;
+    // const updateMoveRight = this.updateSettingsForm.elements.moveRight.value;
+    // const updateSoftDrop = this.updateSettingsForm.elements.softDrop.value;
+    // const updateTogglePause =
+    //   this.updateSettingsForm.elements.togglePause.value;
+    // const updatedKeyControlValues = [
+    //   updateRotateControl,
+    //   updateMoveLeft,
+    //   updateMoveRight,
+    //   updateSoftDrop,
+    //   updateTogglePause,
+    // ];
 
-    // Validation for Key Controls
-    if (!this.verifyUniqueKeyControls(updatedKeyControlValues)) {
-      const error = createErrorMessage("settings-error-message");
-      this.updateSettingsForm.append(error);
-      return;
-    }
+    // // Validation for Key Controls
+    // if (!this.verifyUniqueKeyControls(updatedKeyControlValues)) {
+    //   const error = createErrorMessage("settings-error-message");
+    //   this.updateSettingsForm.append(error);
+    //   return;
+    // }
+
+    // console.log(
+    //   "values inside instance method: ",
+    //   updateSoundFxOnOff,
+    //   updateMusicOnOff,
+    //   updateGameMusicSelection,
+    //   updateColorPaletteSelection,
+    //   updatedKeyControlValues
+    // );
 
     // Update All Settings
-    if (updateSoundFx === "on") {
+    if (updateSoundFxOnOff === "on") {
       this.turnSoundFxOn();
     } else {
       this.turnSoundFxOff();
@@ -123,11 +138,11 @@ class Settings {
       keyControls: this.keyControls,
     });
 
-    this.settingsAppliedSuccessfully = true;
+    // this.settingsUpdated = true;
 
     // save our newly updated settings to session storage
     window.sessionStorage.setItem("savedSettings", settingsJson);
-    this.settingsModal.close();
+    // this.settingsModal.close();
   };
 }
 
