@@ -10,28 +10,32 @@ import {
   updateSettingsFormData,
 } from "./utils/index.js";
 
-// const savedSettings = JSON.parse(
-//   window.sessionStorage.getItem("savedSettings")
-// );
-
 // render a player name form with a custom method to be called on submit
-export const createPlayerNameForm = (methodForSubmit, playerScore) => {
-  // ! Why do we need these lines that remove an existing form?
+export const createPlayerNameForm = (methodForSubmit, playerScoreFromGame) => {
   const existingForm = document.getElementById("player-name-form");
   if (existingForm) {
     existingForm.remove();
   }
-  const playerNameForm = quickElement("form", [], "player-name-form");
+  const playerNameForm = quickElement(
+    "form",
+    highScoresFormData.formContainerClasses,
+    highScoresFormData.formContainerId
+  );
   playerNameForm.addEventListener("submit", (e) => {
     e.preventDefault();
     methodForSubmit();
   });
-  const playerNameContainer = createInputContainer(highScoresFormData);
-  const playerScoreContainer = createInputContainer(
-    highScoresFormData,
-    playerScore
+  const playerNameContainer = createInputContainer(
+    highScoresFormData.playerName
   );
-  const submitButton = createSubmitButton({ buttonText: "Submit" });
+  const playerScoreContainer = createInputContainer(
+    highScoresFormData.playerScore,
+    playerScoreFromGame
+  );
+  const submitButton = createSubmitButton({
+    buttonText: "Submit",
+    classes: [],
+  });
   playerNameForm.append(
     playerNameContainer,
     playerScoreContainer,
@@ -74,8 +78,8 @@ export const createHighScoresTable = (highScores) => {
 };
 
 // render a customizable heading of any level for use anywhere
-export const createCustomHeading = (headingLevel, headingText, ...classes) => {
-  const headingElement = quickElement(headingLevel, classes);
+export const createCustomHeading = (headingLevel, headingText, classes, id) => {
+  const headingElement = quickElement(headingLevel, classes, id);
   headingElement.innerText = headingText;
   return headingElement;
 };
@@ -187,6 +191,7 @@ const createUpdateSettingsForm = () => {
 
   const submitButton = createSubmitButton({
     id: "update-settings-submit-button",
+    classes: [],
     buttonText: updateSettingsFormData.submitButtonText,
   });
 
@@ -220,4 +225,14 @@ export const createSettingsModal = (closeModalButtonText) => {
   settingsModal.append(closeModalButton, updateSettingsForm);
 
   return settingsModal;
+};
+
+export const createErrorMessage = (id) => {
+  const existingError = document.getElementById(id);
+  if (existingError) {
+    existingError.remove();
+  }
+  const error = quickElement("p", ["error-message"], id);
+  error.innerText = "key controls must be unique!";
+  return error;
 };

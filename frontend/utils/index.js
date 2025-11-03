@@ -128,11 +128,47 @@ export const controllerRowObjs = {
 };
 
 // Key Control Values For Keydown Event Listeners
-export const keyControlPrefix = "key-control-";
-export const validKeySelectInputIds = [
-  `${keyControlPrefix}rotate`,
-  `${keyControlPrefix}move-left`,
-  `${keyControlPrefix}move-right`,
-  `${keyControlPrefix}soft-drop`,
-  `${keyControlPrefix}toggle-pause`,
-];
+const keyControlPrefix = "key-control-";
+
+// All Settings Input ID's
+export const settingsInputIds = {
+  radioIds: [
+    "sound-fx-on",
+    "sound-fx-off",
+    "music-on",
+    "music-off",
+    "music-theme-one",
+    "music-theme-two",
+    "music-theme-three",
+    "color-palette-classic",
+    "color-palette-two",
+    "color-palette-three",
+  ],
+
+  keyControlIds: [
+    `${keyControlPrefix}rotate`,
+    `${keyControlPrefix}move-left`,
+    `${keyControlPrefix}move-right`,
+    `${keyControlPrefix}soft-drop`,
+    `${keyControlPrefix}toggle-pause`,
+  ],
+};
+
+export const displayCurrentSettingsOnForm = (settingsObj) => {
+  const allIds = Object.values(settingsInputIds);
+  allIds.forEach((arrayOfIds) => {
+    arrayOfIds.forEach((id) => {
+      const currentInput = document.getElementById(id);
+      const nameOfCurrentInput = currentInput.name;
+      if (currentInput.type === "radio") {
+        const currentSetting = settingsObj[nameOfCurrentInput];
+        if (currentSetting === currentInput.value) {
+          currentInput.checked = true;
+        }
+      } else {
+        const currentSetting = settingsObj.keyControls[nameOfCurrentInput];
+        currentInput.value = currentSetting;
+      }
+    });
+  });
+};

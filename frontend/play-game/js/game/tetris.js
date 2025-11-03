@@ -1,4 +1,11 @@
-import { GRID_SPACE, NUM_ROWS, NUM_COLS } from "../../../utils/index.js";
+import {
+  GRID_SPACE,
+  NUM_ROWS,
+  NUM_COLS,
+  displayCurrentSettingsOnForm,
+  availableShapes,
+  generateSoundPath,
+} from "../../../utils/index.js";
 import {
   Line,
   Square,
@@ -10,7 +17,6 @@ import {
 } from "./shapes.js";
 import GameGrid from "./gameGrid.js";
 import { createPlayerNameForm } from "../../../components/index.js";
-import { availableShapes, generateSoundPath } from "../../../utils/index.js";
 
 class Tetris {
   constructor(
@@ -89,13 +95,13 @@ class Tetris {
         this.submitHighScore,
         this.playerTotalScore
       );
-      this.playGameContainer.appendChild(playerNameForm);
+      this.playGameContainer.prepend(playerNameForm);
 
       if (existingHighScores.length === 10) {
         this.idOfScoreToRemove = lastPlaceScoreObj.id; // never keep more than 10 high scores in the database
       }
     } else {
-      this.playGameContainer.appendChild(this.postGameMenuButtons);
+      this.playGameContainer.prepend(this.postGameMenuButtons);
     }
   };
 
@@ -121,6 +127,8 @@ class Tetris {
 
   togglePause = () => {
     if (!this.gamePaused) {
+      displayCurrentSettingsOnForm(this.gameSettings);
+      // TODO clear any error state
       this.settingsModal.showModal();
     } else {
       this.settingsModal.close();
@@ -181,6 +189,7 @@ class Tetris {
   };
 
   awardPoints = () => {
+    return;
     let awardedPoints = 0;
     if (this.rowsCleared === 1) {
       awardedPoints += 40;

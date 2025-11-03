@@ -9,8 +9,8 @@ import {
   menuButtonsContainerObj,
   mainMenuButtonObjs,
   returnBody,
-  keyControlPrefix,
-  validKeySelectInputIds,
+  settingsInputIds,
+  displayCurrentSettingsOnForm,
 } from "./utils/index.js";
 
 // Build out the UI
@@ -23,7 +23,7 @@ const mainMenuContainer = createContainer(
 const settingsModal = createSettingsModal("Return to Main Menu");
 
 body.prepend(
-  createCustomHeading("h1", "Main Menu", "main-heading"),
+  createCustomHeading("h1", "Main Menu", ["main-heading"], "main-heading"),
   mainMenuContainer,
   settingsModal
 );
@@ -34,25 +34,27 @@ const mainMenuButtons = createMenuButtons(
 );
 mainMenuContainer.appendChild(mainMenuButtons);
 
+// Instantiate a Settings object
+const updateSettingsForm = document.getElementById("update-settings-form");
+const settingsObj = new Settings(settingsModal, updateSettingsForm);
+
 // Add Event Listeners
 document.getElementById("open-modal-button").addEventListener("click", () => {
+  displayCurrentSettingsOnForm(settingsObj);
+  // TODO remove  "settings-error-message" if it exists
   settingsModal.showModal();
 });
 document.getElementById("close-modal-button").addEventListener("click", () => {
   settingsModal.close();
 });
 
-// Target the updateSettingsForm and Instantiate a Settings Object
-const updateSettingsForm = document.getElementById("update-settings-form");
-new Settings(settingsModal, updateSettingsForm);
-
 // Event Listeners For Updating Game Controls From Main Menu
 window.addEventListener("keyup", (e) => {
   const keyName = e.key;
   const activeElement = document.activeElement;
-  if (!validKeySelectInputIds.includes(activeElement.getAttribute("id"))) {
-    return;
+  if (
+    settingsInputIds.keyControlIds.includes(activeElement.getAttribute("id"))
+  ) {
+    activeElement.value = keyName;
   }
-
-  activeElement.value = keyName;
 });

@@ -16,16 +16,16 @@ import {
   postGameMenuButtonObjs,
   returnBody,
   controllerRowObjs,
-  keyControlPrefix,
-  validKeySelectInputIds,
+  settingsInputIds,
 } from "../../utils/index.js";
 import Tetris from "./game/tetris.js";
 
 // Build out the UI
 
 const body = returnBody();
-body.prepend(createCustomHeading("h1", "Tetris", "main-heading"));
-
+body.prepend(
+  createCustomHeading("h1", "Tetris", ["main-heading"], "main-heading")
+);
 // target gameGridContainer to inject this UI after it
 const gameGridContainer = document.getElementById("game-grid-container");
 
@@ -73,15 +73,8 @@ gameGridContainer.after(gameDetailsContainer, settingsModal);
 
 // Instantiate the Settings object
 const updateSettingsForm = document.getElementById("update-settings-form");
-const savedSettings = JSON.parse(
-  window.sessionStorage.getItem("savedSettings")
-);
 
-const settingsObj = new Settings(
-  settingsModal,
-  updateSettingsForm,
-  savedSettings
-);
+const settingsObj = new Settings(settingsModal, updateSettingsForm);
 
 // Instantiate a high scores object for use inside the Tetris game
 const highScoresObj = new HighScores();
@@ -93,12 +86,13 @@ const previewImg = document.getElementById("preview-img");
 const levelHeading = document.getElementById("level-heading");
 const totalScoreHeading = document.getElementById("total-score-heading");
 const rowsClearedHeading = document.getElementById("rows-cleared-heading");
+const playerNameForm = document.getElementById("player-name-form");
 const postGameMenuButtons = createMenuButtons(
   menuButtonsContainerObj,
   postGameMenuButtonObjs
 );
 
-// Instantiate the Tetris game
+// Instantiate the Tetris Game
 const game = new Tetris(
   settingsObj,
   highScoresObj,
@@ -130,7 +124,12 @@ scoreHeading.innerText = `Score: ${game.playerTotalScore}`;
 
 // Mouse Events
 updateSettingsSubmitButton.addEventListener("click", () => {
-  game.togglePause();
+  setTimeout(() => {
+    if (settingsObj.settingsAppliedSuccessfully) {
+      game.togglePause();
+      settingsObj.settingsAppliedSuccessfully = false;
+    }
+  }, 150);
 });
 
 modalCloseButton.addEventListener("click", () => {
@@ -163,7 +162,9 @@ window.addEventListener("keyup", (e) => {
   const keyName = e.key;
   // Event Listeners For Updating Game Controls From Main Menu
   const activeElement = document.activeElement;
-  if (validKeySelectInputIds.includes(activeElement.getAttribute("id"))) {
+  if (
+    settingsInputIds.keyControlIds.includes(activeElement.getAttribute("id"))
+  ) {
     activeElement.value = keyName;
     return;
   }

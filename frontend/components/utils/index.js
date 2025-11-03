@@ -1,7 +1,3 @@
-const savedSettings = JSON.parse(
-  window.sessionStorage.getItem("savedSettings")
-);
-
 // UI Helpers
 
 // create any element with any number of classes and an optional id
@@ -25,7 +21,7 @@ export const createMenuButton = (buttonObj) => {
 };
 
 // create a div element with a label and input
-export const createInputContainer = (data, customValue = null) => {
+export const createInputContainer = (data, readOnlyValue = null) => {
   const inputContainer = quickElement("div", data.containerClasses);
   const label = quickElement("label", []);
   label.innerText = data.labelText;
@@ -36,19 +32,8 @@ export const createInputContainer = (data, customValue = null) => {
     input.setAttribute(attribute, data.input[attribute]);
   });
 
-  if (data.input.type === "radio") {
-    if (
-      (savedSettings && savedSettings[data.input.name] === data.input.value) ||
-      data.input.value === "on" ||
-      data.input.value === "theme-1" ||
-      data.input.value === "classic"
-    ) {
-      input.setAttribute("checked", true);
-    }
-  }
-
-  if (customValue) {
-    input.value = customValue;
+  if (readOnlyValue) {
+    input.value = readOnlyValue;
   }
 
   inputContainer.append(label, input);
@@ -56,7 +41,7 @@ export const createInputContainer = (data, customValue = null) => {
 };
 
 export const createSubmitButton = (buttonObj) => {
-  const submit = quickElement("button", [], buttonObj.id);
+  const submit = quickElement("button", buttonObj.classes, buttonObj.id);
   submit.setAttribute("type", "submit");
   submit.innerText = buttonObj.buttonText;
   return submit;
@@ -123,7 +108,7 @@ export const updateSettingsFormData = {
     musicSelect: {
       fieldSetOptions: {
         containerClasses: [],
-        legendText: "Music Theme",
+        legendText: "Select Game Music",
         legendClasses: [],
       },
       radioOptions: [
@@ -162,7 +147,7 @@ export const updateSettingsFormData = {
     colorPaletteSelect: {
       fieldSetOptions: {
         containerClasses: [],
-        legendText: "Color Palette",
+        legendText: "Select Color Palette",
         legendClasses: [],
       },
       radioOptions: [
@@ -206,7 +191,6 @@ export const updateSettingsFormData = {
           id: "key-control-rotate",
           type: "text",
           name: "rotate",
-          value: savedSettings?.keyControls.softDrop || "ArrowUp",
           required: true,
         },
       },
@@ -217,7 +201,6 @@ export const updateSettingsFormData = {
           id: "key-control-move-left",
           type: "text",
           name: "moveLeft",
-          value: savedSettings?.keyControls.softDrop || "ArrowLeft",
           required: true,
         },
       },
@@ -228,7 +211,6 @@ export const updateSettingsFormData = {
           id: "key-control-move-right",
           type: "text",
           name: "moveRight",
-          value: savedSettings?.keyControls.softDrop || "ArrowRight",
           required: true,
         },
       },
@@ -239,7 +221,6 @@ export const updateSettingsFormData = {
           id: "key-control-soft-drop",
           type: "text",
           name: "softDrop",
-          value: savedSettings?.keyControls.softDrop || "ArrowDown",
           required: true,
         },
       },
@@ -250,7 +231,6 @@ export const updateSettingsFormData = {
           id: "key-control-toggle-pause",
           type: "text",
           name: "togglePause",
-          value: savedSettings?.keyControls.softDrop || "p",
           required: true,
         },
       },
@@ -289,6 +269,8 @@ export const updateSettingsFormData = {
 };
 
 export const highScoresFormData = {
+  formContainerClasses: [],
+  formContainerId: "player-name-form",
   playerName: {
     containerClasses: [],
     labelText: "Enter your name",

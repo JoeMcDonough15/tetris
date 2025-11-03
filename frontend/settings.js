@@ -1,20 +1,26 @@
+import { createErrorMessage } from "./components/index.js";
+
 class Settings {
-  constructor(settingsModal, updateSettingsForm, savedSettings) {
+  constructor(settingsModal, updateSettingsForm) {
+    this.savedSettings = JSON.parse(
+      window.sessionStorage.getItem("savedSettings") // possibly null
+    );
     this.settingsModal = settingsModal;
     this.updateSettingsForm = updateSettingsForm;
-    this.soundFx = savedSettings?.soundFx || "on";
-    this.music = savedSettings?.music || "on";
-    this.gameMusicSelection = savedSettings?.gameMusicSelection || "theme-1";
+    this.soundFx = this.savedSettings?.soundFx || "on";
+    this.music = this.savedSettings?.music || "on";
+    this.gameMusicSelection =
+      this.savedSettings?.gameMusicSelection || "theme-1";
     this.colorPaletteSelection =
-      savedSettings?.colorPaletteSelection || "classic";
-    this.keyControls = savedSettings?.keyControls || {
+      this.savedSettings?.colorPaletteSelection || "classic";
+    this.keyControls = this.savedSettings?.keyControls || {
       rotate: "ArrowUp",
       moveLeft: "ArrowLeft",
       moveRight: "ArrowRight",
       softDrop: "ArrowDown",
       togglePause: "p",
     };
-
+    this.settingsAppliedSuccessfully = false;
     this.listenForSettingsUpdates();
   }
 
@@ -53,6 +59,15 @@ class Settings {
     });
   };
 
+  verifyUniqueKeyControls = (newKeyControls) => {
+    const CHAR_MAP = {};
+    for (const newKey of newKeyControls) {
+      if (CHAR_MAP[newKey]) return false;
+      CHAR_MAP[newKey] = true;
+    }
+    return true;
+  };
+
   updateSettings = () => {
     const updateSoundFx = this.updateSettingsForm.elements.soundFx.value;
     const updateMusicOnOff = this.updateSettingsForm.elements.music.value;
@@ -74,6 +89,14 @@ class Settings {
       updateTogglePause,
     ];
 
+    // Validation for Key Controls
+    if (!this.verifyUniqueKeyControls(updatedKeyControlValues)) {
+      const error = createErrorMessage("settings-error-message");
+      this.updateSettingsForm.append(error);
+      return;
+    }
+
+    // Update All Settings
     if (updateSoundFx === "on") {
       this.turnSoundFxOn();
     } else {
@@ -99,6 +122,8 @@ class Settings {
       colorPaletteSelection: this.colorPaletteSelection,
       keyControls: this.keyControls,
     });
+
+    this.settingsAppliedSuccessfully = true;
 
     // save our newly updated settings to session storage
     window.sessionStorage.setItem("savedSettings", settingsJson);
