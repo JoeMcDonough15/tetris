@@ -17,6 +17,7 @@ import {
   verifyUniqueStrings,
   showErrorById,
   openLoadGameModal,
+  closeLoadGameModal,
 } from "./utils/index.js";
 
 // Build out the UI
@@ -81,19 +82,13 @@ document.getElementById("close-modal-button").addEventListener("click", () => {
 document
   .getElementById("open-load-game-modal-button")
   .addEventListener("click", () => {
-    // write a function called openLoadGameModal(loadGameModal).
     openLoadGameModal(loadGameModal);
-    // This function should include a helper function that fetches all saved games from local storage and returns an array of the game names
-    // Then it calls another helper function that places all of those options on the form's dropdown/select container with a class name of "game-to-load-select-option".
-    // Then it should open the modal that was passed in.
   });
 
 document
   .getElementById("close-load-game-modal-button")
   .addEventListener("click", () => {
-    // write a function called closeLoadGameModal(loadGameModal).
-    // This function should include a helper function that grabs all elements by class name "game-to-load-select-option" and calls .remove() on each of the elements in the collection.
-    // Then it should close the modal that was passed in.
+    closeLoadGameModal(loadGameModal);
   });
 
 // * 2. Set a click event listener on the Load Game button.
@@ -103,7 +98,7 @@ document
 
 // Keyboard Events
 
-// Event Listeners For Updating Game Controls From Main Menu
+// Event Listeners For Updating Game Controls and Closing loadGameModal From Main Menu
 window.addEventListener("keyup", (e) => {
   const keyName = e.key;
   const activeElement = document.activeElement;
@@ -111,5 +106,10 @@ window.addEventListener("keyup", (e) => {
     settingsInputIds.keyControlIds.includes(activeElement.getAttribute("id"))
   ) {
     activeElement.value = keyName;
+    return;
+  }
+
+  if (keyName === "Escape") {
+    closeLoadGameModal(loadGameModal);
   }
 });

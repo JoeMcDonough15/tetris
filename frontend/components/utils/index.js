@@ -29,10 +29,7 @@ export const createInputContainer = (data, isSelect) => {
   label.innerText = data.labelText;
   label.setAttribute("for", data.input.id);
   const input = quickElement(isSelect ? "select" : "input", [], data.input.id);
-  if (isSelect) {
-    const selectInstructions = createOption("Choose a Saved Game");
-    input.appendChild(selectInstructions);
-  }
+
   const attributes = Object.keys(data.input);
   attributes.forEach((attribute) => {
     input.setAttribute(attribute, data.input[attribute]);

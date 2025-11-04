@@ -266,10 +266,21 @@ export const openLoadGameModal = (loadGameModal) => {
     localStorage.getItem("savedGames")
   ).map((savedGame) => savedGame.nameOfGame);
   const selectInput = document.getElementById("load-game-select");
+  selectInput.appendChild(createOption("Select a Game To Load"));
   namesOfAllSavedGames.forEach((nameOfSavedGame) => {
     selectInput.appendChild(createOption(nameOfSavedGame));
   });
   loadGameModal.showModal();
+};
+
+export const closeLoadGameModal = (loadGameModal) => {
+  const allExistingGameLoadOptions = Array.from(
+    document.getElementsByClassName("game-to-load-select-option")
+  );
+  allExistingGameLoadOptions.forEach((gameLoadOption) => {
+    gameLoadOption.remove();
+  });
+  loadGameModal.close();
 };
 
 export const updateSettingsFormData = {
