@@ -132,7 +132,11 @@ const createUpdateSettingsForm = () => {
 };
 
 const createModal = (closeModalButtonText, modalClasses, buttonClasses, id) => {
-  const modal = quickElement("dialog", modalClasses, id);
+  const modal = quickElement(
+    "dialog",
+    ["modal-container", ...modalClasses],
+    id
+  );
   const closeModalButton = createCloseModalButton(
     closeModalButtonText,
     buttonClasses,

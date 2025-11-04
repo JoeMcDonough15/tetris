@@ -92,22 +92,27 @@ gameGridContainer.after(
   settingsModal
 );
 
-// Instantiate the Settings object and the HighScores object
+// Instantiate Necessary Classes
 const settingsObj = new Settings();
 const highScoresObj = new HighScores();
-
-// Instantiate the Tetris Game
 const game = new Tetris(settingsObj, highScoresObj);
 
 // Target Elements for Event Listeners
-const closeSettingsModalButton = document.getElementById(
-  "close-settings-modal-button"
-);
+
 const rotateButton = document.getElementById("btn-up");
 const softDropButton = document.getElementById("btn-down");
 const moveLeftButton = document.getElementById("btn-left");
 const moveRightButton = document.getElementById("btn-right");
 const pauseButton = document.getElementById("btn-pause");
+const closePauseModalButton = document.getElementById(
+  "close-pause-modal-button"
+);
+const openSettingsModalButton = document.getElementById(
+  "open-settings-modal-button"
+);
+const closeSettingsModalButton = document.getElementById(
+  "close-settings-modal-button"
+);
 
 // Form Submit Events
 playerNameForm.addEventListener("submit", async (e) => {
@@ -148,13 +153,22 @@ updateSettingsForm.addEventListener("submit", (e) => {
 
 // Mouse Events
 pauseButton.addEventListener("click", () => {
-  openSettingsModal(settingsObj, settingsModal);
+  pauseModal.showModal();
   game.togglePause();
+});
+
+closePauseModalButton.addEventListener("click", () => {
+  pauseModal.close();
+  game.togglePause();
+});
+
+openSettingsModalButton.addEventListener("click", () => {
+  // clear any error state, pre populate input fields, open the modal
+  openSettingsModal(settingsObj, settingsModal);
 });
 
 closeSettingsModalButton.addEventListener("click", () => {
   closeSettingsModal(settingsModal);
-  game.togglePause();
 });
 
 rotateButton.addEventListener("click", () => {
