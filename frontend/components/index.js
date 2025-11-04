@@ -1,14 +1,11 @@
+import { highScoresFormData, highScoresTableFields } from "../utils/index.js";
 import {
   createInputContainer,
   createMenuButton,
   createPreviewImg,
-  createRadioOptions,
   createSubmitButton,
   createUpdateSettingsForm,
-  highScoresFormData,
-  highScoresTableFields,
   quickElement,
-  updateSettingsFormData,
 } from "./utils/index.js";
 
 // render a player name form with a custom method to be called on submit

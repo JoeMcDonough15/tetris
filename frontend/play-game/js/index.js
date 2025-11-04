@@ -94,8 +94,6 @@ gameGridContainer.after(
 const settingsObj = new Settings();
 const highScoresObj = new HighScores();
 
-// 3. Write a function that handles all the tasks necessary when opening the modal.  Prefilling inputs, removing error message if it's there, and showModal().
-
 // Instantiate the Tetris Game
 const game = new Tetris(settingsObj, highScoresObj);
 
@@ -139,12 +137,8 @@ updateSettingsForm.addEventListener("submit", (e) => {
     return;
   }
 
-  const newSettings = {
-    ...inputsObj,
-  };
-
-  settingsObj.updateSettings(newSettings);
-  settingsModal.close();
+  settingsObj.updateSettings({ ...inputsObj });
+  closeSettingsModal(settingsModal);
   game.togglePause();
 });
 

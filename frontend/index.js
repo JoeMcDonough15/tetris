@@ -1,7 +1,6 @@
 import {
   createContainer,
   createCustomHeading,
-  createErrorMessage,
   createMenuButtons,
   createSettingsModal,
 } from "./components/index.js";
@@ -11,7 +10,11 @@ import {
   mainMenuButtonObjs,
   returnBody,
   settingsInputIds,
-  displayCurrentSettingsOnForm,
+  openSettingsModal,
+  closeSettingsModal,
+  grabInputValuesFromForm,
+  verifyUniqueStrings,
+  showErrorById,
 } from "./utils/index.js";
 
 // Build out the UI
@@ -36,72 +39,31 @@ const mainMenuButtons = createMenuButtons(
 mainMenuContainer.appendChild(mainMenuButtons);
 
 // Instantiate a Settings object
-
-// const settingsObj = new Settings(settingsModal, updateSettingsForm);
 const settingsObj = new Settings();
 
 // Add Event Listeners
 document.getElementById("open-modal-button").addEventListener("click", () => {
-  displayCurrentSettingsOnForm(settingsObj);
-  // TODO remove  "settings-error-message" if it exists
-  settingsModal.showModal();
+  openSettingsModal(settingsObj, settingsModal);
 });
 
 document.getElementById("close-modal-button").addEventListener("click", () => {
-  settingsModal.close();
+  closeSettingsModal(settingsModal);
 });
 
 const updateSettingsForm = document.getElementById("update-settings-form");
 updateSettingsForm.addEventListener("submit", (e) => {
-  console.log("running inside handle submit");
   e.preventDefault();
-  // grab elements from form
-  const updateSoundFxOnOff = updateSettingsForm.elements.soundFx.value;
-  const updateMusicOnOff = updateSettingsForm.elements.music.value;
-  const updateGameMusicSelection =
-    updateSettingsForm.elements.gameMusicSelection.value;
-  const updateColorPaletteSelection =
-    updateSettingsForm.elements.colorPaletteSelection.value;
-  const updateRotateControl = updateSettingsForm.elements.rotate.value;
-  const updateMoveLeft = updateSettingsForm.elements.moveLeft.value;
-  const updateMoveRight = updateSettingsForm.elements.moveRight.value;
-  const updateSoftDrop = updateSettingsForm.elements.softDrop.value;
-  const updateTogglePause = updateSettingsForm.elements.togglePause.value;
-  const updatedKeyControlValues = [
-    updateRotateControl,
-    updateMoveLeft,
-    updateMoveRight,
-    updateSoftDrop,
-    updateTogglePause,
-  ];
+  const inputsObj = grabInputValuesFromForm(updateSettingsForm);
+  const keyControlInputVals = Object.values(inputsObj.keyControls);
+  const allUniqueKeyControlVals = verifyUniqueStrings(keyControlInputVals);
 
-  // helper function to verify unique inputs for key controls
-  const verifyUniqueKeyControls = (newKeyControls) => {
-    const CHAR_MAP = {};
-    for (const newKey of newKeyControls) {
-      if (CHAR_MAP[newKey]) return false;
-      CHAR_MAP[newKey] = true;
-    }
-    return true;
-  };
-
-  // add error to form and return early if verification failed
-  if (!verifyUniqueKeyControls(updatedKeyControlValues)) {
-    const error = createErrorMessage("settings-error-message");
-    updateSettingsForm.append(error);
+  if (!allUniqueKeyControlVals) {
+    showErrorById("settings-error-message");
     return;
   }
 
-  // update settings
-  settingsObj.updateSettings({
-    updateSoundFxOnOff,
-    updateMusicOnOff,
-    updateGameMusicSelection,
-    updateColorPaletteSelection,
-    updatedKeyControlValues,
-  });
-  // close modal
-  settingsModal.close();
+  settingsObj.updateSettings({ ...inputsObj });
+  closeSettingsModal(settingsModal);
 });
 
 // Event Listeners For Updating Game Controls From Main Menu
