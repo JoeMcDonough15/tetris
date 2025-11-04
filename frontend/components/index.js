@@ -1,6 +1,7 @@
 import { highScoresFormData, highScoresTableFields } from "../utils/index.js";
 import {
   createInputContainer,
+  createLoadGameForm,
   createMenuButton,
   createPreviewImg,
   createSubmitButton,
@@ -159,7 +160,7 @@ export const createControllerRow = (containerClassName, controllerObjs) => {
 export const createSettingsModal = (closeModalButtonText) => {
   const settingsModal = quickElement(
     "dialog",
-    ["settings-modal-container"],
+    ["modal-container"],
     "settings-modal"
   );
   const updateSettingsForm = createUpdateSettingsForm();
@@ -169,4 +170,25 @@ export const createSettingsModal = (closeModalButtonText) => {
   settingsModal.append(closeModalButton, updateSettingsForm);
 
   return settingsModal;
+};
+
+export const createLoadGameModal = (closeModalButtonText) => {
+  const loadGameModal = quickElement(
+    "dialog",
+    ["modal-container"],
+    "load-game-modal"
+  );
+
+  const closeModalButton = quickElement(
+    "button",
+    [],
+    "close-load-game-modal-button"
+  );
+  closeModalButton.innerText = closeModalButtonText;
+  closeModalButton.setAttribute("autofocus", true);
+
+  const loadGameForm = createLoadGameForm();
+
+  loadGameModal.append(closeModalButton, loadGameForm);
+  return loadGameModal;
 };

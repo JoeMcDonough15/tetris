@@ -1,3 +1,5 @@
+import { createOption } from "../components/utils/index.js";
+
 // Game Grid Values
 export const NUM_ROWS = 18;
 export const NUM_COLS = 10;
@@ -84,6 +86,7 @@ export const mainMenuButtonObjs = [
     buttonText: "Settings",
     id: "open-modal-button",
   },
+  { buttonText: "Load Game", id: "open-load-game-modal-button" },
 ];
 
 export const highScoresMenuButtonObjs = [
@@ -256,6 +259,17 @@ export const openSettingsModal = (settingsObj, settingsModal) => {
 
 export const closeSettingsModal = (settingsModal) => {
   settingsModal.close();
+};
+
+export const openLoadGameModal = (loadGameModal) => {
+  const namesOfAllSavedGames = JSON.parse(
+    localStorage.getItem("savedGames")
+  ).map((savedGame) => savedGame.nameOfGame);
+  const selectInput = document.getElementById("load-game-select");
+  namesOfAllSavedGames.forEach((nameOfSavedGame) => {
+    selectInput.appendChild(createOption(nameOfSavedGame));
+  });
+  loadGameModal.showModal();
 };
 
 export const updateSettingsFormData = {

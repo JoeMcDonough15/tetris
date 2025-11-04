@@ -23,12 +23,16 @@ export const createMenuButton = (buttonObj) => {
 };
 
 // create a div element with a label and input
-export const createInputContainer = (data) => {
+export const createInputContainer = (data, isSelect) => {
   const inputContainer = quickElement("div", data.containerClasses);
   const label = quickElement("label", []);
   label.innerText = data.labelText;
   label.setAttribute("for", data.input.id);
-  const input = quickElement("input", [], data.input.id);
+  const input = quickElement(isSelect ? "select" : "input", [], data.input.id);
+  if (isSelect) {
+    const selectInstructions = createOption("Choose a Saved Game");
+    input.appendChild(selectInstructions);
+  }
   const attributes = Object.keys(data.input);
   attributes.forEach((attribute) => {
     input.setAttribute(attribute, data.input[attribute]);
@@ -123,4 +127,26 @@ export const createUpdateSettingsForm = () => {
     error
   );
   return updateSettingsForm;
+};
+
+export const createLoadGameForm = () => {
+  const loadGameForm = quickElement("form", [], "load-game-form");
+  const selectInputContainer = createInputContainer(
+    {
+      containerClasses: [],
+      labelText: "Select a Game To Load",
+      input: { id: "load-game-select", name: "gameToLoad" },
+    },
+    "isSelect"
+  );
+
+  loadGameForm.appendChild(selectInputContainer);
+  return loadGameForm;
+};
+
+export const createOption = (optionName) => {
+  const optionElement = quickElement("option", ["game-to-load-select-option"]);
+  optionElement.value = optionName;
+  optionElement.innerText = optionName;
+  return optionElement;
 };
