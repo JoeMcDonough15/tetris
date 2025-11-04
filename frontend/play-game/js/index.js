@@ -21,8 +21,8 @@ import {
   displayCurrentSettingsOnForm,
   postGameMenuButtonsContainerObj,
   toggleDisplayById,
-  grabInputsFromForm,
   verifyUniqueStrings,
+  grabInputValuesFromForm,
 } from "../../utils/index.js";
 import Tetris from "./game/tetris.js";
 
@@ -94,7 +94,6 @@ const highScoresObj = new HighScores();
 
 // TODO Functions to move to utils
 
-// 2. Clean up updateSettingsForm submit event handler - see what helper functions can get fleshed out and moved to utils.
 // 3. Make it so that any errors on the updateSettingsForm go away when you close and reopen the modal.  Do this across here and the homepage.
 // 4. Only render one single error message and use toggleDisplayById() to make it appear/disappear when needed.  Do this across here and the homepage.
 // 5. Move sound FX files to utils and out of the Tetris constructor.  Import them instead.
@@ -134,60 +133,22 @@ playerNameForm.addEventListener("submit", async (e) => {
 const updateSettingsForm = document.getElementById("update-settings-form");
 updateSettingsForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  const inputsObj = grabInputsFromForm(updateSettingsForm); // key value pairs of name/id and value {"music", "on", "soundFx": "off", "keyControlRotate": "r", }
-  // const updateSoundFxOnOff = updateSettingsForm.elements.soundFx.value;
-  // const updateMusicOnOff = updateSettingsForm.elements.music.value;
-  // const updateGameMusicSelection =
-  //   updateSettingsForm.elements.gameMusicSelection.value;
-  // const updateColorPaletteSelection =
-  //   updateSettingsForm.elements.colorPaletteSelection.value;
-  // const updateRotateControl = updateSettingsForm.elements.rotate.value;
-  // const updateMoveLeft = updateSettingsForm.elements.moveLeft.value;
-  // const updateMoveRight = updateSettingsForm.elements.moveRight.value;
-  // const updateSoftDrop = updateSettingsForm.elements.softDrop.value;
-  // const updateTogglePause = updateSettingsForm.elements.togglePause.value;
-  // const updatedKeyControlValues = [
-  //   updateRotateControl,
-  //   updateMoveLeft,
-  //   updateMoveRight,
-  //   updateSoftDrop,
-  //   updateTogglePause,
-  // ];
+  const inputsObj = grabInputValuesFromForm(updateSettingsForm);
   const keyControlInputVals = Object.values(inputsObj.keyControls);
-
-  // helper function to verify unique inputs for key controls
   const allUniqueKeyControlVals = verifyUniqueStrings(keyControlInputVals);
 
-  // add error to form and return early if verification failed
   if (!allUniqueKeyControlVals) {
     const error = createErrorMessage("settings-error-message");
-    // instead of creating the error, let's target it with a utils function and toggle the display
+    // TODO instead of creating the error, let's target it with a utils function and toggle the display
     updateSettingsForm.append(error);
     return;
   }
 
-  const printKeys = (inputsObj) => {
-    for (const key in inputsObj) {
-      const value = inputsObj[key];
-      if (typeof value === "string") {
-        console.log(key);
-      } else {
-        printKeys(value);
-      }
-    }
+  const newSettings = {
+    ...inputsObj,
   };
 
-  printKeys(inputsObj);
-
-  // update settings
-  settingsObj.updateSettings({
-    updateSoundFxOnOff,
-    updateMusicOnOff,
-    updateGameMusicSelection,
-    updateColorPaletteSelection,
-    updatedKeyControlValues,
-  });
-  // close modal
+  settingsObj.updateSettings(newSettings);
   settingsModal.close();
   game.togglePause();
 });

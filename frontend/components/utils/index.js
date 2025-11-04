@@ -46,7 +46,8 @@ export const createSubmitButton = (buttonObj) => {
 export const createRadioOptions = (data) => {
   const radioOptionsFieldSet = quickElement(
     "fieldset",
-    data.fieldSetOptions.containerClasses
+    data.fieldSetOptions.containerClasses,
+    data.fieldSetOptions.fieldSetId
   );
   const radioOptionsLegend = quickElement(
     "legend",
@@ -79,6 +80,7 @@ export const updateSettingsFormData = {
   settingsOptions: {
     musicOnOff: {
       fieldSetOptions: {
+        fieldSetId: "music-on-off",
         containerClasses: [],
         legendText: "Music",
         legendClasses: [],
@@ -103,6 +105,7 @@ export const updateSettingsFormData = {
     },
     musicSelect: {
       fieldSetOptions: {
+        fieldSetId: "music-select",
         containerClasses: [],
         legendText: "Select Game Music",
         legendClasses: [],
@@ -142,6 +145,7 @@ export const updateSettingsFormData = {
     },
     colorPaletteSelect: {
       fieldSetOptions: {
+        fieldSetId: "color-palette-select",
         containerClasses: [],
         legendText: "Select Color Palette",
         legendClasses: [],
@@ -233,6 +237,7 @@ export const updateSettingsFormData = {
     },
     soundFxOnOff: {
       fieldSetOptions: {
+        fieldSetId: "sound-fx-on-off",
         containerClasses: [],
         legendText: "Sound FX",
         legendClasses: [],

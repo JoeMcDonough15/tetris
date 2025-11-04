@@ -202,12 +202,12 @@ export const injectValueToInputById = (id, valueToInject) => {
   element.value = valueToInject;
 };
 
-export const grabInputsFromForm = (formElement) => {
+export const grabInputValuesFromForm = (formElement) => {
   const inputs = formElement.elements;
   const inputsFromForm = { keyControls: {} };
 
   for (const input of inputs) {
-    if (input.id === "update-settings-submit-button") {
+    if (input.type === "submit" || input.type === "fieldset") {
       continue;
     }
     const inputName = input.name;

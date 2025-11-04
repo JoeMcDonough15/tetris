@@ -46,31 +46,36 @@ class Settings {
     this.keyControls[keyToChange] = newKeyChoice;
   };
 
+  selectKeyControls = (newKeyControls) => {
+    this.keyControls = newKeyControls;
+  };
+
   updateSettings = ({
-    updateSoundFxOnOff,
-    updateMusicOnOff,
-    updateGameMusicSelection,
-    updateColorPaletteSelection,
-    updatedKeyControlValues,
+    soundFx,
+    music,
+    gameMusicSelection,
+    colorPaletteSelection,
+    keyControls,
   }) => {
     // Update All Settings
-    if (updateSoundFxOnOff === "on") {
+    if (soundFx === "on") {
       this.turnSoundFxOn();
     } else {
       this.turnSoundFxOff();
     }
-    if (updateMusicOnOff === "on") {
+    if (music === "on") {
       this.turnMusicOn();
     } else {
       this.turnMusicOff();
     }
-    this.selectGameMusic(updateGameMusicSelection);
-    this.selectColorPalette(updateColorPaletteSelection);
+    this.selectGameMusic(gameMusicSelection);
+    this.selectColorPalette(colorPaletteSelection);
+    this.selectKeyControls(keyControls);
 
-    Object.keys(this.keyControls).forEach((keyControl, index) => {
-      const updatedValue = updatedKeyControlValues[index];
-      this.changeKeyControl(keyControl, updatedValue);
-    });
+    // Object.keys(this.keyControls).forEach((keyControl, index) => {
+    //   const updatedValue = updatedKeyControlValues[index];
+    //   this.changeKeyControl(keyControl, updatedValue);
+    // });
 
     const settingsJson = JSON.stringify({
       soundFx: this.soundFx,
