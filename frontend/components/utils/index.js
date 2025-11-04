@@ -75,6 +75,54 @@ export const createPreviewImg = (id) => {
   return previewImg;
 };
 
+// render a form to put inside the settingsModal in order to update settings
+export const createUpdateSettingsForm = () => {
+  const updateSettingsForm = quickElement("form", [], "update-settings-form");
+  const soundFxOnOffOptions = createRadioOptions(
+    updateSettingsFormData.settingsOptions.soundFxOnOff
+  );
+  const musicOnOffOptions = createRadioOptions(
+    updateSettingsFormData.settingsOptions.musicOnOff
+  );
+  const musicSelectOptions = createRadioOptions(
+    updateSettingsFormData.settingsOptions.musicSelect
+  );
+  const colorPaletteSelectOptions = createRadioOptions(
+    updateSettingsFormData.settingsOptions.colorPaletteSelect
+  );
+  const keyControlSelectOptionsContainer = quickElement("div", []);
+
+  const keyControlSelectOptions = Object.values(
+    updateSettingsFormData.settingsOptions.keyControls
+  ).map((keyControlObj) => createInputContainer(keyControlObj));
+
+  keyControlSelectOptionsContainer.append(...keyControlSelectOptions);
+
+  const submitButton = createSubmitButton({
+    id: "update-settings-submit-button",
+    classes: [],
+    buttonText: updateSettingsFormData.submitButtonText,
+  });
+
+  const error = quickElement(
+    "p",
+    ["error-message", "no-display"],
+    "settings-error-message"
+  );
+  error.innerText = "key controls must be unique!";
+
+  updateSettingsForm.append(
+    soundFxOnOffOptions,
+    musicOnOffOptions,
+    musicSelectOptions,
+    colorPaletteSelectOptions,
+    keyControlSelectOptionsContainer,
+    submitButton,
+    error
+  );
+  return updateSettingsForm;
+};
+
 // UI Data
 export const updateSettingsFormData = {
   settingsOptions: {

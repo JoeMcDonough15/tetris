@@ -4,6 +4,7 @@ import {
   createPreviewImg,
   createRadioOptions,
   createSubmitButton,
+  createUpdateSettingsForm,
   highScoresFormData,
   highScoresTableFields,
   quickElement,
@@ -157,46 +158,6 @@ export const createControllerRow = (containerClassName, controllerObjs) => {
   return controllerRow;
 };
 
-// render a form to put inside the settingsModal in order to update settings
-const createUpdateSettingsForm = () => {
-  const updateSettingsForm = quickElement("form", [], "update-settings-form");
-  const soundFxOnOffOptions = createRadioOptions(
-    updateSettingsFormData.settingsOptions.soundFxOnOff
-  );
-  const musicOnOffOptions = createRadioOptions(
-    updateSettingsFormData.settingsOptions.musicOnOff
-  );
-  const musicSelectOptions = createRadioOptions(
-    updateSettingsFormData.settingsOptions.musicSelect
-  );
-  const colorPaletteSelectOptions = createRadioOptions(
-    updateSettingsFormData.settingsOptions.colorPaletteSelect
-  );
-  const keyControlSelectOptionsContainer = quickElement("div", []);
-
-  const keyControlSelectOptions = Object.values(
-    updateSettingsFormData.settingsOptions.keyControls
-  ).map((keyControlObj) => createInputContainer(keyControlObj));
-
-  keyControlSelectOptionsContainer.append(...keyControlSelectOptions);
-
-  const submitButton = createSubmitButton({
-    id: "update-settings-submit-button",
-    classes: [],
-    buttonText: updateSettingsFormData.submitButtonText,
-  });
-
-  updateSettingsForm.append(
-    soundFxOnOffOptions,
-    musicOnOffOptions,
-    musicSelectOptions,
-    colorPaletteSelectOptions,
-    keyControlSelectOptionsContainer,
-    submitButton
-  );
-  return updateSettingsForm;
-};
-
 // render a settings modal that can be used as a dialog element for whenever user opens settings in main menu or pauses game during game play
 export const createSettingsModal = (closeModalButtonText) => {
   const settingsModal = quickElement(
@@ -211,16 +172,4 @@ export const createSettingsModal = (closeModalButtonText) => {
   settingsModal.append(closeModalButton, updateSettingsForm);
 
   return settingsModal;
-};
-
-export const createErrorMessage = (id) => {
-  //! We should not need this if we use toggleDisplayById utility function instead of creating new error messages
-  const existingError = document.getElementById(id);
-  if (existingError) {
-    existingError.remove();
-  }
-  //!
-  const error = quickElement("p", ["error-message"], id);
-  error.innerText = "key controls must be unique!";
-  return error;
 };

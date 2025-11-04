@@ -237,3 +237,23 @@ export const verifyUniqueStrings = (strArray) => {
   }
   return true;
 };
+
+export const showErrorById = (errorId) => {
+  const errorMessage = document.getElementById(errorId);
+  errorMessage.classList.remove("no-display");
+};
+
+const removeErrorById = (errorId) => {
+  const errorMessage = document.getElementById(errorId);
+  errorMessage.classList.add("no-display");
+};
+
+export const openSettingsModal = (settingsObj, settingsModal) => {
+  displayCurrentSettingsOnForm(settingsObj);
+  removeErrorById("settings-error-message");
+  settingsModal.showModal();
+};
+
+export const closeSettingsModal = (settingsModal) => {
+  settingsModal.close();
+};

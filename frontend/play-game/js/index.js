@@ -7,7 +7,6 @@ import {
   createSubHeaders,
   createMenuButtons,
   createPreviewImgContainer,
-  createErrorMessage,
   createPlayerNameForm,
 } from "../../components/index.js";
 import HighScores from "../../high-scores/js/api/highScoresApi.js";
@@ -23,6 +22,9 @@ import {
   toggleDisplayById,
   verifyUniqueStrings,
   grabInputValuesFromForm,
+  showErrorById,
+  openSettingsModal,
+  closeSettingsModal,
 } from "../../utils/index.js";
 import Tetris from "./game/tetris.js";
 
@@ -92,10 +94,6 @@ gameGridContainer.after(
 const settingsObj = new Settings();
 const highScoresObj = new HighScores();
 
-// TODO Functions to move to utils
-
-// 1. Make it so that any errors on the updateSettingsForm go away when you close and reopen the modal.  Do this across here and the homepage.
-// 2. Only render one single error message and use toggleDisplayById() to make it appear/disappear when needed.  Do this across here and the homepage.
 // 3. Write a function that handles all the tasks necessary when opening the modal.  Prefilling inputs, removing error message if it's there, and showModal().
 
 // Instantiate the Tetris Game
@@ -137,9 +135,7 @@ updateSettingsForm.addEventListener("submit", (e) => {
   const allUniqueKeyControlVals = verifyUniqueStrings(keyControlInputVals);
 
   if (!allUniqueKeyControlVals) {
-    const error = createErrorMessage("settings-error-message");
-    // TODO instead of creating the error, let's target it with a utils function and toggle the display
-    updateSettingsForm.append(error);
+    showErrorById("settings-error-message");
     return;
   }
 
@@ -154,14 +150,12 @@ updateSettingsForm.addEventListener("submit", (e) => {
 
 // Mouse Events
 modalCloseButton.addEventListener("click", () => {
-  settingsModal.close();
+  closeSettingsModal(settingsModal);
   game.togglePause();
 });
 
 pauseButton.addEventListener("click", () => {
-  displayCurrentSettingsOnForm(settingsObj);
-  // TODO clear any error state
-  settingsModal.showModal();
+  openSettingsModal(settingsObj, settingsModal);
   game.togglePause();
 });
 
@@ -197,11 +191,9 @@ window.addEventListener("keyup", (e) => {
   // Event Listener for Pause Button During Gameplay
   if (keyName === settingsObj.keyControls.togglePause) {
     if (settingsModal.open) {
-      settingsModal.close();
+      closeSettingsModal(settingsModal);
     } else {
-      displayCurrentSettingsOnForm(settingsObj);
-      // TODO clear any error state
-      settingsModal.showModal();
+      openSettingsModal(settingsObj, settingsModal);
     }
     game.togglePause();
   }
