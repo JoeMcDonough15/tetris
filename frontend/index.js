@@ -38,6 +38,8 @@ const mainMenuButtons = createMenuButtons(
 );
 mainMenuContainer.appendChild(mainMenuButtons);
 
+// * 1. Render a button to Load Game inside mainMenuButtons.  This should not be a nav button.  The order of the buttons should be controlled with CSS
+
 // Instantiate a Settings object
 const settingsObj = new Settings();
 
@@ -49,6 +51,8 @@ document.getElementById("open-modal-button").addEventListener("click", () => {
 document.getElementById("close-modal-button").addEventListener("click", () => {
   closeSettingsModal(settingsModal);
 });
+
+// Form Submit Events
 
 const updateSettingsForm = document.getElementById("update-settings-form");
 updateSettingsForm.addEventListener("submit", (e) => {
@@ -65,6 +69,21 @@ updateSettingsForm.addEventListener("submit", (e) => {
   settingsObj.updateSettings({ ...inputsObj });
   closeSettingsModal(settingsModal);
 });
+
+// * 3. Set a submit event listener for the loadGamesForm
+// When the user submits the form, the name of the selected game gets sent to window.sessionStorage as gameToLoad key set to the value of
+// the name of the game that was collected from the form's select/drop down menu.
+// window.sessionStorage.setItem(JSON.stringify( { gameToLoad: nameOfGameToLoadFromForm }  ))
+// This should now navigate the user to /play-game, which will check for and pull a gameToLoad key/value pair inside window.sessionStorage.
+
+// Mouse Events
+
+// * 2. Set a click event listener on the Load Game button.
+// This event listener should call showModal(loadGameModal), which opens a dialog called loadGameModal that displays a form called loadGamesForm.  The form should have a select/drop down menu.
+// This form displays all the names of games from localStorage that can be loaded.
+// once the user selects a game and clicks "Load This Game", the form submits.
+
+// Keyboard Events
 
 // Event Listeners For Updating Game Controls From Main Menu
 window.addEventListener("keyup", (e) => {

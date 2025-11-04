@@ -23,12 +23,13 @@ import {
 import GameGrid from "./gameGrid.js";
 
 class Tetris {
-  constructor(gameSettingsObj, highScoresObj) {
+  constructor(gameSettingsObj, highScoresObj, nameOfGameToLoad) {
     // APIs for settings and high scores
     this.gameSettings = gameSettingsObj;
     this.highScoresObj = highScoresObj;
 
     // Game State
+    this.nameOfGame = nameOfGameToLoad; // possibly undefined
     this.gameOver = false;
     this.gamePaused = false;
     this.gameSpeed = 400;
@@ -43,9 +44,40 @@ class Tetris {
     this.currentPiece = null;
     this.currentPiecePlaced = false;
     this.numRotations = 0;
+
+    // load game if it exists
+    if (this.nameOfGame) {
+      this.loadGame();
+    }
   }
 
   // Game methods
+
+  saveGame = (nameOfGameToSave) => {
+    // this is called only when the form submits, inside an event listener on play-game/index.js
+    // On pause menu, a button called Save Game must be clicked rendering a form to take in the name of the game to save.
+    // On successful submission of that form, this method is called: game.saveGame(nameOfGameFromTextInput);
+    // this method grabs all the current game state and puts it in an object called gameObj
+    // it also saves the state of the canvas with a utility function that targets the canvas element by id, and copies
+    // its data using canvas.toDataURL('image/png'), returning a string. This function could be called saveCanvas() or something like that.
+    // Both the gameObj and the gameBoard get stored in one object with one property called nameOfGameToSave.
+    // The value to that single property would look like this:
+    //   const gameToSave =  { gameObj: { ...allGameState },
+    //                         gameBoardString: 'imageString.png', <-- returned from utility function saveCanvas()
+    //                       },
+    // }
+    // Then, gameToSave would be set inside localStorage as JSON.stringify({ nameOfGameToSave: gameToSave });
+  };
+
+  loadGame = () => {
+    if (!this.nameOfGame) return; // * might be redundant since this should only be called from constructor if this.nameOfGame is truthy
+    // 1. pull the loadedGame out of local storage using this.nameOfGame, then JSON.parse: const loadedGame = JSON.parse(localStorage.getItem(this.nameOfGame))
+    // 2. update all necessary game state using all game details from the loadedGame.gameObj; then, set values from the gameObj for lines 33 - 46 inside Tetris constructor.  This will update the game state to match the saved game.
+    // 3. Then, call a utility function that updates the canvas element with the passed in string returned from .toDataURL() when game was saved. drawLoadedGameToCanvasCtx(loadedGame.gameBoardString);
+    // 4. That function inside utils would target the ctx by id, then create an img tag (no need to add this <img> to the DOM).  The src of the image tag would be set to the string passed into the function (which would be loadedGame.gameBoardString).
+    // 5. That same function inside utils would then call ctx.drawImage(imgTagCreatedByutilityFunction)
+    // 6. pause game so user can unpause when ready to continue their saved game.
+  };
 
   startGame = () => {
     this.dequeuePiece();

@@ -17,7 +17,6 @@ import {
   returnBody,
   controllerRowObjs,
   settingsInputIds,
-  displayCurrentSettingsOnForm,
   postGameMenuButtonsContainerObj,
   toggleDisplayById,
   verifyUniqueStrings,
@@ -75,6 +74,17 @@ gameDetailsContainer.append(
   controllerContainer
 );
 
+// * Pause Menu Modal
+// Build a component that renders a dialog similar to settingsModal but instead of a form on it,
+// it should have a menuButtons component that uses data from utils called pauseGameMenuButtonObjs.
+// This modal should open with openModal(pauseGameModal)
+// one of these buttons should a button to save the game.
+// The click event listener on that button should openModal(saveGameModal).  This shows a save game form also on a dialog.
+// the save game form should have a single input (text) for the name of the game to save.
+// on submit, the save game form should pull the input value off the form, and then pass it to
+// the Tetris instance method saveGame(), like this: game.saveGame(nameOfGameToSaveTakenFromForm);
+// after the game saves successfully, the save game form should be hidden with toggleDisplayById(idOfSaveGameForm)
+
 const settingsModal = createSettingsModal("Return to Game");
 
 const playerNameForm = createPlayerNameForm();
@@ -93,6 +103,13 @@ gameGridContainer.after(
 // Instantiate the Settings object and the HighScores object
 const settingsObj = new Settings();
 const highScoresObj = new HighScores();
+
+// * Loading The Game
+// * 1. Check window.sessionStorage for a gameToLoad key
+// window.sessionStorage.getItem('gameToLoad')
+// * 2. If it is there, retrieve it from sessionStorage, parse it, and keep the string as a constant that will be passed into Tetris as nameOfGameToLoad, or the 3rd argument to the class's constructor method.
+// * 3. Remove the gameToLoad from sessionStorage after it has been retrieved.  That way, if the user refreshes the game, a new game will start
+// rather than the saved game.  Refreshing the page should start a new game.  The only way to load a saved game would be to do so from the main menu.
 
 // Instantiate the Tetris Game
 const game = new Tetris(settingsObj, highScoresObj);
