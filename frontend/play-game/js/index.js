@@ -94,10 +94,9 @@ const highScoresObj = new HighScores();
 
 // TODO Functions to move to utils
 
-// 3. Make it so that any errors on the updateSettingsForm go away when you close and reopen the modal.  Do this across here and the homepage.
-// 4. Only render one single error message and use toggleDisplayById() to make it appear/disappear when needed.  Do this across here and the homepage.
-// 5. Move sound FX files to utils and out of the Tetris constructor.  Import them instead.
-// 6. Write a function that handles all the tasks necessary when opening the modal.  Prefilling inputs, removing error message if it's there, and showModal().
+// 1. Make it so that any errors on the updateSettingsForm go away when you close and reopen the modal.  Do this across here and the homepage.
+// 2. Only render one single error message and use toggleDisplayById() to make it appear/disappear when needed.  Do this across here and the homepage.
+// 3. Write a function that handles all the tasks necessary when opening the modal.  Prefilling inputs, removing error message if it's there, and showModal().
 
 // Instantiate the Tetris Game
 const game = new Tetris(settingsObj, highScoresObj);

@@ -3,11 +3,13 @@ import {
   NUM_ROWS,
   NUM_COLS,
   availableShapes,
-  generateSoundPath,
   updateElementTextById,
   updateImageSrcById,
   toggleDisplayById,
   injectValueToInputById,
+  blockSound,
+  rotateSound,
+  clearedRowSound,
 } from "../../../utils/index.js";
 import {
   Line,
@@ -41,10 +43,6 @@ class Tetris {
     this.currentPiece = null;
     this.currentPiecePlaced = false;
     this.numRotations = 0;
-    // Sound Fx Files // TODO move to utils
-    this.blockSound = new Audio(generateSoundPath("block-landing"));
-    this.rotateSound = new Audio(generateSoundPath("rotate"));
-    this.clearedRowSound = new Audio(generateSoundPath("cleared-row"));
   }
 
   // Game methods
@@ -157,7 +155,7 @@ class Tetris {
   updateRowsCleared = () => {
     if (!this.rowsCleared) return;
     if (this.gameSettings.soundFx === "on") {
-      this.clearedRowSound.play();
+      clearedRowSound.play();
     }
     this.totalRowsCleared += this.rowsCleared;
     updateElementTextById(
@@ -190,7 +188,7 @@ class Tetris {
 
   placePiece = () => {
     if (this.gameSettings.soundFx === "on") {
-      this.blockSound.play();
+      blockSound.play();
     }
     this.addBlocksToGrid();
     this.checkForClearedRows();
@@ -300,7 +298,7 @@ class Tetris {
   rotatePiece = () => {
     if (!this.rotationPermitted()) return;
     if (this.gameSettings.soundFx === "on") {
-      this.rotateSound.play();
+      rotateSound.play();
     }
     this.numRotations++;
     this.currentPiece.rotate(this.numRotations);

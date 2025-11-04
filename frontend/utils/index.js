@@ -53,9 +53,14 @@ export const generatePreviewImgPath = (shapeName) => {
   return `${previewImgPathObj.prefix}${shapeName}${previewImgPathObj.suffix}`;
 };
 
-export const generateSoundPath = (soundEffect) => {
+const generateSoundPath = (soundEffect) => {
   return `${gameSoundsPathObj.prefix}${soundEffect}${gameSoundsPathObj.suffix}`;
 };
+
+// In Game Sounds Audio Objects
+export const blockSound = new Audio(generateSoundPath("block-landing"));
+export const rotateSound = new Audio(generateSoundPath("rotate"));
+export const clearedRowSound = new Audio(generateSoundPath("cleared-row"));
 
 // Menu Buttons
 export const menuButtonsContainerObj = {
