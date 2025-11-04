@@ -202,41 +202,23 @@ export const injectValueToInputById = (id, valueToInject) => {
   element.value = valueToInject;
 };
 
-// A helper function that can convert string Id's that are sword-case to camelCase - // O(n) Time, O(n) Space
-const convertSwordToCamel = (str) => {
-  let camelStr = "";
-  let i = 0;
-  while (i < str.length) {
-    const currentChar = str[i];
-    if (currentChar === "-") {
-      const nextChar = str[i + 1].toUpperCase();
-      camelStr += nextChar;
-      i += 2;
-    } else {
-      camelStr += currentChar;
-      i++;
-    }
-  }
-  return camelStr;
-};
-
-// write a function that can grab elements from a passed in form and return an object of all its inputs
 export const grabInputsFromForm = (formElement) => {
-  const inputs = formElement.elements; // array of input elements
-  // put the values of these inputs into an object with keys that use the specific inputs' ids (converted to camelCase)
+  const inputs = formElement.elements;
   const inputsFromForm = { keyControls: {} };
-  // handle radio inputs
+
   for (const input of inputs) {
-    const newVal = input.value;
+    if (input.id === "update-settings-submit-button") {
+      continue;
+    }
+    const inputName = input.name;
+    const inputVal = input.value;
+
     if (input.type === "radio") {
-      // ignore if this is not checked
-      if (!input.checked) continue;
-      const inputName = input.name; // already camelCase
-      inputsFromForm[inputName] = newVal;
+      if (input.checked) {
+        inputsFromForm[inputName] = inputVal;
+      }
     } else {
-      // handle text inputs
-      const camelCasedIdOfInput = convertSwordToCamel(input.id); // use each text input's id, converted to camelCase, as the newKey for our inputFromForm
-      inputsFromForm.keyControls[camelCasedIdOfInput] = newVal;
+      inputsFromForm.keyControls[inputName] = inputVal;
     }
   }
   return inputsFromForm;

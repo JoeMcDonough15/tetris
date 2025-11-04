@@ -166,6 +166,19 @@ updateSettingsForm.addEventListener("submit", (e) => {
     return;
   }
 
+  const printKeys = (inputsObj) => {
+    for (const key in inputsObj) {
+      const value = inputsObj[key];
+      if (typeof value === "string") {
+        console.log(key);
+      } else {
+        printKeys(value);
+      }
+    }
+  };
+
+  printKeys(inputsObj);
+
   // update settings
   settingsObj.updateSettings({
     updateSoundFxOnOff,
