@@ -63,7 +63,7 @@ export const rotateSound = new Audio(generateSoundPath("rotate"));
 export const clearedRowSound = new Audio(generateSoundPath("cleared-row"));
 
 // Menu Button Containers
-export const menuButtonsContainerObj = {
+export const mainMenuButtonsContainerObj = {
   elementName: "div",
   classes: ["menu-buttons"],
 };
@@ -74,7 +74,7 @@ export const postGameMenuButtonsContainerObj = {
   id: "post-game-menu-buttons",
 };
 
-export const pauseGameMenuButtonsContainerObj = menuButtonsContainerObj;
+export const pauseGameMenuButtonsContainerObj = mainMenuButtonsContainerObj;
 
 // Button Navigation Routes
 const buttonNavRoutes = {
@@ -82,6 +82,7 @@ const buttonNavRoutes = {
   playGame: "/play-game",
   highScores: "/high-scores",
 };
+
 // Menu Buttons
 const allButtonObjs = {
   startGame: { buttonText: "Start Game", navLink: buttonNavRoutes.playGame },
@@ -103,6 +104,7 @@ const allButtonObjs = {
     };
   },
 };
+
 export const mainMenuButtonObjs = [
   allButtonObjs.startGame,
   allButtonObjs.viewHighScores,

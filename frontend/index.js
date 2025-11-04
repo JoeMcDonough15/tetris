@@ -6,7 +6,7 @@ import {
 } from "./components/index.js";
 import Settings from "./settings.js";
 import {
-  menuButtonsContainerObj,
+  mainMenuButtonsContainerObj,
   mainMenuButtonObjs,
   returnBody,
   settingsInputIds,
@@ -33,7 +33,7 @@ body.prepend(
 );
 
 const mainMenuButtons = createMenuButtons(
-  menuButtonsContainerObj,
+  mainMenuButtonsContainerObj,
   mainMenuButtonObjs
 );
 mainMenuContainer.appendChild(mainMenuButtons);

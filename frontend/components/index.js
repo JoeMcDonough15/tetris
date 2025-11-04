@@ -1,6 +1,8 @@
 import {
   highScoresFormData,
   highScoresTableFields,
+  pauseGameMenuButtonsContainerObj,
+  pauseMenuButtonObjs,
   updateSettingsFormData,
 } from "../utils/index.js";
 
@@ -304,7 +306,7 @@ export const createControllerRow = (containerClassName, controllerObjs) => {
   return controllerRow;
 };
 
-// render a settings modal that can be used as a dialog element for whenever user opens settings in main menu or pauses game during game play
+// render a settings modal that can be used as a dialog element for whenever user opens settings in main menu or from the pause menu during game play
 export const createSettingsModal = (closeModalButtonText) => {
   const settingsModal = createModal(
     closeModalButtonText,
@@ -317,6 +319,7 @@ export const createSettingsModal = (closeModalButtonText) => {
   return settingsModal;
 };
 
+// render a pause modal that can be used as a dialog element for whenever user pauses the game during game play
 export const createPauseModal = (closeModalButtonText) => {
   const pauseModal = createModal(
     closeModalButtonText,
@@ -324,7 +327,10 @@ export const createPauseModal = (closeModalButtonText) => {
     [],
     "pause-modal"
   );
-  // an array of buttons
-
+  const pauseMenuButtons = createMenuButtons(
+    pauseGameMenuButtonsContainerObj,
+    pauseMenuButtonObjs
+  );
+  pauseModal.appendChild(pauseMenuButtons);
   return pauseModal;
 };

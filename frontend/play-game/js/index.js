@@ -8,6 +8,7 @@ import {
   createMenuButtons,
   createPreviewImgContainer,
   createPlayerNameForm,
+  createPauseModal,
 } from "../../components/index.js";
 import HighScores from "../../high-scores/js/api/highScoresApi.js";
 import Settings from "../../settings.js";
@@ -75,6 +76,7 @@ gameDetailsContainer.append(
 );
 
 const settingsModal = createSettingsModal("Return to Game");
+const pauseModal = createPauseModal("Return to Game");
 
 const playerNameForm = createPlayerNameForm();
 const postGameMenuButtons = createMenuButtons(
@@ -86,6 +88,7 @@ gameGridContainer.after(
   gameDetailsContainer,
   playerNameForm,
   postGameMenuButtons,
+  pauseModal,
   settingsModal
 );
 
