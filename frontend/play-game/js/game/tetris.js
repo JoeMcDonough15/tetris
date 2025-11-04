@@ -29,7 +29,7 @@ class Tetris {
     this.highScoresObj = highScoresObj;
 
     // Game State
-    this.nameOfGame = nameOfGameToLoad; // possibly undefined
+    this.nameOfGame = nameOfGameToLoad; // possibly null
     this.gameOver = false;
     this.gamePaused = false;
     this.gameSpeed = 400;
@@ -70,7 +70,6 @@ class Tetris {
   };
 
   loadGame = () => {
-    if (!this.nameOfGame) return; // * might be redundant since this should only be called from constructor if this.nameOfGame is truthy
     // 1. pull the loadedGame out of local storage using this.nameOfGame, then JSON.parse: const loadedGame = JSON.parse(localStorage.getItem(this.nameOfGame))
     // 2. update all necessary game state using all game details from the loadedGame.gameObj; then, set values from the gameObj for lines 33 - 46 inside Tetris constructor.  This will update the game state to match the saved game.
     // 3. Then, call a utility function that updates the canvas element with the passed in string returned from .toDataURL() when game was saved. drawLoadedGameToCanvasCtx(loadedGame.gameBoardString);

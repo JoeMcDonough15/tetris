@@ -104,15 +104,14 @@ gameGridContainer.after(
 const settingsObj = new Settings();
 const highScoresObj = new HighScores();
 
-// * Loading The Game
-// * 1. Check window.sessionStorage for a gameToLoad key
-// window.sessionStorage.getItem('gameToLoad')
-// * 2. If it is there, retrieve it from sessionStorage, parse it, and keep the string as a constant that will be passed into Tetris as nameOfGameToLoad, or the 3rd argument to the class's constructor method.
-// * 3. Remove the gameToLoad from sessionStorage after it has been retrieved.  That way, if the user refreshes the game, a new game will start
-// rather than the saved game.  Refreshing the page should start a new game.  The only way to load a saved game would be to do so from the main menu.
+// Load a Saved Game If There Is a Game in Session Storage to be Loaded
+const gameToLoad = window.sessionStorage.getItem("gameToLoad");
+if (gameToLoad) {
+  window.sessionStorage.removeItem("gameToLoad");
+}
 
 // Instantiate the Tetris Game
-const game = new Tetris(settingsObj, highScoresObj);
+const game = new Tetris(settingsObj, highScoresObj, gameToLoad);
 
 // Target Elements for Event Listeners
 const modalCloseButton = document.getElementById("close-modal-button");
