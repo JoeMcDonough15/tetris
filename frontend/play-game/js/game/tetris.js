@@ -2,9 +2,14 @@ import {
   GRID_SPACE,
   NUM_ROWS,
   NUM_COLS,
-  displayCurrentSettingsOnForm,
   availableShapes,
-  generateSoundPath,
+  updateElementTextById,
+  updateImageSrcById,
+  toggleDisplayById,
+  injectValueToInputById,
+  blockSound,
+  rotateSound,
+  clearedRowSound,
 } from "../../../utils/index.js";
 import {
   Line,
@@ -16,37 +21,13 @@ import {
   ZShape,
 } from "./shapes.js";
 import GameGrid from "./gameGrid.js";
-import { createPlayerNameForm } from "../../../components/index.js";
 
 class Tetris {
-  constructor(
-    gameSettingsObj,
-    highScoresObj,
-    settingsModal,
-    playGameContainer,
-    gameGridContainer,
-    gameDetailsContainer,
-    mainHeading,
-    previewImg,
-    levelHeading,
-    totalScoreHeading,
-    rowsClearedHeading,
-    postGameMenuButtons
-  ) {
+  constructor(gameSettingsObj, highScoresObj) {
     // APIs for settings and high scores
     this.gameSettings = gameSettingsObj;
     this.highScoresObj = highScoresObj;
-    // DOM Elements
-    this.settingsModal = settingsModal;
-    this.playGameContainer = playGameContainer;
-    this.gameGridContainer = gameGridContainer;
-    this.gameDetailsContainer = gameDetailsContainer;
-    this.mainHeading = mainHeading;
-    this.previewImg = previewImg;
-    this.levelHeading = levelHeading;
-    this.totalScoreHeading = totalScoreHeading;
-    this.rowsClearedHeading = rowsClearedHeading;
-    this.postGameMenuButtons = postGameMenuButtons;
+
     // Game State
     this.gameOver = false;
     this.gamePaused = false;
@@ -62,10 +43,6 @@ class Tetris {
     this.currentPiece = null;
     this.currentPiecePlaced = false;
     this.numRotations = 0;
-    // Sound Fx Files
-    this.blockSound = new Audio(generateSoundPath("block-landing"));
-    this.rotateSound = new Audio(generateSoundPath("rotate"));
-    this.clearedRowSound = new Audio(generateSoundPath("cleared-row"));
   }
 
   // Game methods
@@ -76,9 +53,8 @@ class Tetris {
 
   endGame = () => {
     this.gameOver = true;
-    this.gameGridContainer.remove();
-    this.gameDetailsContainer.remove();
-    this.mainHeading.innerText = "Game Over";
+    toggleDisplayById("game-grid-container", "game-details-container");
+    updateElementTextById("main-heading", "Game Over");
     this.checkForHighScore();
   };
 
@@ -91,49 +67,18 @@ class Tetris {
         (lastPlaceScoreObj && this.playerTotalScore > lastPlaceScoreObj.score));
 
     if (highScoreAchieved) {
-      const playerNameForm = createPlayerNameForm(
-        this.submitHighScore,
-        this.playerTotalScore
-      );
-      this.playGameContainer.prepend(playerNameForm);
+      toggleDisplayById("player-name-form");
+      injectValueToInputById("player-score", this.playerTotalScore);
 
       if (existingHighScores.length === 10) {
         this.idOfScoreToRemove = lastPlaceScoreObj.id; // never keep more than 10 high scores in the database
       }
     } else {
-      this.playGameContainer.prepend(this.postGameMenuButtons);
+      toggleDisplayById("post-game-menu-buttons");
     }
-  };
-
-  submitHighScore = async () => {
-    const playerNameForm = document.getElementById("player-name-form");
-    const playerName = playerNameForm.element.playerName.value;
-    const playerScore = playerNameForm.elements.playerScore.value;
-
-    const playerDetails = {
-      name: playerName,
-      score: playerScore,
-    };
-
-    if (this.idOfScoreToRemove) {
-      await this.highScoresObj.removeHighScore(this.idOfScoreToRemove);
-    }
-
-    await this.highScoresObj.addScoreToHighScores(playerDetails);
-
-    this.playGameContainer.removeChild(playerNameForm);
-    this.playGameContainer.appendChild(this.postGameMenuButtons);
   };
 
   togglePause = () => {
-    if (!this.gamePaused) {
-      displayCurrentSettingsOnForm(this.gameSettings);
-      // TODO clear any error state
-      this.settingsModal.showModal();
-    } else {
-      this.settingsModal.close();
-    }
-
     this.gamePaused = !this.gamePaused;
   };
 
@@ -189,7 +134,6 @@ class Tetris {
   };
 
   awardPoints = () => {
-    return;
     let awardedPoints = 0;
     if (this.rowsCleared === 1) {
       awardedPoints += 40;
@@ -202,16 +146,22 @@ class Tetris {
     }
     this.playerTotalScore +=
       awardedPoints * (this.level + 1) + this.softDropPoints;
-    this.totalScoreHeading.innerText = `Score: ${this.playerTotalScore}`;
+    updateElementTextById(
+      "total-score-heading",
+      `Score: ${this.playerTotalScore}`
+    );
   };
 
   updateRowsCleared = () => {
     if (!this.rowsCleared) return;
     if (this.gameSettings.soundFx === "on") {
-      this.clearedRowSound.play();
+      clearedRowSound.play();
     }
     this.totalRowsCleared += this.rowsCleared;
-    this.rowsClearedHeading.innerText = `Rows: ${this.totalRowsCleared}`;
+    updateElementTextById(
+      "rows-cleared-heading",
+      `Rows: ${this.totalRowsCleared}`
+    );
     if (this.level < 9 && this.clearedTenRows()) {
       this.levelUp();
     } else if (this.level >= 9 && this.clearedTwentyRows()) {
@@ -221,7 +171,7 @@ class Tetris {
 
   levelUp = () => {
     this.level++;
-    this.levelHeading.innerText = `Level: ${this.level}`;
+    updateElementTextById("level-heading", `Level: ${this.level}`);
     this.gameSpeed -= 50;
   };
 
@@ -238,7 +188,7 @@ class Tetris {
 
   placePiece = () => {
     if (this.gameSettings.soundFx === "on") {
-      this.blockSound.play();
+      blockSound.play();
     }
     this.addBlocksToGrid();
     this.checkForClearedRows();
@@ -348,7 +298,7 @@ class Tetris {
   rotatePiece = () => {
     if (!this.rotationPermitted()) return;
     if (this.gameSettings.soundFx === "on") {
-      this.rotateSound.play();
+      rotateSound.play();
     }
     this.numRotations++;
     this.currentPiece.rotate(this.numRotations);
@@ -384,10 +334,6 @@ class Tetris {
     this.pieceQueue.push(newPiece);
   };
 
-  setPreviewOfNextPiece = () => {
-    this.previewImg.setAttribute("src", this.pieceQueue[0].preview);
-  };
-
   dequeuePiece = () => {
     if (!this.pieceQueue.length) {
       for (let i = 0; i < 2; i++) {
@@ -398,7 +344,8 @@ class Tetris {
     }
 
     this.currentPiece = this.pieceQueue.shift();
-    this.setPreviewOfNextPiece();
+    const nextPieceInQueue = this.pieceQueue[0];
+    updateImageSrcById("preview-img", nextPieceInQueue.preview);
 
     this.currentPiecePlaced = false;
     this.numRotations = 0;

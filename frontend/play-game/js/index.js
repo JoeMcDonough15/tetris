@@ -7,16 +7,24 @@ import {
   createSubHeaders,
   createMenuButtons,
   createPreviewImgContainer,
+  createPlayerNameForm,
 } from "../../components/index.js";
 import HighScores from "../../high-scores/js/api/highScoresApi.js";
 import Settings from "../../settings.js";
 import {
-  menuButtonsContainerObj,
   playGameSubHeaders,
   postGameMenuButtonObjs,
   returnBody,
   controllerRowObjs,
   settingsInputIds,
+  displayCurrentSettingsOnForm,
+  postGameMenuButtonsContainerObj,
+  toggleDisplayById,
+  verifyUniqueStrings,
+  grabInputValuesFromForm,
+  showErrorById,
+  openSettingsModal,
+  closeSettingsModal,
 } from "../../utils/index.js";
 import Tetris from "./game/tetris.js";
 
@@ -69,44 +77,25 @@ gameDetailsContainer.append(
 
 const settingsModal = createSettingsModal("Return to Game");
 
-gameGridContainer.after(gameDetailsContainer, settingsModal);
-
-// Instantiate the Settings object
-const updateSettingsForm = document.getElementById("update-settings-form");
-
-const settingsObj = new Settings(settingsModal, updateSettingsForm);
-
-// Instantiate a high scores object for use inside the Tetris game
-const highScoresObj = new HighScores();
-
-// Target DOM Elements for use in Tetris game
-const playGameContainer = document.getElementById("play-game-container");
-const mainHeading = document.getElementById("main-heading");
-const previewImg = document.getElementById("preview-img");
-const levelHeading = document.getElementById("level-heading");
-const totalScoreHeading = document.getElementById("total-score-heading");
-const rowsClearedHeading = document.getElementById("rows-cleared-heading");
-const playerNameForm = document.getElementById("player-name-form");
+const playerNameForm = createPlayerNameForm();
 const postGameMenuButtons = createMenuButtons(
-  menuButtonsContainerObj,
+  postGameMenuButtonsContainerObj,
   postGameMenuButtonObjs
 );
 
-// Instantiate the Tetris Game
-const game = new Tetris(
-  settingsObj,
-  highScoresObj,
-  settingsModal,
-  playGameContainer,
-  gameGridContainer,
+gameGridContainer.after(
   gameDetailsContainer,
-  mainHeading,
-  previewImg,
-  levelHeading,
-  totalScoreHeading,
-  rowsClearedHeading,
-  postGameMenuButtons
+  playerNameForm,
+  postGameMenuButtons,
+  settingsModal
 );
+
+// Instantiate the Settings object and the HighScores object
+const settingsObj = new Settings();
+const highScoresObj = new HighScores();
+
+// Instantiate the Tetris Game
+const game = new Tetris(settingsObj, highScoresObj);
 
 // Target Elements for Event Listeners
 const modalCloseButton = document.getElementById("close-modal-button");
@@ -115,29 +104,52 @@ const softDropButton = document.getElementById("btn-down");
 const moveLeftButton = document.getElementById("btn-left");
 const moveRightButton = document.getElementById("btn-right");
 const pauseButton = document.getElementById("btn-pause");
-const scoreHeading = document.getElementById("total-score-heading");
-const updateSettingsSubmitButton = document.getElementById(
-  "update-settings-submit-button"
-);
 
-scoreHeading.innerText = `Score: ${game.playerTotalScore}`;
+// Form Submit Events
+playerNameForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const playerName = playerNameForm.elements.playerName.value;
+  const playerScore = playerNameForm.elements.playerScore.value;
+  const playerDetails = {
+    name: playerName,
+    score: Number(playerScore),
+  };
 
-// Mouse Events
-updateSettingsSubmitButton.addEventListener("click", () => {
-  setTimeout(() => {
-    if (settingsObj.settingsAppliedSuccessfully) {
-      game.togglePause();
-      settingsObj.settingsAppliedSuccessfully = false;
-    }
-  }, 150);
+  if (game.idOfScoreToRemove) {
+    await highScoresObj.removeHighScore(game.idOfScoreToRemove);
+  }
+
+  await highScoresObj.addScoreToHighScores(playerDetails);
+
+  toggleDisplayById("player-name-form");
+  toggleDisplayById("post-game-menu-buttons");
 });
 
+const updateSettingsForm = document.getElementById("update-settings-form");
+updateSettingsForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const inputsObj = grabInputValuesFromForm(updateSettingsForm);
+  const keyControlInputVals = Object.values(inputsObj.keyControls);
+  const allUniqueKeyControlVals = verifyUniqueStrings(keyControlInputVals);
+
+  if (!allUniqueKeyControlVals) {
+    showErrorById("settings-error-message");
+    return;
+  }
+
+  settingsObj.updateSettings({ ...inputsObj });
+  closeSettingsModal(settingsModal);
+  game.togglePause();
+});
+
+// Mouse Events
 modalCloseButton.addEventListener("click", () => {
-  settingsModal.close();
+  closeSettingsModal(settingsModal);
   game.togglePause();
 });
 
 pauseButton.addEventListener("click", () => {
+  openSettingsModal(settingsObj, settingsModal);
   game.togglePause();
 });
 
@@ -159,6 +171,7 @@ softDropButton.addEventListener("click", () => {
 
 // Key Events
 window.addEventListener("keyup", (e) => {
+  if (game.gameOver) return;
   const keyName = e.key;
   // Event Listeners For Updating Game Controls From Main Menu
   const activeElement = document.activeElement;
@@ -171,11 +184,17 @@ window.addEventListener("keyup", (e) => {
 
   // Event Listener for Pause Button During Gameplay
   if (keyName === settingsObj.keyControls.togglePause) {
+    if (settingsModal.open) {
+      closeSettingsModal(settingsModal);
+    } else {
+      openSettingsModal(settingsObj, settingsModal);
+    }
     game.togglePause();
   }
 });
 
 window.addEventListener("keydown", (e) => {
+  if (game.gameOver) return;
   const keyName = e.key;
   if (keyName === settingsObj.keyControls.rotate) {
     game.rotatePiece();

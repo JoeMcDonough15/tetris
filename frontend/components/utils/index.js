@@ -1,3 +1,5 @@
+import { updateSettingsFormData } from "../../utils/index.js";
+
 // UI Helpers
 
 // create any element with any number of classes and an optional id
@@ -21,7 +23,7 @@ export const createMenuButton = (buttonObj) => {
 };
 
 // create a div element with a label and input
-export const createInputContainer = (data, readOnlyValue = null) => {
+export const createInputContainer = (data) => {
   const inputContainer = quickElement("div", data.containerClasses);
   const label = quickElement("label", []);
   label.innerText = data.labelText;
@@ -31,10 +33,6 @@ export const createInputContainer = (data, readOnlyValue = null) => {
   attributes.forEach((attribute) => {
     input.setAttribute(attribute, data.input[attribute]);
   });
-
-  if (readOnlyValue) {
-    input.value = readOnlyValue;
-  }
 
   inputContainer.append(label, input);
   return inputContainer;
@@ -50,7 +48,8 @@ export const createSubmitButton = (buttonObj) => {
 export const createRadioOptions = (data) => {
   const radioOptionsFieldSet = quickElement(
     "fieldset",
-    data.fieldSetOptions.containerClasses
+    data.fieldSetOptions.containerClasses,
+    data.fieldSetOptions.fieldSetId
   );
   const radioOptionsLegend = quickElement(
     "legend",
@@ -78,220 +77,50 @@ export const createPreviewImg = (id) => {
   return previewImg;
 };
 
-// UI Data
-export const updateSettingsFormData = {
-  settingsOptions: {
-    musicOnOff: {
-      fieldSetOptions: {
-        containerClasses: [],
-        legendText: "Music",
-        legendClasses: [],
-      },
-      radioOptions: [
-        {
-          containerClasses: ["radio-option"],
-          labelText: "On",
-          input: { id: "music-on", type: "radio", name: "music", value: "on" },
-        },
-        {
-          containerClasses: ["radio-option"],
-          labelText: "Off",
-          input: {
-            id: "music-off",
-            type: "radio",
-            name: "music",
-            value: "off",
-          },
-        },
-      ],
-    },
-    musicSelect: {
-      fieldSetOptions: {
-        containerClasses: [],
-        legendText: "Select Game Music",
-        legendClasses: [],
-      },
-      radioOptions: [
-        {
-          containerClasses: ["radio-option"],
-          labelText: "Theme One",
-          input: {
-            id: "music-theme-one",
-            type: "radio",
-            name: "gameMusicSelection",
-            value: "theme-1",
-          },
-        },
-        {
-          containerClasses: ["radio-option"],
-          labelText: "Theme Two",
-          input: {
-            id: "music-theme-two",
-            type: "radio",
-            name: "gameMusicSelection",
-            value: "theme-2",
-          },
-        },
-        {
-          containerClasses: ["radio-option"],
-          labelText: "Theme Three",
-          input: {
-            id: "music-theme-three",
-            type: "radio",
-            name: "gameMusicSelection",
-            value: "theme-3",
-          },
-        },
-      ],
-    },
-    colorPaletteSelect: {
-      fieldSetOptions: {
-        containerClasses: [],
-        legendText: "Select Color Palette",
-        legendClasses: [],
-      },
-      radioOptions: [
-        {
-          containerClasses: ["radio-option"],
-          labelText: "Classic",
-          input: {
-            id: "color-palette-classic",
-            type: "radio",
-            name: "colorPaletteSelection",
-            value: "classic",
-          },
-        },
-        {
-          containerClasses: ["radio-option"],
-          labelText: "Two",
-          input: {
-            id: "color-palette-two",
-            type: "radio",
-            name: "colorPaletteSelection",
-            value: "two",
-          },
-        },
-        {
-          containerClasses: ["radio-option"],
-          labelText: "Three",
-          input: {
-            id: "color-palette-three",
-            type: "radio",
-            name: "colorPaletteSelection",
-            value: "three",
-          },
-        },
-      ],
-    },
-    keyControls: {
-      rotate: {
-        containerClasses: [],
-        labelText: "Rotate Shape",
-        input: {
-          id: "key-control-rotate",
-          type: "text",
-          name: "rotate",
-          required: true,
-        },
-      },
-      moveLeft: {
-        containerClasses: [],
-        labelText: "Move Left",
-        input: {
-          id: "key-control-move-left",
-          type: "text",
-          name: "moveLeft",
-          required: true,
-        },
-      },
-      moveRight: {
-        containerClasses: [],
-        labelText: "Move Right",
-        input: {
-          id: "key-control-move-right",
-          type: "text",
-          name: "moveRight",
-          required: true,
-        },
-      },
-      softDrop: {
-        containerClasses: [],
-        labelText: "Soft Drop Shape",
-        input: {
-          id: "key-control-soft-drop",
-          type: "text",
-          name: "softDrop",
-          required: true,
-        },
-      },
-      togglePause: {
-        containerClasses: [],
-        labelText: "Pause/Unpause Game",
-        input: {
-          id: "key-control-toggle-pause",
-          type: "text",
-          name: "togglePause",
-          required: true,
-        },
-      },
-    },
-    soundFxOnOff: {
-      fieldSetOptions: {
-        containerClasses: [],
-        legendText: "Sound FX",
-        legendClasses: [],
-      },
-      radioOptions: [
-        {
-          containerClasses: ["radio-option"],
-          labelText: "On",
-          input: {
-            id: "sound-fx-on",
-            type: "radio",
-            name: "soundFx",
-            value: "on",
-          },
-        },
-        {
-          containerClasses: ["radio-option"],
-          labelText: "Off",
-          input: {
-            id: "sound-fx-off",
-            type: "radio",
-            name: "soundFx",
-            value: "off",
-          },
-        },
-      ],
-    },
-  },
-  submitButtonText: "Apply Settings",
-};
+// render a form to put inside the settingsModal in order to update settings
+export const createUpdateSettingsForm = () => {
+  const updateSettingsForm = quickElement("form", [], "update-settings-form");
+  const soundFxOnOffOptions = createRadioOptions(
+    updateSettingsFormData.settingsOptions.soundFxOnOff
+  );
+  const musicOnOffOptions = createRadioOptions(
+    updateSettingsFormData.settingsOptions.musicOnOff
+  );
+  const musicSelectOptions = createRadioOptions(
+    updateSettingsFormData.settingsOptions.musicSelect
+  );
+  const colorPaletteSelectOptions = createRadioOptions(
+    updateSettingsFormData.settingsOptions.colorPaletteSelect
+  );
+  const keyControlSelectOptionsContainer = quickElement("div", []);
 
-export const highScoresFormData = {
-  formContainerClasses: [],
-  formContainerId: "player-name-form",
-  playerName: {
-    containerClasses: [],
-    labelText: "Enter your name",
-    input: {
-      id: "player-name",
-      type: "text",
-      name: "playerName",
-      required: true,
-      maxLength: 18,
-    },
-  },
-  playerScore: {
-    containerClasses: ["player-score-container"],
-    labelText: "Your Score",
-    input: {
-      id: "player-score",
-      type: "text",
-      name: "playerScore",
-      readonly: true,
-    },
-  },
-};
+  const keyControlSelectOptions = Object.values(
+    updateSettingsFormData.settingsOptions.keyControls
+  ).map((keyControlObj) => createInputContainer(keyControlObj));
 
-export const highScoresTableFields = ["No.", "Player", "Score"];
+  keyControlSelectOptionsContainer.append(...keyControlSelectOptions);
+
+  const submitButton = createSubmitButton({
+    id: "update-settings-submit-button",
+    classes: [],
+    buttonText: updateSettingsFormData.submitButtonText,
+  });
+
+  const error = quickElement(
+    "p",
+    ["error-message", "no-display"],
+    "settings-error-message"
+  );
+  error.innerText = "key controls must be unique!";
+
+  updateSettingsForm.append(
+    soundFxOnOffOptions,
+    musicOnOffOptions,
+    musicSelectOptions,
+    colorPaletteSelectOptions,
+    keyControlSelectOptionsContainer,
+    submitButton,
+    error
+  );
+  return updateSettingsForm;
+};

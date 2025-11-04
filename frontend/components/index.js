@@ -1,36 +1,25 @@
+import { highScoresFormData, highScoresTableFields } from "../utils/index.js";
 import {
   createInputContainer,
   createMenuButton,
   createPreviewImg,
-  createRadioOptions,
   createSubmitButton,
-  highScoresFormData,
-  highScoresTableFields,
+  createUpdateSettingsForm,
   quickElement,
-  updateSettingsFormData,
 } from "./utils/index.js";
 
 // render a player name form with a custom method to be called on submit
-export const createPlayerNameForm = (methodForSubmit, playerScoreFromGame) => {
-  const existingForm = document.getElementById("player-name-form");
-  if (existingForm) {
-    existingForm.remove();
-  }
+export const createPlayerNameForm = () => {
   const playerNameForm = quickElement(
     "form",
     highScoresFormData.formContainerClasses,
     highScoresFormData.formContainerId
   );
-  playerNameForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    methodForSubmit();
-  });
   const playerNameContainer = createInputContainer(
     highScoresFormData.playerName
   );
   const playerScoreContainer = createInputContainer(
-    highScoresFormData.playerScore,
-    playerScoreFromGame
+    highScoresFormData.playerScore
   );
   const submitButton = createSubmitButton({
     buttonText: "Submit",
@@ -166,46 +155,6 @@ export const createControllerRow = (containerClassName, controllerObjs) => {
   return controllerRow;
 };
 
-// render a form to put inside the settingsModal in order to update settings
-const createUpdateSettingsForm = () => {
-  const updateSettingsForm = quickElement("form", [], "update-settings-form");
-  const soundFxOnOffOptions = createRadioOptions(
-    updateSettingsFormData.settingsOptions.soundFxOnOff
-  );
-  const musicOnOffOptions = createRadioOptions(
-    updateSettingsFormData.settingsOptions.musicOnOff
-  );
-  const musicSelectOptions = createRadioOptions(
-    updateSettingsFormData.settingsOptions.musicSelect
-  );
-  const colorPaletteSelectOptions = createRadioOptions(
-    updateSettingsFormData.settingsOptions.colorPaletteSelect
-  );
-  const keyControlSelectOptionsContainer = quickElement("div", []);
-
-  const keyControlSelectOptions = Object.values(
-    updateSettingsFormData.settingsOptions.keyControls
-  ).map((keyControlObj) => createInputContainer(keyControlObj));
-
-  keyControlSelectOptionsContainer.append(...keyControlSelectOptions);
-
-  const submitButton = createSubmitButton({
-    id: "update-settings-submit-button",
-    classes: [],
-    buttonText: updateSettingsFormData.submitButtonText,
-  });
-
-  updateSettingsForm.append(
-    soundFxOnOffOptions,
-    musicOnOffOptions,
-    musicSelectOptions,
-    colorPaletteSelectOptions,
-    keyControlSelectOptionsContainer,
-    submitButton
-  );
-  return updateSettingsForm;
-};
-
 // render a settings modal that can be used as a dialog element for whenever user opens settings in main menu or pauses game during game play
 export const createSettingsModal = (closeModalButtonText) => {
   const settingsModal = quickElement(
@@ -215,24 +164,9 @@ export const createSettingsModal = (closeModalButtonText) => {
   );
   const updateSettingsForm = createUpdateSettingsForm();
   const closeModalButton = quickElement("button", [], "close-modal-button");
-  // TODO once the pause menu is built, return the close modal event listener to this component; remove that
-  // TODO event listener from the /index.js and /play-game/index.js
-
-  // ? This is because, as of now, the close modal functionality also has to close the pause menu in play-game/index.js which
-  // ? is why it was removed from here and defined inside play-game/index.js
   closeModalButton.innerText = closeModalButtonText;
   closeModalButton.setAttribute("autofocus", true);
   settingsModal.append(closeModalButton, updateSettingsForm);
 
   return settingsModal;
-};
-
-export const createErrorMessage = (id) => {
-  const existingError = document.getElementById(id);
-  if (existingError) {
-    existingError.remove();
-  }
-  const error = quickElement("p", ["error-message"], id);
-  error.innerText = "key controls must be unique!";
-  return error;
 };

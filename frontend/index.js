@@ -10,7 +10,11 @@ import {
   mainMenuButtonObjs,
   returnBody,
   settingsInputIds,
-  displayCurrentSettingsOnForm,
+  openSettingsModal,
+  closeSettingsModal,
+  grabInputValuesFromForm,
+  verifyUniqueStrings,
+  showErrorById,
 } from "./utils/index.js";
 
 // Build out the UI
@@ -35,17 +39,31 @@ const mainMenuButtons = createMenuButtons(
 mainMenuContainer.appendChild(mainMenuButtons);
 
 // Instantiate a Settings object
-const updateSettingsForm = document.getElementById("update-settings-form");
-const settingsObj = new Settings(settingsModal, updateSettingsForm);
+const settingsObj = new Settings();
 
 // Add Event Listeners
 document.getElementById("open-modal-button").addEventListener("click", () => {
-  displayCurrentSettingsOnForm(settingsObj);
-  // TODO remove  "settings-error-message" if it exists
-  settingsModal.showModal();
+  openSettingsModal(settingsObj, settingsModal);
 });
+
 document.getElementById("close-modal-button").addEventListener("click", () => {
-  settingsModal.close();
+  closeSettingsModal(settingsModal);
+});
+
+const updateSettingsForm = document.getElementById("update-settings-form");
+updateSettingsForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const inputsObj = grabInputValuesFromForm(updateSettingsForm);
+  const keyControlInputVals = Object.values(inputsObj.keyControls);
+  const allUniqueKeyControlVals = verifyUniqueStrings(keyControlInputVals);
+
+  if (!allUniqueKeyControlVals) {
+    showErrorById("settings-error-message");
+    return;
+  }
+
+  settingsObj.updateSettings({ ...inputsObj });
+  closeSettingsModal(settingsModal);
 });
 
 // Event Listeners For Updating Game Controls From Main Menu

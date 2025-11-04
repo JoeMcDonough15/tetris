@@ -8,12 +8,10 @@ import {
 import {
   menuButtonsContainerObj,
   highScoresMenuButtonObjs,
+  returnBody,
 } from "../../utils/index.js";
 
-const bodyArrayFromCollection = Array.from(
-  document.getElementsByTagName("body")
-);
-const body = bodyArrayFromCollection[0];
+const body = returnBody();
 const highScoresContainer = createContainer("main", ["high-scores-container"]);
 
 body.prepend(
@@ -32,6 +30,6 @@ if (highScores.length) {
   highScoresContainer.appendChild(createHighScoresTable(highScores));
 } else {
   highScoresContainer.appendChild(
-    createCustomHeading("h2", "No High Scores Yet", "no-high-scores-header")
+    createCustomHeading("h2", "No High Scores Yet", ["no-high-scores-header"])
   );
 }

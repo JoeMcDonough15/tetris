@@ -53,14 +53,25 @@ export const generatePreviewImgPath = (shapeName) => {
   return `${previewImgPathObj.prefix}${shapeName}${previewImgPathObj.suffix}`;
 };
 
-export const generateSoundPath = (soundEffect) => {
+const generateSoundPath = (soundEffect) => {
   return `${gameSoundsPathObj.prefix}${soundEffect}${gameSoundsPathObj.suffix}`;
 };
+
+// In Game Sounds Audio Objects
+export const blockSound = new Audio(generateSoundPath("block-landing"));
+export const rotateSound = new Audio(generateSoundPath("rotate"));
+export const clearedRowSound = new Audio(generateSoundPath("cleared-row"));
 
 // Menu Buttons
 export const menuButtonsContainerObj = {
   elementName: "div",
   classes: ["menu-buttons"],
+};
+
+export const postGameMenuButtonsContainerObj = {
+  elementName: "div",
+  classes: ["menu-buttons", "no-display"],
+  id: "post-game-menu-buttons",
 };
 
 export const mainMenuButtonObjs = [
@@ -155,20 +166,315 @@ export const settingsInputIds = {
 };
 
 export const displayCurrentSettingsOnForm = (settingsObj) => {
-  const allIds = Object.values(settingsInputIds);
-  allIds.forEach((arrayOfIds) => {
+  const arraysOfIds = Object.values(settingsInputIds);
+  arraysOfIds.forEach((arrayOfIds) => {
     arrayOfIds.forEach((id) => {
       const currentInput = document.getElementById(id);
       const nameOfCurrentInput = currentInput.name;
-      if (currentInput.type === "radio") {
+      const typeOfInput = currentInput.type;
+      if (typeOfInput === "radio") {
         const currentSetting = settingsObj[nameOfCurrentInput];
         if (currentSetting === currentInput.value) {
           currentInput.checked = true;
         }
-      } else {
+      } else if (typeOfInput === "text") {
         const currentSetting = settingsObj.keyControls[nameOfCurrentInput];
-        currentInput.value = currentSetting;
+        injectValueToInputById(currentInput.id, currentSetting);
       }
     });
   });
 };
+
+export const updateElementTextById = (id, newVal) => {
+  const element = document.getElementById(id);
+  element.innerText = newVal;
+};
+
+export const updateImageSrcById = (id, newSrc) => {
+  const imageElement = document.getElementById(id);
+  imageElement.src = newSrc;
+};
+
+export const toggleDisplayById = (...ids) => {
+  ids.forEach((id) => {
+    const element = document.getElementById(id);
+    element.classList.toggle("no-display");
+  });
+};
+
+export const injectValueToInputById = (id, valueToInject) => {
+  const element = document.getElementById(id);
+  element.value = valueToInject;
+};
+
+export const grabInputValuesFromForm = (formElement) => {
+  const inputs = formElement.elements;
+  const inputsFromForm = { keyControls: {} };
+
+  for (const input of inputs) {
+    if (input.type === "submit" || input.type === "fieldset") {
+      continue;
+    }
+    const inputName = input.name;
+    const inputVal = input.value;
+
+    if (input.type === "radio") {
+      if (input.checked) {
+        inputsFromForm[inputName] = inputVal;
+      }
+    } else {
+      inputsFromForm.keyControls[inputName] = inputVal;
+    }
+  }
+  return inputsFromForm;
+};
+
+export const verifyUniqueStrings = (strArray) => {
+  const CHAR_MAP = {};
+  for (const str of strArray) {
+    if (CHAR_MAP[str]) return false;
+    CHAR_MAP[str] = true;
+  }
+  return true;
+};
+
+export const showErrorById = (errorId) => {
+  const errorMessage = document.getElementById(errorId);
+  errorMessage.classList.remove("no-display");
+};
+
+const removeErrorById = (errorId) => {
+  const errorMessage = document.getElementById(errorId);
+  errorMessage.classList.add("no-display");
+};
+
+export const openSettingsModal = (settingsObj, settingsModal) => {
+  displayCurrentSettingsOnForm(settingsObj);
+  removeErrorById("settings-error-message");
+  settingsModal.showModal();
+};
+
+export const closeSettingsModal = (settingsModal) => {
+  settingsModal.close();
+};
+
+export const updateSettingsFormData = {
+  settingsOptions: {
+    musicOnOff: {
+      fieldSetOptions: {
+        fieldSetId: "music-on-off",
+        containerClasses: [],
+        legendText: "Music",
+        legendClasses: [],
+      },
+      radioOptions: [
+        {
+          containerClasses: ["radio-option"],
+          labelText: "On",
+          input: { id: "music-on", type: "radio", name: "music", value: "on" },
+        },
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Off",
+          input: {
+            id: "music-off",
+            type: "radio",
+            name: "music",
+            value: "off",
+          },
+        },
+      ],
+    },
+    musicSelect: {
+      fieldSetOptions: {
+        fieldSetId: "music-select",
+        containerClasses: [],
+        legendText: "Select Game Music",
+        legendClasses: [],
+      },
+      radioOptions: [
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Theme One",
+          input: {
+            id: "music-theme-one",
+            type: "radio",
+            name: "gameMusicSelection",
+            value: "theme-1",
+          },
+        },
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Theme Two",
+          input: {
+            id: "music-theme-two",
+            type: "radio",
+            name: "gameMusicSelection",
+            value: "theme-2",
+          },
+        },
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Theme Three",
+          input: {
+            id: "music-theme-three",
+            type: "radio",
+            name: "gameMusicSelection",
+            value: "theme-3",
+          },
+        },
+      ],
+    },
+    colorPaletteSelect: {
+      fieldSetOptions: {
+        fieldSetId: "color-palette-select",
+        containerClasses: [],
+        legendText: "Select Color Palette",
+        legendClasses: [],
+      },
+      radioOptions: [
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Classic",
+          input: {
+            id: "color-palette-classic",
+            type: "radio",
+            name: "colorPaletteSelection",
+            value: "classic",
+          },
+        },
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Two",
+          input: {
+            id: "color-palette-two",
+            type: "radio",
+            name: "colorPaletteSelection",
+            value: "two",
+          },
+        },
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Three",
+          input: {
+            id: "color-palette-three",
+            type: "radio",
+            name: "colorPaletteSelection",
+            value: "three",
+          },
+        },
+      ],
+    },
+    keyControls: {
+      rotate: {
+        containerClasses: [],
+        labelText: "Rotate Shape",
+        input: {
+          id: "key-control-rotate",
+          type: "text",
+          name: "rotate",
+          required: true,
+        },
+      },
+      moveLeft: {
+        containerClasses: [],
+        labelText: "Move Left",
+        input: {
+          id: "key-control-move-left",
+          type: "text",
+          name: "moveLeft",
+          required: true,
+        },
+      },
+      moveRight: {
+        containerClasses: [],
+        labelText: "Move Right",
+        input: {
+          id: "key-control-move-right",
+          type: "text",
+          name: "moveRight",
+          required: true,
+        },
+      },
+      softDrop: {
+        containerClasses: [],
+        labelText: "Soft Drop Shape",
+        input: {
+          id: "key-control-soft-drop",
+          type: "text",
+          name: "softDrop",
+          required: true,
+        },
+      },
+      togglePause: {
+        containerClasses: [],
+        labelText: "Pause/Unpause Game",
+        input: {
+          id: "key-control-toggle-pause",
+          type: "text",
+          name: "togglePause",
+          required: true,
+        },
+      },
+    },
+    soundFxOnOff: {
+      fieldSetOptions: {
+        fieldSetId: "sound-fx-on-off",
+        containerClasses: [],
+        legendText: "Sound FX",
+        legendClasses: [],
+      },
+      radioOptions: [
+        {
+          containerClasses: ["radio-option"],
+          labelText: "On",
+          input: {
+            id: "sound-fx-on",
+            type: "radio",
+            name: "soundFx",
+            value: "on",
+          },
+        },
+        {
+          containerClasses: ["radio-option"],
+          labelText: "Off",
+          input: {
+            id: "sound-fx-off",
+            type: "radio",
+            name: "soundFx",
+            value: "off",
+          },
+        },
+      ],
+    },
+  },
+  submitButtonText: "Apply Settings",
+};
+
+export const highScoresFormData = {
+  formContainerClasses: ["player-name-form", "no-display"],
+  formContainerId: "player-name-form",
+  playerName: {
+    containerClasses: [],
+    labelText: "Enter your name",
+    input: {
+      id: "player-name",
+      type: "text",
+      name: "playerName",
+      required: true,
+      maxLength: 18,
+    },
+  },
+  playerScore: {
+    containerClasses: ["player-score-container"],
+    labelText: "Your Score",
+    input: {
+      id: "player-score",
+      type: "text",
+      name: "playerScore",
+      readonly: true,
+    },
+  },
+};
+
+export const highScoresTableFields = ["No.", "Player", "Score"];
