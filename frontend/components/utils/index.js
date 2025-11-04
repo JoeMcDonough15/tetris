@@ -78,6 +78,13 @@ export const createPreviewImg = (id) => {
   return previewImg;
 };
 
+const createErrorMessage = (errorText, id) => {
+  const error = quickElement("p", ["error-message", "no-display"], id);
+  error.innerText = errorText;
+
+  return error;
+};
+
 // render a form to put inside the settingsModal in order to update settings
 export const createUpdateSettingsForm = () => {
   const updateSettingsForm = quickElement("form", [], "update-settings-form");
@@ -109,12 +116,10 @@ export const createUpdateSettingsForm = () => {
     buttonText: updateSettingsFormData.submitButtonText,
   });
 
-  const error = quickElement(
-    "p",
-    ["error-message", "no-display"],
+  const error = createErrorMessage(
+    "key controls must be unique!",
     "settings-error-message"
   );
-  error.innerText = "key controls must be unique!";
 
   updateSettingsForm.append(
     soundFxOnOffOptions,
@@ -143,7 +148,13 @@ export const createLoadGameForm = () => {
     classes: [],
     buttonText: "Load Selected Game",
   });
-  loadGameForm.append(selectInputContainer, submitButton);
+
+  const error = createErrorMessage(
+    "Please Select a Game To Load",
+    "no-game-selected-error-message"
+  );
+
+  loadGameForm.append(selectInputContainer, submitButton, error);
   return loadGameForm;
 };
 

@@ -72,7 +72,7 @@ loadGameForm.addEventListener("submit", (e) => {
   const loadGameSelectElement = loadGameForm.elements[0];
   const selectedOption = grabSelectedOption(loadGameSelectElement); // either an option.value or undefined
   if (!selectedOption) {
-    // TODO have an error element on the form that can be shown with toggleDisplayById(errorId)
+    showErrorById("no-game-selected-error-message");
     return;
   }
   // now set that selected game name in window.sessionStorage as gameToLoad, then close the modal (clearing the options) and navigate to /play-game

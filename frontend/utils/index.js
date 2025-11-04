@@ -270,6 +270,7 @@ export const openLoadGameModal = (loadGameModal) => {
   namesOfAllSavedGames.forEach((nameOfSavedGame) => {
     selectInput.appendChild(createOption(nameOfSavedGame));
   });
+  removeErrorById("no-game-selected-error-message");
   loadGameModal.showModal();
 };
 
