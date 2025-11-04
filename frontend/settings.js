@@ -1,7 +1,7 @@
 class Settings {
   constructor() {
     this.savedSettings = JSON.parse(
-      window.sessionStorage.getItem("savedSettings") // possibly null
+      window.sessionStorage.getItem("savedSettings")
     );
     this.soundFx = this.savedSettings?.soundFx || "on";
     this.music = this.savedSettings?.music || "on";
@@ -18,20 +18,12 @@ class Settings {
     };
   }
 
-  turnSoundFxOn = () => {
-    this.soundFx = "on";
+  selectSoundFx = (onOrOff) => {
+    this.soundFx = onOrOff;
   };
 
-  turnSoundFxOff = () => {
-    this.soundFx = "off";
-  };
-
-  turnMusicOn = () => {
-    this.music = "on";
-  };
-
-  turnMusicOff = () => {
-    this.music = "off";
+  selectMusic = (onOrOff) => {
+    this.music = onOrOff;
   };
 
   selectGameMusic = (musicChoice) => {
@@ -40,10 +32,6 @@ class Settings {
 
   selectColorPalette = (colorPaletteChoice) => {
     this.colorPaletteSelection = colorPaletteChoice;
-  };
-
-  changeKeyControl = (keyToChange, newKeyChoice) => {
-    this.keyControls[keyToChange] = newKeyChoice;
   };
 
   selectKeyControls = (newKeyControls) => {
@@ -57,25 +45,11 @@ class Settings {
     colorPaletteSelection,
     keyControls,
   }) => {
-    // Update All Settings
-    if (soundFx === "on") {
-      this.turnSoundFxOn();
-    } else {
-      this.turnSoundFxOff();
-    }
-    if (music === "on") {
-      this.turnMusicOn();
-    } else {
-      this.turnMusicOff();
-    }
+    this.selectSoundFx(soundFx);
+    this.selectMusic(music);
     this.selectGameMusic(gameMusicSelection);
     this.selectColorPalette(colorPaletteSelection);
     this.selectKeyControls(keyControls);
-
-    // Object.keys(this.keyControls).forEach((keyControl, index) => {
-    //   const updatedValue = updatedKeyControlValues[index];
-    //   this.changeKeyControl(keyControl, updatedValue);
-    // });
 
     const settingsJson = JSON.stringify({
       soundFx: this.soundFx,
@@ -85,7 +59,6 @@ class Settings {
       keyControls: this.keyControls,
     });
 
-    // save our newly updated settings to session storage
     window.sessionStorage.setItem("savedSettings", settingsJson);
   };
 }
