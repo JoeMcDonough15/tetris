@@ -83,6 +83,44 @@ const buttonNavRoutes = {
   highScores: "/high-scores",
 };
 
+// Modals
+const allModals = {
+  settingsModal: {
+    closeButtonObj: {
+      createButtonText: function (buttonText) {
+        return buttonText;
+      },
+      classes: [],
+      id: "close-settings-modal-button",
+    },
+    classes: ["settings-modal-container"],
+    id: "settings-modal",
+  },
+};
+
+// destructure to get the createButtonText function out separately from the remaining props
+const {
+  closeButtonObj: { createButtonText, ...remainingButtonProps },
+  ...remainingModalProps
+} = allModals.settingsModal;
+
+// then use the createButtonText function to make dynamic close modal button text, spreading in the remaining properties
+export const settingsModalInGame = {
+  closeButtonObj: {
+    buttonText: createButtonText("Return to Game"),
+    ...remainingButtonProps,
+  },
+  ...remainingModalProps,
+};
+
+export const settingsModalInMainMenu = {
+  closeButtonObj: {
+    buttonText: createButtonText("Close Settings"),
+    ...remainingButtonProps,
+  },
+  ...remainingModalProps,
+};
+
 // Menu Buttons
 const allButtonObjs = {
   startGame: { buttonText: "Start Game", navLink: buttonNavRoutes.playGame },
@@ -97,6 +135,10 @@ const allButtonObjs = {
   newGame: { navLink: buttonNavRoutes.playGame, buttonText: "New Game" },
 
   saveGame: { buttonText: "Save Game" },
+  closePauseModal: {
+    buttonText: "Return to Game",
+    id: "close-pause-modal-button",
+  },
   createMainMenuObj: function (buttonText) {
     return {
       navLink: buttonNavRoutes.mainMenu,
@@ -122,6 +164,7 @@ export const postGameMenuButtonObjs = [
 ];
 
 export const pauseMenuButtonObjs = [
+  allButtonObjs.closePauseModal,
   allButtonObjs.saveGame,
   allButtonObjs.settings,
   allButtonObjs.createMainMenuObj("Quit Game"),

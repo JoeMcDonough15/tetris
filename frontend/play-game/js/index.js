@@ -25,6 +25,7 @@ import {
   showErrorById,
   openSettingsModal,
   closeSettingsModal,
+  settingsModalInGame,
 } from "../../utils/index.js";
 import Tetris from "./game/tetris.js";
 
@@ -75,8 +76,8 @@ gameDetailsContainer.append(
   controllerContainer
 );
 
-const settingsModal = createSettingsModal("Return to Game");
-const pauseModal = createPauseModal("Return to Game");
+const settingsModal = createSettingsModal(settingsModalInGame);
+const pauseModal = createPauseModal();
 
 const playerNameForm = createPlayerNameForm();
 const postGameMenuButtons = createMenuButtons(

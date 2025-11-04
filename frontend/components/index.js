@@ -131,33 +131,18 @@ const createUpdateSettingsForm = () => {
   return updateSettingsForm;
 };
 
-const createModal = (closeModalButtonText, modalClasses, buttonClasses, id) => {
-  const modal = quickElement(
-    "dialog",
-    ["modal-container", ...modalClasses],
-    id
-  );
-  const closeModalButton = createCloseModalButton(
-    closeModalButtonText,
-    buttonClasses,
-    id
-  );
+const createModalWithButton = ({ closeButtonObj, classes, id }) => {
+  const modal = quickElement("dialog", ["modal-container", ...classes], id);
+  const closeModalButton = createCloseModalButton(closeButtonObj);
   modal.appendChild(closeModalButton);
   return modal;
 };
 
-const createCloseModalButton = (
-  closeModalButtonText,
-  buttonClasses,
-  modalId
-) => {
-  const closeModalButton = quickElement(
-    "button",
-    buttonClasses,
-    `close-${modalId}-button`
-  );
-  closeModalButton.innerText = closeModalButtonText;
-  closeModalButton.setAttribute("autofocus", true);
+// ? This function only gets called inside createModalWithButton.  Should it just live there?
+const createCloseModalButton = ({ buttonText, classes, id }) => {
+  const closeModalButton = quickElement("button", classes, id);
+  closeModalButton.innerText = buttonText;
+  closeModalButton.setAttribute("autofocus", true); // accessibility concern
   return closeModalButton;
 };
 
@@ -311,30 +296,21 @@ export const createControllerRow = (containerClassName, controllerObjs) => {
 };
 
 // render a settings modal that can be used as a dialog element for whenever user opens settings in main menu or from the pause menu during game play
-export const createSettingsModal = (closeModalButtonText) => {
-  const settingsModal = createModal(
-    closeModalButtonText,
-    ["settings-modal-container"],
-    [],
-    "settings-modal"
-  );
+export const createSettingsModal = (settingsDataObj) => {
+  const settingsModal = createModalWithButton(settingsDataObj);
   const updateSettingsForm = createUpdateSettingsForm();
   settingsModal.append(updateSettingsForm);
   return settingsModal;
 };
 
 // render a pause modal that can be used as a dialog element for whenever user pauses the game during game play
-export const createPauseModal = (closeModalButtonText) => {
-  const pauseModal = createModal(
-    closeModalButtonText,
-    ["pause-modal-container"],
-    [],
-    "pause-modal"
-  );
+export const createPauseModal = () => {
+  const pauseModal = quickElement("dialog", ["modal-container"], "pause-modal");
   const pauseMenuButtons = createMenuButtons(
     pauseGameMenuButtonsContainerObj,
     pauseMenuButtonObjs
   );
   pauseModal.appendChild(pauseMenuButtons);
+
   return pauseModal;
 };

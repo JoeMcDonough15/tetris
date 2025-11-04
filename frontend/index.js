@@ -15,6 +15,7 @@ import {
   grabInputValuesFromForm,
   verifyUniqueStrings,
   showErrorById,
+  settingsModalInMainMenu,
 } from "./utils/index.js";
 
 // Build out the UI
@@ -24,7 +25,7 @@ const mainMenuContainer = createContainer(
   ["main-container", "main-menu-container"],
   "main-menu-container"
 );
-const settingsModal = createSettingsModal("Return to Main Menu");
+const settingsModal = createSettingsModal(settingsModalInMainMenu);
 
 body.prepend(
   createCustomHeading("h1", "Main Menu", ["main-heading"], "main-heading"),
