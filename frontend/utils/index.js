@@ -283,6 +283,14 @@ export const closeLoadGameModal = (loadGameModal) => {
   loadGameModal.close();
 };
 
+export const grabSelectedOption = (selectElement) => {
+  const indexOfSelectedOption = selectElement.selectedIndex;
+  // return if the option selected is the dropdown instructions
+  if (indexOfSelectedOption === 0) return;
+  const selectedOption = selectElement[indexOfSelectedOption].value;
+  return selectedOption;
+};
+
 export const updateSettingsFormData = {
   settingsOptions: {
     musicOnOff: {

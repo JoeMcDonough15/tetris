@@ -102,6 +102,8 @@ export const createUpdateSettingsForm = () => {
   keyControlSelectOptionsContainer.append(...keyControlSelectOptions);
 
   const submitButton = createSubmitButton({
+    // ! Not sure I need the id on this button anymore.  We were calling an event listener on click but now
+    // ! all logic is being handled in the submit event listener.
     id: "update-settings-submit-button",
     classes: [],
     buttonText: updateSettingsFormData.submitButtonText,
@@ -137,7 +139,11 @@ export const createLoadGameForm = () => {
     "isSelect"
   );
 
-  loadGameForm.appendChild(selectInputContainer);
+  const submitButton = createSubmitButton({
+    classes: [],
+    buttonText: "Load Selected Game",
+  });
+  loadGameForm.append(selectInputContainer, submitButton);
   return loadGameForm;
 };
 

@@ -18,6 +18,7 @@ import {
   showErrorById,
   openLoadGameModal,
   closeLoadGameModal,
+  grabSelectedOption,
 } from "./utils/index.js";
 
 // Build out the UI
@@ -63,11 +64,22 @@ updateSettingsForm.addEventListener("submit", (e) => {
   closeSettingsModal(settingsModal);
 });
 
-// * 3. Set a submit event listener for the loadGamesForm
-// When the user submits the form, the name of the selected game gets sent to window.sessionStorage as gameToLoad key set to the value of
-// the name of the game that was collected from the form's select/drop down menu.
-// window.sessionStorage.setItem(JSON.stringify( { gameToLoad: nameOfGameToLoadFromForm }  ))
 // This should now navigate the user to /play-game, which will check for and pull a gameToLoad key/value pair inside window.sessionStorage.
+const loadGameForm = document.getElementById("load-game-form");
+loadGameForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const loadGameSelectElement = loadGameForm.elements[0];
+  const selectedOption = grabSelectedOption(loadGameSelectElement); // either an option.value or undefined
+  if (!selectedOption) {
+    // TODO have an error element on the form that can be shown with toggleDisplayById(errorId)
+    return;
+  }
+  // now set that selected game name in window.sessionStorage as gameToLoad, then close the modal (clearing the options) and navigate to /play-game
+  window.sessionStorage.setItem("gameToLoad", selectedOption);
+  closeLoadGameModal(loadGameModal);
+  window.location.assign("/play-game");
+});
 
 // Mouse Events
 // Add Event Listeners
@@ -90,11 +102,6 @@ document
   .addEventListener("click", () => {
     closeLoadGameModal(loadGameModal);
   });
-
-// * 2. Set a click event listener on the Load Game button.
-// This event listener should call showModal(loadGameModal), which opens a dialog called loadGameModal that displays a form called loadGamesForm.  The form should have a select/drop down menu.
-// This form displays all the names of games from localStorage that can be loaded.
-// once the user selects a game and clicks "Load This Game", the form submits.
 
 // Keyboard Events
 
