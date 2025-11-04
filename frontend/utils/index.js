@@ -62,7 +62,7 @@ export const blockSound = new Audio(generateSoundPath("block-landing"));
 export const rotateSound = new Audio(generateSoundPath("rotate"));
 export const clearedRowSound = new Audio(generateSoundPath("cleared-row"));
 
-// Menu Buttons
+// Menu Button Containers
 export const menuButtonsContainerObj = {
   elementName: "div",
   classes: ["menu-buttons"],
@@ -74,26 +74,55 @@ export const postGameMenuButtonsContainerObj = {
   id: "post-game-menu-buttons",
 };
 
-export const mainMenuButtonObjs = [
-  { buttonText: "Start Game", navLink: "/play-game" },
-  {
+export const pauseGameMenuButtonsContainerObj = menuButtonsContainerObj;
+
+// Button Navigation Routes
+const buttonNavRoutes = {
+  mainMenu: "/",
+  playGame: "/play-game",
+  highScores: "/high-scores",
+};
+// Menu Buttons
+const allButtonObjs = {
+  startGame: { buttonText: "Start Game", navLink: buttonNavRoutes.playGame },
+  viewHighScores: {
     buttonText: "View High Scores",
-    navLink: "/high-scores",
+    navLink: buttonNavRoutes.highScores,
   },
-  {
+  settings: {
     buttonText: "Settings",
-    id: "open-modal-button",
+    id: "open-settings-modal-button",
   },
+  newGame: { navLink: buttonNavRoutes.playGame, buttonText: "New Game" },
+
+  saveGame: { buttonText: "Save Game" },
+  createMainMenuObj: function (buttonText) {
+    return {
+      navLink: buttonNavRoutes.mainMenu,
+      buttonText: buttonText,
+    };
+  },
+};
+export const mainMenuButtonObjs = [
+  allButtonObjs.startGame,
+  allButtonObjs.viewHighScores,
+  allButtonObjs.settings,
 ];
 
 export const highScoresMenuButtonObjs = [
-  { navLink: "/play-game", buttonText: "New Game" },
-  { navLink: "/", buttonText: "Main Menu" },
+  allButtonObjs.newGame,
+  allButtonObjs.createMainMenuObj("Main Menu"),
 ];
 
 export const postGameMenuButtonObjs = [
-  { navLink: "/", buttonText: "Return to Main Menu" },
-  { navLink: "/high-scores", buttonText: "View High Scores" },
+  allButtonObjs.createMainMenuObj("Return to Main Menu"),
+  allButtonObjs.viewHighScores,
+];
+
+export const pauseMenuButtonObjs = [
+  allButtonObjs.saveGame,
+  allButtonObjs.settings,
+  allButtonObjs.createMainMenuObj("Quit Game"),
 ];
 
 // Game State Sub Headers

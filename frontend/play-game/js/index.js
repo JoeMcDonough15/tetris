@@ -17,7 +17,6 @@ import {
   returnBody,
   controllerRowObjs,
   settingsInputIds,
-  displayCurrentSettingsOnForm,
   postGameMenuButtonsContainerObj,
   toggleDisplayById,
   verifyUniqueStrings,
@@ -98,7 +97,9 @@ const highScoresObj = new HighScores();
 const game = new Tetris(settingsObj, highScoresObj);
 
 // Target Elements for Event Listeners
-const modalCloseButton = document.getElementById("close-modal-button");
+const closeSettingsModalButton = document.getElementById(
+  "close-settings-modal-button"
+);
 const rotateButton = document.getElementById("btn-up");
 const softDropButton = document.getElementById("btn-down");
 const moveLeftButton = document.getElementById("btn-left");
@@ -143,13 +144,13 @@ updateSettingsForm.addEventListener("submit", (e) => {
 });
 
 // Mouse Events
-modalCloseButton.addEventListener("click", () => {
-  closeSettingsModal(settingsModal);
+pauseButton.addEventListener("click", () => {
+  openSettingsModal(settingsObj, settingsModal);
   game.togglePause();
 });
 
-pauseButton.addEventListener("click", () => {
-  openSettingsModal(settingsObj, settingsModal);
+closeSettingsModalButton.addEventListener("click", () => {
+  closeSettingsModal(settingsModal);
   game.togglePause();
 });
 

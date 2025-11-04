@@ -42,13 +42,17 @@ mainMenuContainer.appendChild(mainMenuButtons);
 const settingsObj = new Settings();
 
 // Add Event Listeners
-document.getElementById("open-modal-button").addEventListener("click", () => {
-  openSettingsModal(settingsObj, settingsModal);
-});
+document
+  .getElementById("open-settings-modal-button")
+  .addEventListener("click", () => {
+    openSettingsModal(settingsObj, settingsModal);
+  });
 
-document.getElementById("close-modal-button").addEventListener("click", () => {
-  closeSettingsModal(settingsModal);
-});
+document
+  .getElementById("close-settings-modal-button")
+  .addEventListener("click", () => {
+    closeSettingsModal(settingsModal);
+  });
 
 const updateSettingsForm = document.getElementById("update-settings-form");
 updateSettingsForm.addEventListener("submit", (e) => {
