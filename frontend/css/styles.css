@@ -40,7 +40,7 @@ button {
   text-transform: capitalize;
 }
 
-.settings-modal-container {
+.modal-container {
   height: 50vh;
   position: fixed;
   margin: auto;

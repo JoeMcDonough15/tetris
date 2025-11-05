@@ -6,7 +6,7 @@ import {
 } from "./components/index.js";
 import Settings from "./settings.js";
 import {
-  menuButtonsContainerObj,
+  mainMenuButtonsContainerObj,
   mainMenuButtonObjs,
   returnBody,
   settingsInputIds,
@@ -15,6 +15,7 @@ import {
   grabInputValuesFromForm,
   verifyUniqueStrings,
   showErrorById,
+  settingsModalInMainMenu,
 } from "./utils/index.js";
 
 // Build out the UI
@@ -24,7 +25,7 @@ const mainMenuContainer = createContainer(
   ["main-container", "main-menu-container"],
   "main-menu-container"
 );
-const settingsModal = createSettingsModal("Return to Main Menu");
+const settingsModal = createSettingsModal(settingsModalInMainMenu);
 
 body.prepend(
   createCustomHeading("h1", "Main Menu", ["main-heading"], "main-heading"),
@@ -33,7 +34,7 @@ body.prepend(
 );
 
 const mainMenuButtons = createMenuButtons(
-  menuButtonsContainerObj,
+  mainMenuButtonsContainerObj,
   mainMenuButtonObjs
 );
 mainMenuContainer.appendChild(mainMenuButtons);
@@ -42,13 +43,17 @@ mainMenuContainer.appendChild(mainMenuButtons);
 const settingsObj = new Settings();
 
 // Add Event Listeners
-document.getElementById("open-modal-button").addEventListener("click", () => {
-  openSettingsModal(settingsObj, settingsModal);
-});
+document
+  .getElementById("open-settings-modal-button")
+  .addEventListener("click", () => {
+    openSettingsModal(settingsObj, settingsModal);
+  });
 
-document.getElementById("close-modal-button").addEventListener("click", () => {
-  closeSettingsModal(settingsModal);
-});
+document
+  .getElementById("close-settings-modal-button")
+  .addEventListener("click", () => {
+    closeSettingsModal(settingsModal);
+  });
 
 const updateSettingsForm = document.getElementById("update-settings-form");
 updateSettingsForm.addEventListener("submit", (e) => {

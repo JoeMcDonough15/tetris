@@ -6,7 +6,7 @@ import {
   createCustomHeading,
 } from "../../components/index.js";
 import {
-  menuButtonsContainerObj,
+  mainMenuButtonsContainerObj,
   highScoresMenuButtonObjs,
   returnBody,
 } from "../../utils/index.js";
@@ -23,7 +23,7 @@ const highScoresObj = new HighScores();
 const highScores = await highScoresObj.getHighScores();
 
 highScoresContainer.appendChild(
-  createMenuButtons(menuButtonsContainerObj, highScoresMenuButtonObjs)
+  createMenuButtons(mainMenuButtonsContainerObj, highScoresMenuButtonObjs)
 );
 
 if (highScores.length) {
