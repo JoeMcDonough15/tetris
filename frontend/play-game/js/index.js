@@ -131,6 +131,12 @@ const openSettingsModalButton = document.getElementById(
 const closeSettingsModalButton = document.getElementById(
   "close-settings-modal-button"
 );
+const openSaveGameModalButton = document.getElementById(
+  "open-save-game-modal-button"
+);
+const closeSaveGameModalButton = document.getElementById(
+  "close-save-game-modal-button"
+);
 
 // Form Submit Events
 playerNameForm.addEventListener("submit", async (e) => {
@@ -168,6 +174,12 @@ updateSettingsForm.addEventListener("submit", (e) => {
   closeSettingsModal(settingsModal);
 });
 
+const saveGameForm = document.getElementById("save-game-form");
+saveGameForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  // TODO Finish this event listener
+});
+
 // Mouse Events
 pauseButton.addEventListener("click", () => {
   pauseModal.showModal();
@@ -186,6 +198,14 @@ openSettingsModalButton.addEventListener("click", () => {
 
 closeSettingsModalButton.addEventListener("click", () => {
   closeSettingsModal(settingsModal);
+});
+
+openSaveGameModalButton.addEventListener("click", () => {
+  saveGameModal.showModal();
+});
+
+closeSaveGameModalButton.addEventListener("click", () => {
+  saveGameModal.close();
 });
 
 rotateButton.addEventListener("click", () => {

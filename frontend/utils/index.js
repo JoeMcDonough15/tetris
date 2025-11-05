@@ -170,7 +170,7 @@ const allMenuButtonObjs = {
     id: "open-settings-modal-button",
   },
   newGame: { navLink: buttonNavRoutes.playGame, buttonText: "New Game" },
-  saveGame: { buttonText: "Save Game" },
+  saveGame: { buttonText: "Save Game", id: "open-save-game-modal-button" },
   loadGame: { buttonText: "Load a Game", id: "open-load-game-modal-button" },
   createMainMenuObj: function (buttonText) {
     return {
