@@ -1,9 +1,12 @@
 import {
   highScoresFormData,
   highScoresTableFields,
+  loadGameFormData,
+  loadGameModalObj,
   pauseMenuButtonObjs,
   pauseMenuButtonsContainerObj,
   pauseModalObj,
+  saveGameFormData,
   updateSettingsFormData,
 } from "../utils/index.js";
 
@@ -20,6 +23,9 @@ const quickElement = (elementName, classes, id = null) => {
 // create one menu button that wraps either a navigation link or a span
 const createMenuButton = (buttonObj) => {
   const button = quickElement("button", ["menu-button"], buttonObj.id);
+  if (buttonObj.autofocus) {
+    button.setAttribute("autofocus", true);
+  }
   const buttonContent = quickElement(buttonObj.navLink ? "a" : "span", []);
   buttonContent.innerText = buttonObj.buttonText;
   if (buttonObj.navLink) {
@@ -68,28 +74,37 @@ const createErrorMessage = (errorText, id) => {
 };
 
 const createLoadGameForm = () => {
-  const loadGameForm = quickElement("form", [], "load-game-form");
+  const loadGameForm = quickElement(
+    "form",
+    loadGameFormData.formContainerClasses,
+    loadGameFormData.formContainerId
+  );
   const selectInputContainer = createInputContainer(
-    {
-      containerClasses: [],
-      labelText: "Select a Game To Load",
-      input: { id: "load-game-select", name: "gameToLoad" },
-    },
+    loadGameFormData.inputs[0],
     "isSelect"
   );
-
-  const submitButton = createSubmitButton({
-    classes: [],
-    buttonText: "Load Selected Game",
-  });
-
+  const submitButton = createSubmitButton(loadGameFormData.submitButton);
   const error = createErrorMessage(
     "Please Select a Game To Load",
     "no-game-selected-error-message"
   );
-
   loadGameForm.append(selectInputContainer, submitButton, error);
   return loadGameForm;
+};
+
+const createSaveGameForm = () => {
+  const saveGameForm = quickElement(
+    "form",
+    saveGameFormData.formContainerClasses,
+    saveGameFormData.formContainerId
+  );
+  const nameOfGameInputContainer = createInputContainer(
+    saveGameFormData.inputs[0]
+  );
+  const submitButton = createSubmitButton(saveGameFormData.submitButton);
+
+  saveGameForm.append(nameOfGameInputContainer, submitButton);
+  return saveGameForm;
 };
 
 const createRadioOptions = (data) => {
@@ -344,25 +359,20 @@ export const createSettingsModal = (settingsDataObj) => {
   return settingsModal;
 };
 
-export const createLoadGameModal = (closeModalButtonText) => {
-  const loadGameModal = quickElement(
-    "dialog",
-    ["modal-container"],
-    "load-game-modal"
-  );
-
-  const closeModalButton = quickElement(
-    "button",
-    [],
-    "close-load-game-modal-button"
-  );
-  closeModalButton.innerText = closeModalButtonText;
-  closeModalButton.setAttribute("autofocus", true);
-
+// render a modal that has a form to select which game to load.  Game names are pulled from localStorage, and on submit, user is redirected to /play-game with the loaded game state
+export const createLoadGameModal = () => {
+  const loadGameModal = createModalWithButton(loadGameModalObj);
   const loadGameForm = createLoadGameForm();
-
-  loadGameModal.append(closeModalButton, loadGameForm);
+  loadGameModal.appendChild(loadGameForm);
   return loadGameModal;
+};
+
+// render a modal that has a form to save your game to localStorage
+export const createSaveGameModal = () => {
+  const saveGameModal = createModalWithButton(saveGameModalObj);
+  const saveGameForm = createSaveGameForm();
+  saveGameModal.appendChild(saveGameForm);
+  return saveGameModal;
 };
 
 // render options to populate the dropdown inside gameToLoadForm.  This is done using local storage inside /frontend/utils/index.js --> openLoadGameModal

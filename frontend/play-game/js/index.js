@@ -78,6 +78,13 @@ gameDetailsContainer.append(
 
 const settingsModal = createSettingsModal(settingsModalInGame);
 const pauseModal = createPauseModal();
+// const saveGameModal = createSaveGameModal(); //! Does not exist yet
+// one of these buttons should a button to save the game.
+// The click event listener on that button should openModal(saveGameModal).  This shows a save game form also on a dialog.
+// the save game form should have a single input (text) for the name of the game to save.
+// on submit, the save game form should pull the input value off the form, and then pass it to
+// the Tetris instance method saveGame(), like this: game.saveGame(nameOfGameToSaveTakenFromForm);
+// after the game saves successfully, the save game form should be hidden with toggleDisplayById(idOfSaveGameForm)
 
 const playerNameForm = createPlayerNameForm();
 const postGameMenuButtons = createMenuButtons(

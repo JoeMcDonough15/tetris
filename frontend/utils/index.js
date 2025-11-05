@@ -82,9 +82,28 @@ const allModals = {
       buttonText: "Return to Game",
       classes: [],
       id: "close-pause-modal-button",
+      autofocus: true,
     },
     classes: ["modal-container"],
     id: "pause-modal",
+  },
+  loadGameModal: {
+    closeButtonObj: {
+      buttonText: "Cancel",
+      classes: [],
+      id: "close-load-game-modal-button",
+    },
+    classes: ["modal-container"],
+    id: "load-game-modal",
+  },
+  saveGameModal: {
+    closeButtonObj: {
+      buttonText: "Cancel",
+      classes: [],
+      id: "close-save-game-modal-button",
+    },
+    classes: ["modal-container"],
+    id: "save-game-modal",
   },
 };
 
@@ -113,6 +132,8 @@ export const settingsModalInGame = {
 };
 
 export const pauseModalObj = allModals.pauseModal;
+
+export const loadGameModalObj = allModals.loadGameModal;
 
 // Button Navigation Routes
 const buttonNavRoutes = {
@@ -594,6 +615,60 @@ export const highScoresFormData = {
       name: "playerScore",
       readonly: true,
     },
+  },
+};
+
+export const loadGameFormData = {
+  formContainerClasses: [],
+  formContainerId: "load-game-form",
+  inputs: [
+    {
+      inputName: "loadGameSelect",
+      labelText: "Select a Game To Load",
+      containerClasses: [],
+      labelClasses: [],
+      inputClasses: [],
+      input: {
+        id: "load-game-select",
+        name: "gameToLoad",
+      },
+    },
+  ],
+  submitButton: {
+    id: "",
+    classes: [],
+    buttonText: "Load Selected Game",
+  },
+  errors: [
+    {
+      message: "Please Select a Game To Load",
+      id: "no-game-selected-error-message",
+    },
+  ],
+};
+
+export const saveGameFormData = {
+  formContainerClasses: [],
+  formContainerId: "save-game-form",
+  inputs: [
+    {
+      inputName: "saveGameText",
+      labelText: "Name The Game You Are Saving",
+      containerClasses: [],
+      labelClasses: [],
+      inputClasses: [],
+      input: {
+        id: "name-of-game-to-save",
+        type: "text",
+        name: "gameToSave",
+        required: true,
+      },
+    },
+  ],
+  submitButton: {
+    id: "",
+    classes: [],
+    buttonText: "Save Game",
   },
 };
 
