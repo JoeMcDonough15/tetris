@@ -462,6 +462,12 @@ export const grabSelectedOption = (selectElement) => {
   return selectedOption;
 };
 
+export const saveGameBoard = () => {
+  const canvas = document.getElementById("canvas");
+  const canvasDataURL = canvas.toDataURL("image/png");
+  return canvasDataURL;
+};
+
 export const updateSettingsFormData = {
   settingsOptions: {
     musicOnOff: {
@@ -725,6 +731,7 @@ export const saveGameFormData = {
         type: "text",
         name: "gameToSave",
         required: true,
+        maxLength: 18,
       },
     },
   ],

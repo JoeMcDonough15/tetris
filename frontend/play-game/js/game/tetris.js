@@ -11,6 +11,7 @@ import {
   rotateSound,
   clearedRowSound,
   openConfirmOverwriteGameModal,
+  saveGameBoard,
 } from "../../../utils/index.js";
 import {
   Line,
@@ -58,10 +59,14 @@ class Tetris {
 
   checkForSavedGame = (nameOfGameToSave) => {
     this.nameOfGameToSave = nameOfGameToSave;
-    const indexOfExistingGame = JSON.parse(
-      window.localStorage.getItem("savedGames")
-    ).findIndex((savedGame) => savedGame.nameOfGame === nameOfGameToSave);
-    console.log("index of existing game: ", indexOfExistingGame);
+    const existingGames = JSON.parse(window.localStorage.getItem("savedGames"));
+    const indexOfExistingGame = existingGames
+      ? existingGames.findIndex(
+          (savedGame) => savedGame.nameOfGame === nameOfGameToSave
+        )
+      : -1;
+
+    console.log("existing game index: ", indexOfExistingGame);
     if (indexOfExistingGame > -1) {
       this.indexOfGameToOverwrite = indexOfExistingGame;
       openConfirmOverwriteGameModal(nameOfGameToSave);
@@ -71,22 +76,57 @@ class Tetris {
   };
 
   saveGame = () => {
-    console.log(
-      `proceed to save game ${this.nameOfGameToSave} into local storage!`
-    );
-    // this is called only when the form submits, inside an event listener on play-game/index.js
-    // On pause menu, a button called Save Game must be clicked rendering a form to take in the name of the game to save.
-    // On successful submission of that form, this method is called: game.saveGame(nameOfGameFromTextInput);
     // this method grabs all the current game state and puts it in an object called gameObj
-    // it also saves the state of the canvas with a utility function that targets the canvas element by id, and copies
-    // its data using canvas.toDataURL('image/png'), returning a string. This function could be called saveCanvas() or something like that.
-    // Both the gameObj and the gameBoard get stored in one object with one property called nameOfGameToSave.
-    // The value to that single property would look like this:
-    //   const gameToSave =  { gameObj: { ...allGameState },
-    //                         gameBoardString: 'imageString.png', <-- returned from utility function saveCanvas()
-    //                       },
-    // }
-    // Then, gameToSave would be set inside localStorage as JSON.stringify({ nameOfGameToSave: gameToSave });
+    const gameObj = {
+      gameOver: this.gameOver,
+      gamePaused: this.gamePaused,
+      gameSpeed: this.gameSpeed,
+      level: this.level,
+      totalRowsCleared: this.totalRowsCleared,
+      softDropPoints: this.softDropPoints,
+      rowsCleared: this.rowsCleared,
+      playerTotalScore: this.playerTotalScore,
+      game: this.game,
+      pieceQueue: this.pieceQueue,
+      currentPiece: this.currentPiece,
+      currentPiecePlaced: this.currentPiecePlaced,
+      numRotations: this.numRotations,
+    };
+
+    // it also saves the state of the canvas with a utility function that targets the canvas element by id, and copies with canvas.toDataURL()
+    const gameBoardString = saveGameBoard();
+
+    // Both the gameObj and the gameBoard get stored in one object that will go into the savedGames array
+    const gameToSave = {
+      nameOfGame: this.nameOfGameToSave,
+      gameObj,
+      gameBoardString,
+    };
+
+    // Then, gameToSave would be set inside localStorage as part of the array savedGames.
+    // * get the item from localStorage and parse it back into an array, using const savedGames = JSON.parse(window.localStorage.getItem("savedGames"))
+    const existingSavedGames = JSON.parse(
+      window.localStorage.getItem("savedGames")
+    );
+    const allSavedGames = existingSavedGames?.length
+      ? [...existingSavedGames]
+      : [];
+
+    console.log("all saved games: ", allSavedGames);
+
+    if (this.indexOfGameToOverwrite > -1) {
+      // * splice out the existing game object at the indexOfGameToOverwrite, and replace it with the current game
+      allSavedGames.splice(this.indexOfGameToOverwrite, 1, gameToSave);
+    } else {
+      // * push the current game to the savedGames array
+      allSavedGames.push(gameToSave);
+    }
+
+    // * Then replace the entire array using window.localStorage.setItem('savedGames', JSON.stringify(savedGames))
+    window.localStorage.setItem("savedGames", JSON.stringify(allSavedGames));
+    // * reset save game and overwrite existing game state inside Tetris
+    this.nameOfGameToSave = null;
+    this.indexOfGameToOverwrite = -1;
   };
 
   loadGame = () => {

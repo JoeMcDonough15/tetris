@@ -258,7 +258,6 @@ confirmOverwriteGameButton.addEventListener("click", () => {
 });
 
 closeConfirmOverwriteModalButton.addEventListener("click", () => {
-  // reset save game and overwrite existing game state inside Tetris
   game.nameOfGameToSave = null;
   game.indexOfGameToOverwrite = -1;
   confirmOverwriteGameModal.close();
