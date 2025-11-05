@@ -31,7 +31,7 @@ class Tetris {
     this.highScoresObj = highScoresObj;
 
     // Game State
-    this.nameOfGame = nameOfGameToLoad; // possibly null
+    this.nameOfGameToLoad = nameOfGameToLoad; // possibly null
     this.nameOfGameToSave = null;
     this.indexOfGameToOverwrite = -1;
     this.gameOver = false;
@@ -50,7 +50,7 @@ class Tetris {
     this.numRotations = 0;
 
     // load game if it exists
-    if (this.nameOfGame) {
+    if (this.nameOfGameToLoad) {
       this.loadGame();
     }
   }
@@ -66,7 +66,6 @@ class Tetris {
         )
       : -1;
 
-    console.log("existing game index: ", indexOfExistingGame);
     if (indexOfExistingGame > -1) {
       this.indexOfGameToOverwrite = indexOfExistingGame;
       openConfirmOverwriteGameModal(nameOfGameToSave);
@@ -79,7 +78,6 @@ class Tetris {
     // this method grabs all the current game state and puts it in an object called gameObj
     const gameObj = {
       gameOver: this.gameOver,
-      gamePaused: this.gamePaused,
       gameSpeed: this.gameSpeed,
       level: this.level,
       totalRowsCleared: this.totalRowsCleared,
@@ -112,8 +110,6 @@ class Tetris {
       ? [...existingSavedGames]
       : [];
 
-    console.log("all saved games: ", allSavedGames);
-
     if (this.indexOfGameToOverwrite > -1) {
       // * splice out the existing game object at the indexOfGameToOverwrite, and replace it with the current game
       allSavedGames.splice(this.indexOfGameToOverwrite, 1, gameToSave);
@@ -131,11 +127,73 @@ class Tetris {
 
   loadGame = () => {
     // 1. pull the loadedGame out of local storage using this.nameOfGame, then JSON.parse: const loadedGame = JSON.parse(localStorage.getItem(this.nameOfGame))
-    // 2. update all necessary game state using all game details from the loadedGame.gameObj; then, set values from the gameObj for lines 33 - 46 inside Tetris constructor.  This will update the game state to match the saved game.
+    const loadedGame = JSON.parse(localStorage.getItem("savedGames")).find(
+      (game) => game.nameOfGame === this.nameOfGameToLoad
+    );
+
+    // 2. update all necessary game state using all game details from the loadedGame.gameObj
+    this.gameOver = loadedGame.gameObj.gameOver;
+    this.gameSpeed = loadedGame.gameObj.gameSpeed;
+    this.level = loadedGame.gameObj.level;
+    updateElementTextById("level-heading", `Level: ${this.level}`);
+    this.totalRowsCleared = loadedGame.gameObj.totalRowsCleared;
+    this.softDropPoints = loadedGame.gameObj.softDropPoints;
+    this.rowsCleared = loadedGame.gameObj.rowsCleared;
+    updateElementTextById(
+      "rows-cleared-heading",
+      `Rows: ${this.totalRowsCleared}`
+    );
+    this.playerTotalScore = loadedGame.gameObj.playerTotalScore;
+    updateElementTextById(
+      "total-score-heading",
+      `Score: ${this.playerTotalScore}`
+    );
+    this.game = new GameGrid(NUM_ROWS, NUM_COLS, loadedGame.gameObj.game.grid);
+
+    loadedGame.gameObj.pieceQueue.forEach((pieceInQueue) => {
+      // instantiate the proper shape object
+      let nextPieceForQueue;
+      if (pieceInQueue.shapeName === "line") {
+        nextPieceForQueue = new Line();
+      } else if (pieceInQueue.shapeName === "square") {
+        nextPieceForQueue = new Square();
+      } else if (pieceInQueue.shapeName === "tShape") {
+        nextPieceForQueue = new TShape();
+      } else if (pieceInQueue.shapeName === "lShape") {
+        nextPieceForQueue = new LShape();
+      } else if (pieceInQueue.shapeName === "jShape") {
+        nextPieceForQueue = new JShape();
+      } else if (pieceInQueue.shapeName === "sShape") {
+        nextPieceForQueue = new SShape();
+      } else if (pieceInQueue.shapeName === "zShape") {
+        nextPieceForQueue = new ZShape();
+      }
+      // push to this.pieceQueue
+      this.pieceQueue.push(nextPieceForQueue);
+    });
+
+    if (loadedGame.gameObj.currentPiece.shapeName === "line") {
+      this.currentPiece = new Line();
+    } else if (loadedGame.gameObj.currentPiece.shapeName === "square") {
+      this.currentPiece = new Square();
+    } else if (loadedGame.gameObj.currentPiece.shapeName === "tShape") {
+      this.currentPiece = new TShape();
+    } else if (loadedGame.gameObj.currentPiece.shapeName === "lShape") {
+      this.currentPiece = new LShape();
+    } else if (loadedGame.gameObj.currentPiece.shapeName === "jShape") {
+      this.currentPiece = new JShape();
+    } else if (loadedGame.gameObj.currentPiece.shapeName === "sShape") {
+      this.currentPiece = new SShape();
+    } else if (loadedGame.gameObj.currentPiece.shapeName === "zShape") {
+      this.currentPiece = new ZShape();
+    }
+
+    this.currentPiecePlaced = loadedGame.gameObj.currentPiecePlaced;
+    this.numRotations = loadedGame.gameObj.numRotations;
+
     // 3. Then, call a utility function that updates the canvas element with the passed in string returned from .toDataURL() when game was saved. drawLoadedGameToCanvasCtx(loadedGame.gameBoardString);
     // 4. That function inside utils would target the ctx by id, then create an img tag (no need to add this <img> to the DOM).  The src of the image tag would be set to the string passed into the function (which would be loadedGame.gameBoardString).
     // 5. That same function inside utils would then call ctx.drawImage(imgTagCreatedByutilityFunction)
-    // 6. pause game so user can unpause when ready to continue their saved game.
   };
 
   startGame = () => {
@@ -308,7 +366,6 @@ class Tetris {
 
       const [currentRow, currentCol] =
         this.game.determineRowAndColumn(currentBlock);
-
       if (
         ledge === "bottom" &&
         (this.game.reachedBottomOfGrid(currentRow) ||
