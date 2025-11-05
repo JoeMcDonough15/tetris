@@ -128,12 +128,12 @@ class Tetris {
     this.level = loadedGame.gameObj.level;
     updateElementTextById("level-heading", `Level: ${this.level}`);
     this.totalRowsCleared = loadedGame.gameObj.totalRowsCleared;
-    this.softDropPoints = loadedGame.gameObj.softDropPoints;
-    this.rowsCleared = loadedGame.gameObj.rowsCleared;
     updateElementTextById(
       "rows-cleared-heading",
       `Rows: ${this.totalRowsCleared}`
     );
+    this.softDropPoints = loadedGame.gameObj.softDropPoints;
+    this.rowsCleared = loadedGame.gameObj.rowsCleared;
     this.playerTotalScore = loadedGame.gameObj.playerTotalScore;
     updateElementTextById(
       "total-score-heading",
@@ -160,27 +160,38 @@ class Tetris {
       }
       this.pieceQueue.push(nextPieceForQueue);
     });
+    // now set the preview-img to be the first shape in the queue
+    updateImageSrcById("preview-img", this.pieceQueue[0].preview);
 
+    // now, set up the currentPiece.  Grab its x and y coordinates and instantiate the shape that it is with those coordinates.
+    const previousXCoordinate =
+      loadedGame.gameObj.currentPiece.anchorBlock.xCoordinate;
+    const previousYCoordinate =
+      loadedGame.gameObj.currentPiece.anchorBlock.yCoordinate;
     if (loadedGame.gameObj.currentPiece.shapeName === "line") {
-      this.currentPiece = new Line();
+      this.currentPiece = new Line(previousXCoordinate, previousYCoordinate);
     } else if (loadedGame.gameObj.currentPiece.shapeName === "square") {
-      this.currentPiece = new Square();
+      this.currentPiece = new Square(previousXCoordinate, previousYCoordinate);
     } else if (loadedGame.gameObj.currentPiece.shapeName === "tShape") {
-      this.currentPiece = new TShape();
+      this.currentPiece = new TShape(previousXCoordinate, previousYCoordinate);
     } else if (loadedGame.gameObj.currentPiece.shapeName === "lShape") {
-      this.currentPiece = new LShape();
+      this.currentPiece = new LShape(previousXCoordinate, previousYCoordinate);
     } else if (loadedGame.gameObj.currentPiece.shapeName === "jShape") {
-      this.currentPiece = new JShape();
+      this.currentPiece = new JShape(previousXCoordinate, previousYCoordinate);
     } else if (loadedGame.gameObj.currentPiece.shapeName === "sShape") {
-      this.currentPiece = new SShape();
+      this.currentPiece = new SShape(previousXCoordinate, previousYCoordinate);
     } else if (loadedGame.gameObj.currentPiece.shapeName === "zShape") {
-      this.currentPiece = new ZShape();
+      this.currentPiece = new ZShape(previousXCoordinate, previousYCoordinate);
     }
+    // now, draw that shape to the board to replace the existing one
+    this.currentPiece.drawShape();
 
     this.currentPiecePlaced = loadedGame.gameObj.currentPiecePlaced;
     this.numRotations = loadedGame.gameObj.numRotations;
 
     loadGameBoard(loadedGame.gameBoardString);
+
+    this.gravityDrop();
   };
 
   startGame = () => {
@@ -220,6 +231,9 @@ class Tetris {
 
   togglePause = () => {
     this.gamePaused = !this.gamePaused;
+    if (!this.gamePaused) {
+      this.gravityDrop();
+    }
   };
 
   addBlocksToGrid = () => {
@@ -378,9 +392,9 @@ class Tetris {
 
   gravityDrop = () => {
     const fallInterval = setInterval(() => {
-      if (this.currentPiecePlaced) {
+      if (this.currentPiecePlaced || this.gamePaused) {
         clearInterval(fallInterval);
-        if (!this.gameOver) {
+        if (!this.gameOver && !this.gamePaused) {
           this.dequeuePiece();
         }
         return;
@@ -390,17 +404,18 @@ class Tetris {
   };
 
   moveShape = (direction) => {
-    if (this.currentPiecePlaced || this.gamePaused) {
-      return;
-    }
-
     if (this.willCollide(direction === "down" ? "bottom" : direction)) {
       if (direction === "down") {
         this.placePiece();
       }
+
       return;
     }
+
+    // clear the shape
     this.currentPiece.clearShape();
+
+    // move the shape
     if (direction === "left") {
       this.currentPiece.anchorBlock.xCoordinate -= GRID_SPACE;
     } else if (direction === "right") {
@@ -408,6 +423,8 @@ class Tetris {
     } else if (direction === "down") {
       this.currentPiece.anchorBlock.yCoordinate += GRID_SPACE;
     }
+
+    // redraw the shape in its new position
     this.currentPiece.drawShape();
   };
 
@@ -487,7 +504,7 @@ class Tetris {
 
     this.currentPiecePlaced = false;
     this.numRotations = 0;
-    this.currentPiece.drawShape();
+    // this.currentPiece.drawShape();
     this.gravityDrop();
   };
 }

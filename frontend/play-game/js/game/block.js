@@ -2,11 +2,13 @@ import { GRID_SPACE } from "../../../utils/index.js";
 import { canvas, ctx } from "./canvas.js";
 
 class Block {
-  constructor(color) {
+  constructor(color, xCoordinate, yCoordinate) {
     this.borderColor = "rgb(0 0 0)";
     this.fillColor = color;
-    this.xCoordinate = Math.floor(canvas.width / 2 - GRID_SPACE); // center of the canvas
-    this.yCoordinate = 0; // top of the canvas
+    this.xCoordinate = xCoordinate
+      ? xCoordinate
+      : Math.floor(canvas.width / 2 - GRID_SPACE); // default x-coord is center of the canvas
+    this.yCoordinate = yCoordinate ? yCoordinate : 0; // default y-coord is top of the canvas
     this.isBottomLedge = false;
     this.isLeftLedge = false;
     this.isRightLedge = false;
