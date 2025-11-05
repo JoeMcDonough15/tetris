@@ -30,12 +30,20 @@ const createMenuButton = (buttonObj) => {
 };
 
 // create a div element with a label and input
-const createInputContainer = (data) => {
+const createInputContainer = (data, isSelect = null) => {
   const inputContainer = quickElement("div", data.containerClasses);
   const label = quickElement("label", []);
   label.innerText = data.labelText;
   label.setAttribute("for", data.input.id);
-  const input = quickElement("input", [], data.input.id);
+  const input = quickElement(isSelect ? "select" : "input", [], data.input.id);
+  if (isSelect) {
+    const dropDownInstructions = createGameToLoadOption(
+      "Select a Game To Load"
+    );
+    dropDownInstructions.classList.remove("game-to-load-select-option");
+    input.appendChild(dropDownInstructions);
+  }
+
   const attributes = Object.keys(data.input);
   attributes.forEach((attribute) => {
     input.setAttribute(attribute, data.input[attribute]);
@@ -52,7 +60,39 @@ const createSubmitButton = (buttonObj) => {
   return submit;
 };
 
-export const createRadioOptions = (data) => {
+const createErrorMessage = (errorText, id) => {
+  const error = quickElement("p", ["error-message", "no-display"], id);
+  error.innerText = errorText;
+
+  return error;
+};
+
+const createLoadGameForm = () => {
+  const loadGameForm = quickElement("form", [], "load-game-form");
+  const selectInputContainer = createInputContainer(
+    {
+      containerClasses: [],
+      labelText: "Select a Game To Load",
+      input: { id: "load-game-select", name: "gameToLoad" },
+    },
+    "isSelect"
+  );
+
+  const submitButton = createSubmitButton({
+    classes: [],
+    buttonText: "Load Selected Game",
+  });
+
+  const error = createErrorMessage(
+    "Please Select a Game To Load",
+    "no-game-selected-error-message"
+  );
+
+  loadGameForm.append(selectInputContainer, submitButton, error);
+  return loadGameForm;
+};
+
+const createRadioOptions = (data) => {
   const radioOptionsFieldSet = quickElement(
     "fieldset",
     data.fieldSetOptions.containerClasses,
@@ -324,6 +364,15 @@ export const createLoadGameModal = (closeModalButtonText) => {
   loadGameModal.append(closeModalButton, loadGameForm);
   return loadGameModal;
 };
+
+// render options to populate the dropdown inside gameToLoadForm.  This is done using local storage inside /frontend/utils/index.js --> openLoadGameModal
+export const createGameToLoadOption = (optionName) => {
+  const optionElement = quickElement("option", ["game-to-load-select-option"]);
+  optionElement.value = optionName;
+  optionElement.innerText = optionName;
+  return optionElement;
+};
+
 // render a pause modal that can be used as a dialog element for whenever user pauses the game during game play
 export const createPauseModal = () => {
   const pauseModal = quickElement(

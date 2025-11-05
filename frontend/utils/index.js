@@ -1,4 +1,4 @@
-import { createOption } from "../components/utils/index.js";
+import { createGameToLoadOption } from "../components/index.js";
 
 // Game Grid Values
 export const NUM_ROWS = 18;
@@ -148,6 +148,7 @@ const allMenuButtonObjs = {
   },
   newGame: { navLink: buttonNavRoutes.playGame, buttonText: "New Game" },
   saveGame: { buttonText: "Save Game" },
+  loadGame: { buttonText: "Load a Game", id: "open-load-game-modal-button" },
   createMainMenuObj: function (buttonText) {
     return {
       navLink: buttonNavRoutes.mainMenu,
@@ -157,7 +158,8 @@ const allMenuButtonObjs = {
 };
 
 export const mainMenuButtonObjs = [
-  allMenuButtonObjs.startGame,
+  allMenuButtonObjs.newGame,
+  allMenuButtonObjs.loadGame,
   allMenuButtonObjs.viewHighScores,
   allMenuButtonObjs.openSettings,
 ];
@@ -341,14 +343,18 @@ export const closeSettingsModal = (settingsModal) => {
   settingsModal.close();
 };
 
-export const openLoadGameModal = (loadGameModal) => {
+const getNamesOfAllSavedGames = () => {
   const namesOfAllSavedGames = JSON.parse(
     localStorage.getItem("savedGames")
   ).map((savedGame) => savedGame.nameOfGame);
+  return namesOfAllSavedGames;
+};
+
+export const openLoadGameModal = (loadGameModal) => {
+  const namesOfAllSavedGames = getNamesOfAllSavedGames();
   const selectInput = document.getElementById("load-game-select");
-  selectInput.appendChild(createOption("Select a Game To Load"));
   namesOfAllSavedGames.forEach((nameOfSavedGame) => {
-    selectInput.appendChild(createOption(nameOfSavedGame));
+    selectInput.appendChild(createGameToLoadOption(nameOfSavedGame));
   });
   removeErrorById("no-game-selected-error-message");
   loadGameModal.showModal();

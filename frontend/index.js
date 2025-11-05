@@ -19,6 +19,7 @@ import {
   openLoadGameModal,
   closeLoadGameModal,
   grabSelectedOption,
+  settingsModalInMainMenu,
 } from "./utils/index.js";
 
 // Build out the UI
@@ -47,19 +48,9 @@ mainMenuContainer.appendChild(mainMenuButtons);
 // Instantiate a Settings object
 const settingsObj = new Settings();
 
-// Add Event Listeners
-document
-  .getElementById("open-settings-modal-button")
-  .addEventListener("click", () => {
-    openSettingsModal(settingsObj, settingsModal);
-  });
+// * Event Listeners
 
-document
-  .getElementById("close-settings-modal-button")
-  .addEventListener("click", () => {
-    closeSettingsModal(settingsModal);
-  });
-
+// Form Submit Events
 const updateSettingsForm = document.getElementById("update-settings-form");
 updateSettingsForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -76,7 +67,6 @@ updateSettingsForm.addEventListener("submit", (e) => {
   closeSettingsModal(settingsModal);
 });
 
-// This should now navigate the user to /play-game, which will check for and pull a gameToLoad key/value pair inside window.sessionStorage.
 const loadGameForm = document.getElementById("load-game-form");
 loadGameForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -94,14 +84,17 @@ loadGameForm.addEventListener("submit", (e) => {
 });
 
 // Mouse Events
-// Add Event Listeners
-document.getElementById("open-modal-button").addEventListener("click", () => {
-  openSettingsModal(settingsObj, settingsModal);
-});
+document
+  .getElementById("open-settings-modal-button")
+  .addEventListener("click", () => {
+    openSettingsModal(settingsObj, settingsModal);
+  });
 
-document.getElementById("close-modal-button").addEventListener("click", () => {
-  closeSettingsModal(settingsModal);
-});
+document
+  .getElementById("close-settings-modal-button")
+  .addEventListener("click", () => {
+    closeSettingsModal(settingsModal);
+  });
 
 document
   .getElementById("open-load-game-modal-button")
