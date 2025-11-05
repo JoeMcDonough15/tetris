@@ -192,7 +192,7 @@ softDropButton.addEventListener("click", () => {
 window.addEventListener("keyup", (e) => {
   if (game.gameOver) return;
   const keyName = e.key;
-  // Event Listeners For Updating Game Controls From Main Menu
+  // Event Listeners For Updating keyControls Inside Settings Modal
   const activeElement = document.activeElement;
   if (
     settingsInputIds.keyControlIds.includes(activeElement.getAttribute("id"))
@@ -203,10 +203,10 @@ window.addEventListener("keyup", (e) => {
 
   // Event Listener for Pause Button During Gameplay
   if (keyName === settingsObj.keyControls.togglePause) {
-    if (settingsModal.open) {
-      closeSettingsModal(settingsModal);
+    if (pauseModal.open) {
+      pauseModal.close();
     } else {
-      openSettingsModal(settingsObj, settingsModal);
+      pauseModal.showModal();
     }
     game.togglePause();
   }
@@ -223,7 +223,7 @@ window.addEventListener("keydown", (e) => {
     game.moveShape("right");
   } else if (keyName === settingsObj.keyControls.softDrop) {
     game.softDrop();
-  } else if (keyName === "Escape" && game.gamePaused) {
+  } else if (keyName === "Escape" && game.gamePaused && !settingsModal.open) {
     game.togglePause();
   }
 });

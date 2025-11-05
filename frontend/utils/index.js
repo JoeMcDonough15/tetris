@@ -62,28 +62,7 @@ export const blockSound = new Audio(generateSoundPath("block-landing"));
 export const rotateSound = new Audio(generateSoundPath("rotate"));
 export const clearedRowSound = new Audio(generateSoundPath("cleared-row"));
 
-// Menu Button Containers
-export const mainMenuButtonsContainerObj = {
-  elementName: "div",
-  classes: ["menu-buttons"],
-};
-
-export const postGameMenuButtonsContainerObj = {
-  elementName: "div",
-  classes: ["menu-buttons", "no-display"],
-  id: "post-game-menu-buttons",
-};
-
-export const pauseGameMenuButtonsContainerObj = mainMenuButtonsContainerObj;
-
-// Button Navigation Routes
-const buttonNavRoutes = {
-  mainMenu: "/",
-  playGame: "/play-game",
-  highScores: "/high-scores",
-};
-
-// Modals
+// Modals with Respective Close Buttons
 const allModals = {
   settingsModal: {
     closeButtonObj: {
@@ -96,23 +75,25 @@ const allModals = {
     classes: ["settings-modal-container"],
     id: "settings-modal",
   },
+  pauseModal: {
+    closeButtonObj: {
+      buttonText: "Return to Game",
+      classes: [],
+      id: "close-pause-modal-button",
+    },
+    classes: ["modal-container"],
+    id: "pause-modal",
+  },
 };
 
-// destructure to get the createButtonText function out separately from the remaining props
+// Destructure from allModals.settingsModal to access the createButtonText function and separate it from the remaining properties
 const {
   closeButtonObj: { createButtonText, ...remainingButtonProps },
   ...remainingModalProps
 } = allModals.settingsModal;
 
-// then use the createButtonText function to make dynamic close modal button text, spreading in the remaining properties
-export const settingsModalInGame = {
-  closeButtonObj: {
-    buttonText: createButtonText("Return to Game"),
-    ...remainingButtonProps,
-  },
-  ...remainingModalProps,
-};
-
+// Then, use the createButtonText function to make dynamic close modal button text, spreading in the remaining properties,
+// for the two different settingsModals in the app
 export const settingsModalInMainMenu = {
   closeButtonObj: {
     buttonText: createButtonText("Close Settings"),
@@ -121,24 +102,50 @@ export const settingsModalInMainMenu = {
   ...remainingModalProps,
 };
 
+export const settingsModalInGame = {
+  closeButtonObj: {
+    buttonText: createButtonText("Return to Game"),
+    ...remainingButtonProps,
+  },
+  ...remainingModalProps,
+};
+
+export const pauseModalObj = allModals.pauseModal;
+
+// Button Navigation Routes
+const buttonNavRoutes = {
+  mainMenu: "/",
+  playGame: "/play-game",
+  highScores: "/high-scores",
+};
+
+// Menu Button Containers
+export const mainMenuButtonsContainerObj = {
+  elementName: "div",
+  classes: ["menu-buttons"],
+};
+
+export const postGameMenuButtonsContainerObj = {
+  elementName: "div",
+  classes: ["menu-buttons", "no-display"],
+  id: "post-game-menu-buttons",
+};
+
+export const pauseMenuButtonsContainerObj = mainMenuButtonsContainerObj;
+
 // Menu Buttons
-const allButtonObjs = {
+const allMenuButtonObjs = {
   startGame: { buttonText: "Start Game", navLink: buttonNavRoutes.playGame },
   viewHighScores: {
     buttonText: "View High Scores",
     navLink: buttonNavRoutes.highScores,
   },
-  settings: {
+  openSettings: {
     buttonText: "Settings",
     id: "open-settings-modal-button",
   },
   newGame: { navLink: buttonNavRoutes.playGame, buttonText: "New Game" },
-
   saveGame: { buttonText: "Save Game" },
-  closePauseModal: {
-    buttonText: "Return to Game",
-    id: "close-pause-modal-button",
-  },
   createMainMenuObj: function (buttonText) {
     return {
       navLink: buttonNavRoutes.mainMenu,
@@ -148,26 +155,26 @@ const allButtonObjs = {
 };
 
 export const mainMenuButtonObjs = [
-  allButtonObjs.startGame,
-  allButtonObjs.viewHighScores,
-  allButtonObjs.settings,
+  allMenuButtonObjs.startGame,
+  allMenuButtonObjs.viewHighScores,
+  allMenuButtonObjs.openSettings,
 ];
 
 export const highScoresMenuButtonObjs = [
-  allButtonObjs.newGame,
-  allButtonObjs.createMainMenuObj("Main Menu"),
+  allMenuButtonObjs.newGame,
+  allMenuButtonObjs.createMainMenuObj("Main Menu"),
 ];
 
 export const postGameMenuButtonObjs = [
-  allButtonObjs.createMainMenuObj("Return to Main Menu"),
-  allButtonObjs.viewHighScores,
+  allMenuButtonObjs.createMainMenuObj("Return to Main Menu"),
+  allMenuButtonObjs.viewHighScores,
 ];
 
 export const pauseMenuButtonObjs = [
-  allButtonObjs.closePauseModal,
-  allButtonObjs.saveGame,
-  allButtonObjs.settings,
-  allButtonObjs.createMainMenuObj("Quit Game"),
+  allModals.pauseModal.closeButtonObj,
+  allMenuButtonObjs.saveGame,
+  allMenuButtonObjs.openSettings,
+  allMenuButtonObjs.createMainMenuObj("Quit Game"),
 ];
 
 // Game State Sub Headers
