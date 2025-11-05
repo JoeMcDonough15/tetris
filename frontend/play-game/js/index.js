@@ -8,6 +8,7 @@ import {
   createMenuButtons,
   createPreviewImgContainer,
   createPlayerNameForm,
+  createPauseModal,
 } from "../../components/index.js";
 import HighScores from "../../high-scores/js/api/highScoresApi.js";
 import Settings from "../../settings.js";
@@ -24,6 +25,7 @@ import {
   showErrorById,
   openSettingsModal,
   closeSettingsModal,
+  settingsModalInGame,
 } from "../../utils/index.js";
 import Tetris from "./game/tetris.js";
 
@@ -74,18 +76,8 @@ gameDetailsContainer.append(
   controllerContainer
 );
 
-// * Pause Menu Modal
-// Build a component that renders a dialog similar to settingsModal but instead of a form on it,
-// it should have a menuButtons component that uses data from utils called pauseGameMenuButtonObjs.
-// This modal should open with openModal(pauseGameModal)
-// one of these buttons should a button to save the game.
-// The click event listener on that button should openModal(saveGameModal).  This shows a save game form also on a dialog.
-// the save game form should have a single input (text) for the name of the game to save.
-// on submit, the save game form should pull the input value off the form, and then pass it to
-// the Tetris instance method saveGame(), like this: game.saveGame(nameOfGameToSaveTakenFromForm);
-// after the game saves successfully, the save game form should be hidden with toggleDisplayById(idOfSaveGameForm)
-
-const settingsModal = createSettingsModal("Return to Game");
+const settingsModal = createSettingsModal(settingsModalInGame);
+const pauseModal = createPauseModal();
 
 const playerNameForm = createPlayerNameForm();
 const postGameMenuButtons = createMenuButtons(
@@ -97,10 +89,11 @@ gameGridContainer.after(
   gameDetailsContainer,
   playerNameForm,
   postGameMenuButtons,
+  pauseModal,
   settingsModal
 );
 
-// Instantiate the Settings object and the HighScores object
+// Instantiate Necessary Classes
 const settingsObj = new Settings();
 const highScoresObj = new HighScores();
 
@@ -114,12 +107,21 @@ if (gameToLoad) {
 const game = new Tetris(settingsObj, highScoresObj, gameToLoad);
 
 // Target Elements for Event Listeners
-const modalCloseButton = document.getElementById("close-modal-button");
+
 const rotateButton = document.getElementById("btn-up");
 const softDropButton = document.getElementById("btn-down");
 const moveLeftButton = document.getElementById("btn-left");
 const moveRightButton = document.getElementById("btn-right");
 const pauseButton = document.getElementById("btn-pause");
+const closePauseModalButton = document.getElementById(
+  "close-pause-modal-button"
+);
+const openSettingsModalButton = document.getElementById(
+  "open-settings-modal-button"
+);
+const closeSettingsModalButton = document.getElementById(
+  "close-settings-modal-button"
+);
 
 // Form Submit Events
 playerNameForm.addEventListener("submit", async (e) => {
@@ -155,18 +157,26 @@ updateSettingsForm.addEventListener("submit", (e) => {
 
   settingsObj.updateSettings({ ...inputsObj });
   closeSettingsModal(settingsModal);
-  game.togglePause();
 });
 
 // Mouse Events
-modalCloseButton.addEventListener("click", () => {
-  closeSettingsModal(settingsModal);
+pauseButton.addEventListener("click", () => {
+  pauseModal.showModal();
   game.togglePause();
 });
 
-pauseButton.addEventListener("click", () => {
-  openSettingsModal(settingsObj, settingsModal);
+closePauseModalButton.addEventListener("click", () => {
+  pauseModal.close();
   game.togglePause();
+});
+
+openSettingsModalButton.addEventListener("click", () => {
+  // clear any error state, pre populate input fields, open the modal
+  openSettingsModal(settingsObj, settingsModal);
+});
+
+closeSettingsModalButton.addEventListener("click", () => {
+  closeSettingsModal(settingsModal);
 });
 
 rotateButton.addEventListener("click", () => {
@@ -189,7 +199,7 @@ softDropButton.addEventListener("click", () => {
 window.addEventListener("keyup", (e) => {
   if (game.gameOver) return;
   const keyName = e.key;
-  // Event Listeners For Updating Game Controls From Main Menu
+  // Event Listeners For Updating keyControls Inside Settings Modal
   const activeElement = document.activeElement;
   if (
     settingsInputIds.keyControlIds.includes(activeElement.getAttribute("id"))
@@ -200,10 +210,10 @@ window.addEventListener("keyup", (e) => {
 
   // Event Listener for Pause Button During Gameplay
   if (keyName === settingsObj.keyControls.togglePause) {
-    if (settingsModal.open) {
-      closeSettingsModal(settingsModal);
+    if (pauseModal.open) {
+      pauseModal.close();
     } else {
-      openSettingsModal(settingsObj, settingsModal);
+      pauseModal.showModal();
     }
     game.togglePause();
   }
@@ -220,9 +230,9 @@ window.addEventListener("keydown", (e) => {
     game.moveShape("right");
   } else if (keyName === settingsObj.keyControls.softDrop) {
     game.softDrop();
-  } else if (keyName === "Escape" && game.gamePaused) {
+  } else if (keyName === "Escape" && game.gamePaused && !settingsModal.open) {
     game.togglePause();
-  }
+  } // * special case because Escape will close dialog elements!  We don't want the game to unpause if we are only closing the settingsModal inside the pauseModal.  Only closing the pauseModal should be tied to unpausing the game.
 });
 
 game.startGame();
