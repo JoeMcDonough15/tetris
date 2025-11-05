@@ -76,7 +76,6 @@ class Tetris {
   };
 
   saveGame = () => {
-    // this method grabs all the current game state and puts it in an object called gameObj
     const gameObj = {
       gameOver: this.gameOver,
       gameSpeed: this.gameSpeed,
@@ -92,18 +91,14 @@ class Tetris {
       numRotations: this.numRotations,
     };
 
-    // it also saves the state of the canvas with a utility function that targets the canvas element by id, and copies with canvas.toDataURL()
     const gameBoardString = saveGameBoard();
 
-    // Both the gameObj and the gameBoard get stored in one object that will go into the savedGames array
     const gameToSave = {
       nameOfGame: this.nameOfGameToSave,
       gameObj,
       gameBoardString,
     };
 
-    // Then, gameToSave would be set inside localStorage as part of the array savedGames.
-    // * get the item from localStorage and parse it back into an array, using const savedGames = JSON.parse(window.localStorage.getItem("savedGames"))
     const existingSavedGames = JSON.parse(
       window.localStorage.getItem("savedGames")
     );
@@ -112,16 +107,13 @@ class Tetris {
       : [];
 
     if (this.indexOfGameToOverwrite > -1) {
-      // * splice out the existing game object at the indexOfGameToOverwrite, and replace it with the current game
       allSavedGames.splice(this.indexOfGameToOverwrite, 1, gameToSave);
     } else {
-      // * push the current game to the savedGames array
       allSavedGames.push(gameToSave);
     }
 
-    // * Then replace the entire array using window.localStorage.setItem('savedGames', JSON.stringify(savedGames))
     window.localStorage.setItem("savedGames", JSON.stringify(allSavedGames));
-    // * reset save game and overwrite existing game state inside Tetris
+
     this.nameOfGameToSave = null;
     this.indexOfGameToOverwrite = -1;
   };
@@ -251,7 +243,6 @@ class Tetris {
         this.game.grid[rowNum][index] = null;
       }
     });
-    // reset the cleared row's column count to 0
     currentRow[currentRow.length - 1] = 0;
   };
 

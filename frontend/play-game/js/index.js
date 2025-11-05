@@ -39,10 +39,8 @@ const body = returnBody();
 body.prepend(
   createCustomHeading("h1", "Tetris", ["main-heading"], "main-heading")
 );
-// target gameGridContainer to inject this UI after it
-const gameGridContainer = document.getElementById("game-grid-container");
 
-// Build out the gameDetailsContainer
+const gameGridContainer = document.getElementById("game-grid-container");
 const gameDetailsContainer = createContainer(
   "section",
   ["game-details-container"],
@@ -109,7 +107,7 @@ gameGridContainer.after(
 const settingsObj = new Settings();
 const highScoresObj = new HighScores();
 
-// Load a Saved Game If There Is a Game in Session Storage to be Loaded
+// Load a Saved Game if Needed
 const gameToLoad = window.sessionStorage.getItem("gameToLoad");
 if (gameToLoad) {
   window.sessionStorage.removeItem("gameToLoad");
@@ -141,13 +139,10 @@ const closeSaveGameModalButton = document.getElementById(
   "close-save-game-modal-button"
 );
 
-// ? confirm overwrite game event listeners
-// * use this id with an event listener in index.js to launch game.saveGame() and close the saveGameModal
 const confirmOverwriteGameButton = document.getElementById(
   "confirm-overwrite-button"
 );
 
-// * use this id to close the modal with event listener in index.js, returning back to the saveGameModal
 const closeConfirmOverwriteModalButton = document.getElementById(
   "close-overwrite-game-modal-button"
 );
@@ -163,13 +158,6 @@ const confirmQuitGameButton = document.getElementById(
 const closeQuitGameModalButton = document.getElementById(
   "close-quit-game-modal-button"
 );
-
-//
-//
-//
-//
-//
-//
 
 // Form Submit Events
 playerNameForm.addEventListener("submit", async (e) => {
@@ -212,21 +200,11 @@ saveGameForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const nameOfGameToSave = saveGameForm.elements.gameToSave.value;
   game.checkForSavedGame(nameOfGameToSave);
-  // TODO Finish this event listener
-  // call game.checkForSavedGame() to see if a game exists in localStorage by this name
-  // * if it does exist
-  // 1. call a utility function that opens the dialog for confirmOverwriteGame().  This dialog sits on top of saveGameModal.  Return out of checkForSavedGame() once the new confirmationModal is open.
-  // 2. if the user clicks no on the confirmOverwriteModal opened by confirmOverwriteGame(), close the dialog.  saveGameModal remains open and comes back into view, allowing the user to write a different name on the form.
-  // 3. if the user clicks yes on the confirmOverwriteModal opened by confirmOverwriteGame(), call game.saveGame() which replaces the game that has the same name.  close saveGameModal since save was successful.
-  // * else
-  // 1. call game.saveGame() which will save a new game in localStorage by the name on the nameOfGame text input on the form.
-  // 2. close saveGameModal since save was successful.
-  // TODO: component: reusable confirmationModal; utility functions: confirmOverwriteGame(), confirmQuitGame(); Tetris instance methods: checkForSavedGame(nameOfGame), saveGame(nameOfGame)
 });
 
 // Mouse Events
 pauseButton.addEventListener("click", () => {
-  pauseModal.showModal();
+  // pauseModal.showModal();
   game.togglePause();
 });
 
@@ -236,7 +214,6 @@ closePauseModalButton.addEventListener("click", () => {
 });
 
 openSettingsModalButton.addEventListener("click", () => {
-  // clear any error state, pre populate input fields, open the modal
   openSettingsModal(settingsObj, settingsModal);
 });
 
@@ -309,7 +286,7 @@ window.addEventListener("keyup", (e) => {
     if (pauseModal.open) {
       pauseModal.close();
     } else {
-      pauseModal.showModal();
+      // pauseModal.showModal();
     }
     game.togglePause();
   }
@@ -334,7 +311,7 @@ window.addEventListener("keydown", (e) => {
     !confirmQuitGameModal.open
   ) {
     game.togglePause();
-  } // * special case because Escape will close dialog elements!  We don't want the game to unpause if we are only closing the settingsModal inside the pauseModal.  Only closing the pauseModal should be tied to unpausing the game.
+  }
 });
 
 game.startGame();
