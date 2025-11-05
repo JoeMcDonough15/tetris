@@ -399,3 +399,48 @@ export const createPauseModal = () => {
 
   return pauseModal;
 };
+
+// render a row of buttons to act as the deny or confirm buttons in a confirmationModal
+const createConfirmationButtonsContainer = ({
+  containerClasses,
+  deny,
+  confirm,
+}) => {
+  const buttonsContainer = createContainer("div", containerClasses);
+
+  const buttonDeny = quickElement("button", deny.classes, deny.id);
+  buttonDeny.innerText = deny.buttonText;
+
+  const buttonConfirm = quickElement("button", confirm.classes, confirm.id);
+  buttonConfirm.innerText = confirm.buttonText;
+
+  [buttonDeny, buttonConfirm].forEach((button) => {
+    button.type = "button";
+  });
+
+  buttonsContainer.append(buttonDeny, buttonConfirm);
+
+  return buttonsContainer;
+};
+
+// render a modal to confirm an action like overwriting a game in memory, or quitting a game from the pause menu
+export const createConfirmationModal = ({
+  classes,
+  id,
+  confirmationText,
+  confirmationButtonsObj,
+}) => {
+  const confirmationModal = quickElement("dialog", classes, id);
+  const confirmationTextElement = quickElement("p", confirmationText.classes);
+  confirmationTextElement.innerText = confirmationText.text;
+  const confirmationButtonsContainer = createConfirmationButtonsContainer(
+    confirmationButtonsObj
+  );
+
+  confirmationModal.append(
+    confirmationTextElement,
+    confirmationButtonsContainer
+  );
+
+  return confirmationModal;
+};

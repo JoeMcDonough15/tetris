@@ -10,6 +10,7 @@ import {
   createPlayerNameForm,
   createPauseModal,
   createSaveGameModal,
+  createConfirmationModal,
 } from "../../components/index.js";
 import HighScores from "../../high-scores/js/api/highScoresApi.js";
 import Settings from "../../settings.js";
@@ -27,6 +28,8 @@ import {
   openSettingsModal,
   closeSettingsModal,
   settingsModalInGame,
+  confirmOverwriteGameModalObj,
+  confirmQuitGameModalObj,
 } from "../../utils/index.js";
 import Tetris from "./game/tetris.js";
 
@@ -80,6 +83,10 @@ gameDetailsContainer.append(
 const settingsModal = createSettingsModal(settingsModalInGame);
 const pauseModal = createPauseModal();
 const saveGameModal = createSaveGameModal();
+const confirmOverwriteGameModal = createConfirmationModal(
+  confirmOverwriteGameModalObj
+);
+const confirmQuitGameModal = createConfirmationModal(confirmQuitGameModalObj);
 
 const playerNameForm = createPlayerNameForm();
 const postGameMenuButtons = createMenuButtons(
@@ -93,7 +100,9 @@ gameGridContainer.after(
   postGameMenuButtons,
   pauseModal,
   settingsModal,
-  saveGameModal
+  saveGameModal,
+  confirmOverwriteGameModal,
+  confirmQuitGameModal
 );
 
 // Instantiate Necessary Classes

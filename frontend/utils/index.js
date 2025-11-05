@@ -105,6 +105,44 @@ const allModals = {
     classes: ["modal-container"],
     id: "save-game-modal",
   },
+  confirmOverwriteGameModal: {
+    classes: [],
+    id: "confirm-overwrite-game-modal",
+    confirmationText: {
+      text: "Are you sure you want to overwrite this existing game?",
+      classes: [],
+    },
+    confirmationButtonsObj: {
+      containerClasses: [],
+      confirm: {
+        buttonText: "Yes, I'm sure",
+        classes: [],
+        id: "confirm-overwrite-button",
+      },
+      deny: { buttonText: "No", classes: [], id: "deny-overwrite-button" },
+    },
+  },
+  confirmQuitGameModal: {
+    classes: [],
+    id: "confirm-quit-game-modal",
+    confirmationText: {
+      text: "Are you sure you want to quit the current game?",
+      classes: [],
+    },
+    confirmationButtonsObj: {
+      containerClasses: [],
+      confirm: {
+        buttonText: "Yes, Return to Main Menu",
+        classes: [],
+        id: "confirm-quit-game-button",
+      },
+      deny: {
+        buttonText: "No, Return to Pause Screen",
+        classes: [],
+        id: "deny-quit-game-button",
+      },
+    },
+  },
 };
 
 // Destructure from allModals.settingsModal to access the createButtonText function and separate it from the remaining properties
@@ -136,6 +174,10 @@ export const pauseModalObj = allModals.pauseModal;
 export const loadGameModalObj = allModals.loadGameModal;
 
 export const saveGameModalObj = allModals.saveGameModal;
+
+export const confirmOverwriteGameModalObj = allModals.confirmOverwriteGameModal;
+
+export const confirmQuitGameModalObj = allModals.confirmQuitGameModal;
 
 // Button Navigation Routes
 const buttonNavRoutes = {
