@@ -1,9 +1,13 @@
 import {
   highScoresFormData,
   highScoresTableFields,
+  loadGameFormData,
+  loadGameModalObj,
   pauseMenuButtonObjs,
   pauseMenuButtonsContainerObj,
   pauseModalObj,
+  saveGameFormData,
+  saveGameModalObj,
   updateSettingsFormData,
 } from "../utils/index.js";
 
@@ -20,6 +24,9 @@ const quickElement = (elementName, classes, id = null) => {
 // create one menu button that wraps either a navigation link or a span
 const createMenuButton = (buttonObj) => {
   const button = quickElement("button", ["menu-button"], buttonObj.id);
+  if (buttonObj.autofocus) {
+    button.setAttribute("autofocus", true);
+  }
   const buttonContent = quickElement(buttonObj.navLink ? "a" : "span", []);
   buttonContent.innerText = buttonObj.buttonText;
   if (buttonObj.navLink) {
@@ -30,12 +37,20 @@ const createMenuButton = (buttonObj) => {
 };
 
 // create a div element with a label and input
-const createInputContainer = (data) => {
+const createInputContainer = (data, isSelect = null) => {
   const inputContainer = quickElement("div", data.containerClasses);
   const label = quickElement("label", []);
   label.innerText = data.labelText;
   label.setAttribute("for", data.input.id);
-  const input = quickElement("input", [], data.input.id);
+  const input = quickElement(isSelect ? "select" : "input", [], data.input.id);
+  if (isSelect) {
+    const dropDownInstructions = createGameToLoadOption(
+      "Select a Game To Load"
+    );
+    dropDownInstructions.classList.remove("game-to-load-select-option");
+    input.appendChild(dropDownInstructions);
+  }
+
   const attributes = Object.keys(data.input);
   attributes.forEach((attribute) => {
     input.setAttribute(attribute, data.input[attribute]);
@@ -52,7 +67,48 @@ const createSubmitButton = (buttonObj) => {
   return submit;
 };
 
-export const createRadioOptions = (data) => {
+const createErrorMessage = (errorText, id) => {
+  const error = quickElement("p", ["error-message", "no-display"], id);
+  error.innerText = errorText;
+
+  return error;
+};
+
+const createLoadGameForm = () => {
+  const loadGameForm = quickElement(
+    "form",
+    loadGameFormData.formContainerClasses,
+    loadGameFormData.formContainerId
+  );
+  const selectInputContainer = createInputContainer(
+    loadGameFormData.inputs[0],
+    "isSelect"
+  );
+  const submitButton = createSubmitButton(loadGameFormData.submitButton);
+  const error = createErrorMessage(
+    "Please Select a Game To Load",
+    "no-game-selected-error-message"
+  );
+  loadGameForm.append(selectInputContainer, submitButton, error);
+  return loadGameForm;
+};
+
+const createSaveGameForm = () => {
+  const saveGameForm = quickElement(
+    "form",
+    saveGameFormData.formContainerClasses,
+    saveGameFormData.formContainerId
+  );
+  const nameOfGameInputContainer = createInputContainer(
+    saveGameFormData.inputs[0]
+  );
+  const submitButton = createSubmitButton(saveGameFormData.submitButton);
+
+  saveGameForm.append(nameOfGameInputContainer, submitButton);
+  return saveGameForm;
+};
+
+const createRadioOptions = (data) => {
   const radioOptionsFieldSet = quickElement(
     "fieldset",
     data.fieldSetOptions.containerClasses,
@@ -304,6 +360,30 @@ export const createSettingsModal = (settingsDataObj) => {
   return settingsModal;
 };
 
+// render a modal that has a form to select which game to load.  Game names are pulled from localStorage, and on submit, user is redirected to /play-game with the loaded game state
+export const createLoadGameModal = () => {
+  const loadGameModal = createModalWithButton(loadGameModalObj);
+  const loadGameForm = createLoadGameForm();
+  loadGameModal.appendChild(loadGameForm);
+  return loadGameModal;
+};
+
+// render a modal that has a form to save your game to localStorage
+export const createSaveGameModal = () => {
+  const saveGameModal = createModalWithButton(saveGameModalObj);
+  const saveGameForm = createSaveGameForm();
+  saveGameModal.appendChild(saveGameForm);
+  return saveGameModal;
+};
+
+// render options to populate the dropdown inside gameToLoadForm.  This is done using local storage inside /frontend/utils/index.js --> openLoadGameModal
+export const createGameToLoadOption = (optionName) => {
+  const optionElement = quickElement("option", ["game-to-load-select-option"]);
+  optionElement.value = optionName;
+  optionElement.innerText = optionName;
+  return optionElement;
+};
+
 // render a pause modal that can be used as a dialog element for whenever user pauses the game during game play
 export const createPauseModal = () => {
   const pauseModal = quickElement(
@@ -318,4 +398,56 @@ export const createPauseModal = () => {
   pauseModal.appendChild(pauseMenuButtons);
 
   return pauseModal;
+};
+
+// render a row of buttons to act as the deny or confirm buttons in a confirmationModal
+const createConfirmationButtonsContainer = ({
+  containerClasses,
+  deny,
+  confirm,
+}) => {
+  const buttonsContainer = createContainer("div", containerClasses);
+
+  const buttonDeny = quickElement("button", deny.classes, deny.id);
+  buttonDeny.innerText = deny.buttonText;
+
+  const buttonConfirm = quickElement("button", confirm.classes, confirm.id);
+  buttonConfirm.innerText = confirm.buttonText;
+
+  [buttonDeny, buttonConfirm].forEach((button) => {
+    button.type = "button";
+  });
+
+  buttonsContainer.append(buttonDeny, buttonConfirm);
+
+  return buttonsContainer;
+};
+
+// render a modal to confirm an action like overwriting a game in memory, or quitting a game from the pause menu
+export const createConfirmationModal = ({
+  classes,
+  id,
+  confirmationTextObj,
+  confirmationButtonsObj,
+}) => {
+  const confirmationModal = quickElement("dialog", classes, id);
+  const confirmationTextElement = quickElement(
+    "p",
+    confirmationTextObj.classes,
+    confirmationTextObj.id
+  );
+  // if the confirmationText object includes
+  if (confirmationTextObj.text) {
+    confirmationTextElement.innerText = confirmationTextObj.text;
+  }
+  const confirmationButtonsContainer = createConfirmationButtonsContainer(
+    confirmationButtonsObj
+  );
+
+  confirmationModal.append(
+    confirmationTextElement,
+    confirmationButtonsContainer
+  );
+
+  return confirmationModal;
 };

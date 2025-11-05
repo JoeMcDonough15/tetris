@@ -1,6 +1,7 @@
 import {
   createContainer,
   createCustomHeading,
+  createLoadGameModal,
   createMenuButtons,
   createSettingsModal,
 } from "./components/index.js";
@@ -15,6 +16,9 @@ import {
   grabInputValuesFromForm,
   verifyUniqueStrings,
   showErrorById,
+  openLoadGameModal,
+  closeLoadGameModal,
+  grabSelectedOption,
   settingsModalInMainMenu,
 } from "./utils/index.js";
 
@@ -26,11 +30,13 @@ const mainMenuContainer = createContainer(
   "main-menu-container"
 );
 const settingsModal = createSettingsModal(settingsModalInMainMenu);
+const loadGameModal = createLoadGameModal("Cancel");
 
 body.prepend(
   createCustomHeading("h1", "Main Menu", ["main-heading"], "main-heading"),
   mainMenuContainer,
-  settingsModal
+  settingsModal,
+  loadGameModal
 );
 
 const mainMenuButtons = createMenuButtons(
@@ -42,19 +48,9 @@ mainMenuContainer.appendChild(mainMenuButtons);
 // Instantiate a Settings object
 const settingsObj = new Settings();
 
-// Add Event Listeners
-document
-  .getElementById("open-settings-modal-button")
-  .addEventListener("click", () => {
-    openSettingsModal(settingsObj, settingsModal);
-  });
+// * Event Listeners
 
-document
-  .getElementById("close-settings-modal-button")
-  .addEventListener("click", () => {
-    closeSettingsModal(settingsModal);
-  });
-
+// Form Submit Events
 const updateSettingsForm = document.getElementById("update-settings-form");
 updateSettingsForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -71,7 +67,50 @@ updateSettingsForm.addEventListener("submit", (e) => {
   closeSettingsModal(settingsModal);
 });
 
-// Event Listeners For Updating Game Controls From Main Menu
+const loadGameForm = document.getElementById("load-game-form");
+loadGameForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const loadGameSelectElement = loadGameForm.elements[0];
+  const selectedOption = grabSelectedOption(loadGameSelectElement); // either an option.value or undefined
+  if (!selectedOption) {
+    showErrorById("no-game-selected-error-message");
+    return;
+  }
+  // now set that selected game name in window.sessionStorage as gameToLoad, then close the modal (clearing the options) and navigate to /play-game
+  window.sessionStorage.setItem("gameToLoad", selectedOption);
+  closeLoadGameModal(loadGameModal);
+  window.location.assign("/play-game");
+});
+
+// Mouse Events
+document
+  .getElementById("open-settings-modal-button")
+  .addEventListener("click", () => {
+    openSettingsModal(settingsObj, settingsModal);
+  });
+
+document
+  .getElementById("close-settings-modal-button")
+  .addEventListener("click", () => {
+    closeSettingsModal(settingsModal);
+  });
+
+document
+  .getElementById("open-load-game-modal-button")
+  .addEventListener("click", () => {
+    openLoadGameModal(loadGameModal);
+  });
+
+document
+  .getElementById("close-load-game-modal-button")
+  .addEventListener("click", () => {
+    closeLoadGameModal(loadGameModal);
+  });
+
+// Keyboard Events
+
+// Event Listeners For Updating Game Controls and Closing loadGameModal From Main Menu
 window.addEventListener("keyup", (e) => {
   const keyName = e.key;
   const activeElement = document.activeElement;
@@ -79,5 +118,10 @@ window.addEventListener("keyup", (e) => {
     settingsInputIds.keyControlIds.includes(activeElement.getAttribute("id"))
   ) {
     activeElement.value = keyName;
+    return;
+  }
+
+  if (keyName === "Escape") {
+    closeLoadGameModal(loadGameModal);
   }
 });

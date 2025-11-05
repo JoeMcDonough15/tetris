@@ -1,3 +1,5 @@
+import { createGameToLoadOption } from "../components/index.js";
+
 // Game Grid Values
 export const NUM_ROWS = 18;
 export const NUM_COLS = 10;
@@ -80,10 +82,82 @@ const allModals = {
       buttonText: "Return to Game",
       classes: [],
       id: "close-pause-modal-button",
+      autofocus: true,
     },
     classes: ["modal-container"],
     id: "pause-modal",
   },
+  loadGameModal: {
+    closeButtonObj: {
+      buttonText: "Cancel",
+      classes: [],
+      id: "close-load-game-modal-button",
+    },
+    classes: ["modal-container"],
+    id: "load-game-modal",
+  },
+  saveGameModal: {
+    closeButtonObj: {
+      buttonText: "Cancel",
+      classes: [],
+      id: "close-save-game-modal-button",
+    },
+    classes: ["modal-container"],
+    id: "save-game-modal",
+  },
+  confirmOverwriteGameModal: {
+    classes: ["modal-container"],
+    id: "confirm-overwrite-game-modal",
+    confirmationTextObj: {
+      classes: [],
+      id: "confirm-overwrite-game-modal-text",
+    },
+    confirmationButtonsObj: {
+      containerClasses: [],
+      confirm: {
+        buttonText: "Yes, Overwrite This Game",
+        classes: [],
+        id: "confirm-overwrite-button",
+      },
+      deny: {
+        buttonText: "No, Rename This Game",
+        classes: [],
+        id: "close-overwrite-game-modal-button",
+      },
+    },
+  },
+  confirmQuitGameModal: {
+    classes: ["modal-container"],
+    id: "confirm-quit-game-modal",
+    confirmationTextObj: {
+      text: "Are you sure you want to quit the current game?",
+      classes: [],
+    },
+    confirmationButtonsObj: {
+      containerClasses: [],
+      confirm: {
+        buttonText: "Yes, Return to Main Menu",
+        classes: [],
+        id: "confirm-quit-game-button",
+      },
+      deny: {
+        buttonText: "No, Return to Pause Screen",
+        classes: [],
+        id: "close-quit-game-modal-button",
+      },
+    },
+  },
+};
+
+export const openConfirmOverwriteGameModal = (nameOfGameToOverwrite) => {
+  const overwriteGameModal = document.getElementById(
+    "confirm-overwrite-game-modal"
+  );
+  const overwriteGameModalText = document.getElementById(
+    "confirm-overwrite-game-modal-text"
+  );
+  overwriteGameModalText.innerText = `Clicking save will overwrite game: ${nameOfGameToOverwrite}. Are you sure you want to continue?`;
+  overwriteGameModal.showModal();
 };
 
 // Destructure from allModals.settingsModal to access the createButtonText function and separate it from the remaining properties
@@ -111,6 +185,14 @@ export const settingsModalInGame = {
 };
 
 export const pauseModalObj = allModals.pauseModal;
+
+export const loadGameModalObj = allModals.loadGameModal;
+
+export const saveGameModalObj = allModals.saveGameModal;
+
+export const confirmOverwriteGameModalObj = allModals.confirmOverwriteGameModal;
+
+export const confirmQuitGameModalObj = allModals.confirmQuitGameModal;
 
 // Button Navigation Routes
 const buttonNavRoutes = {
@@ -145,7 +227,12 @@ const allMenuButtonObjs = {
     id: "open-settings-modal-button",
   },
   newGame: { navLink: buttonNavRoutes.playGame, buttonText: "New Game" },
-  saveGame: { buttonText: "Save Game" },
+  saveGame: { buttonText: "Save Game", id: "open-save-game-modal-button" },
+  loadGame: { buttonText: "Load a Game", id: "open-load-game-modal-button" },
+  quitGame: {
+    buttonText: "Quit Game",
+    id: "open-confirm-quit-game-modal-button",
+  },
   createMainMenuObj: function (buttonText) {
     return {
       navLink: buttonNavRoutes.mainMenu,
@@ -155,7 +242,8 @@ const allMenuButtonObjs = {
 };
 
 export const mainMenuButtonObjs = [
-  allMenuButtonObjs.startGame,
+  allMenuButtonObjs.newGame,
+  allMenuButtonObjs.loadGame,
   allMenuButtonObjs.viewHighScores,
   allMenuButtonObjs.openSettings,
 ];
@@ -174,7 +262,7 @@ export const pauseMenuButtonObjs = [
   allModals.pauseModal.closeButtonObj,
   allMenuButtonObjs.saveGame,
   allMenuButtonObjs.openSettings,
-  allMenuButtonObjs.createMainMenuObj("Quit Game"),
+  allMenuButtonObjs.quitGame,
 ];
 
 // Game State Sub Headers
@@ -337,6 +425,67 @@ export const openSettingsModal = (settingsObj, settingsModal) => {
 
 export const closeSettingsModal = (settingsModal) => {
   settingsModal.close();
+};
+
+const getNamesOfAllSavedGames = () => {
+  const namesOfAllSavedGames = JSON.parse(
+    localStorage.getItem("savedGames")
+  ).map((savedGame) => savedGame.nameOfGame);
+  return namesOfAllSavedGames;
+};
+
+export const openLoadGameModal = (loadGameModal) => {
+  const namesOfAllSavedGames = getNamesOfAllSavedGames();
+  const selectInput = document.getElementById("load-game-select");
+  namesOfAllSavedGames.forEach((nameOfSavedGame) => {
+    selectInput.appendChild(createGameToLoadOption(nameOfSavedGame));
+  });
+  removeErrorById("no-game-selected-error-message");
+  loadGameModal.showModal();
+};
+
+export const closeLoadGameModal = (loadGameModal) => {
+  const allExistingGameLoadOptions = Array.from(
+    document.getElementsByClassName("game-to-load-select-option")
+  );
+  allExistingGameLoadOptions.forEach((gameLoadOption) => {
+    gameLoadOption.remove();
+  });
+  loadGameModal.close();
+};
+
+export const grabSelectedOption = (selectElement) => {
+  const indexOfSelectedOption = selectElement.selectedIndex;
+  // return if the option selected is the dropdown instructions
+  if (indexOfSelectedOption === 0) return;
+  const selectedOption = selectElement[indexOfSelectedOption].value;
+  return selectedOption;
+};
+
+export const saveGameBoard = () => {
+  const canvas = document.getElementById("canvas");
+  let canvasURL; // toBlob can't return, so we have to store its value then return that outside the function.
+
+  canvas.toBlob((blob) => {
+    canvasURL = URL.createObjectURL(blob);
+  });
+
+  return canvasURL;
+};
+
+export const loadGameBoard = (canvasURL) => {
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  const image = document.createElement("img");
+  image.width = NUM_COLS * GRID_SPACE;
+  image.height = NUM_ROWS * GRID_SPACE;
+  image.src = canvasURL;
+
+  image.onload = drawSavedCanvas; // wait for the image to load before trying to draw it on the ctx
+  function drawSavedCanvas() {
+    ctx.drawImage(this, 0, 0); // "this" is the img on which drawSavedCanvas is called.
+  }
 };
 
 export const updateSettingsFormData = {
@@ -555,6 +704,61 @@ export const highScoresFormData = {
       name: "playerScore",
       readonly: true,
     },
+  },
+};
+
+export const loadGameFormData = {
+  formContainerClasses: [],
+  formContainerId: "load-game-form",
+  inputs: [
+    {
+      inputName: "loadGameSelect",
+      labelText: "Select a Game To Load",
+      containerClasses: [],
+      labelClasses: [],
+      inputClasses: [],
+      input: {
+        id: "load-game-select",
+        name: "gameToLoad",
+      },
+    },
+  ],
+  submitButton: {
+    id: "",
+    classes: [],
+    buttonText: "Load Selected Game",
+  },
+  errors: [
+    {
+      message: "Please Select a Game To Load",
+      id: "no-game-selected-error-message",
+    },
+  ],
+};
+
+export const saveGameFormData = {
+  formContainerClasses: [],
+  formContainerId: "save-game-form",
+  inputs: [
+    {
+      inputName: "saveGameText",
+      labelText: "Enter a Name For This Game",
+      containerClasses: [],
+      labelClasses: [],
+      inputClasses: [],
+      input: {
+        id: "name-of-game-to-save",
+        type: "text",
+        name: "gameToSave",
+        required: true,
+        maxLength: 18,
+      },
+    },
+  ],
+  submitButton: {
+    id: "",
+    classes: [],
+    buttonText: "Save Game",
   },
 };
 

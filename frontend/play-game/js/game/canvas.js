@@ -17,7 +17,7 @@ const gameGridContainer = createContainer(
   "game-grid-container"
 );
 
-export const canvas = createCanvas("canvas");
+export const canvas = createCanvas();
 canvas.width = NUM_COLS * GRID_SPACE;
 canvas.height = NUM_ROWS * GRID_SPACE;
 export const ctx = canvas.getContext("2d");

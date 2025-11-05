@@ -9,6 +9,8 @@ import {
   createPreviewImgContainer,
   createPlayerNameForm,
   createPauseModal,
+  createSaveGameModal,
+  createConfirmationModal,
 } from "../../components/index.js";
 import HighScores from "../../high-scores/js/api/highScoresApi.js";
 import Settings from "../../settings.js";
@@ -26,6 +28,8 @@ import {
   openSettingsModal,
   closeSettingsModal,
   settingsModalInGame,
+  confirmOverwriteGameModalObj,
+  confirmQuitGameModalObj,
 } from "../../utils/index.js";
 import Tetris from "./game/tetris.js";
 
@@ -78,6 +82,11 @@ gameDetailsContainer.append(
 
 const settingsModal = createSettingsModal(settingsModalInGame);
 const pauseModal = createPauseModal();
+const saveGameModal = createSaveGameModal();
+const confirmOverwriteGameModal = createConfirmationModal(
+  confirmOverwriteGameModalObj
+);
+const confirmQuitGameModal = createConfirmationModal(confirmQuitGameModalObj);
 
 const playerNameForm = createPlayerNameForm();
 const postGameMenuButtons = createMenuButtons(
@@ -90,13 +99,24 @@ gameGridContainer.after(
   playerNameForm,
   postGameMenuButtons,
   pauseModal,
-  settingsModal
+  settingsModal,
+  saveGameModal,
+  confirmOverwriteGameModal,
+  confirmQuitGameModal
 );
 
 // Instantiate Necessary Classes
 const settingsObj = new Settings();
 const highScoresObj = new HighScores();
-const game = new Tetris(settingsObj, highScoresObj);
+
+// Load a Saved Game If There Is a Game in Session Storage to be Loaded
+const gameToLoad = window.sessionStorage.getItem("gameToLoad");
+if (gameToLoad) {
+  window.sessionStorage.removeItem("gameToLoad");
+}
+
+// Instantiate the Tetris Game
+const game = new Tetris(settingsObj, highScoresObj, gameToLoad);
 
 // Target Elements for Event Listeners
 
@@ -114,6 +134,42 @@ const openSettingsModalButton = document.getElementById(
 const closeSettingsModalButton = document.getElementById(
   "close-settings-modal-button"
 );
+const openSaveGameModalButton = document.getElementById(
+  "open-save-game-modal-button"
+);
+const closeSaveGameModalButton = document.getElementById(
+  "close-save-game-modal-button"
+);
+
+// ? confirm overwrite game event listeners
+// * use this id with an event listener in index.js to launch game.saveGame() and close the saveGameModal
+const confirmOverwriteGameButton = document.getElementById(
+  "confirm-overwrite-button"
+);
+
+// * use this id to close the modal with event listener in index.js, returning back to the saveGameModal
+const closeConfirmOverwriteModalButton = document.getElementById(
+  "close-overwrite-game-modal-button"
+);
+
+const quitGameButton = document.getElementById(
+  "open-confirm-quit-game-modal-button"
+);
+
+const confirmQuitGameButton = document.getElementById(
+  "confirm-quit-game-button"
+);
+
+const closeQuitGameModalButton = document.getElementById(
+  "close-quit-game-modal-button"
+);
+
+//
+//
+//
+//
+//
+//
 
 // Form Submit Events
 playerNameForm.addEventListener("submit", async (e) => {
@@ -151,6 +207,23 @@ updateSettingsForm.addEventListener("submit", (e) => {
   closeSettingsModal(settingsModal);
 });
 
+const saveGameForm = document.getElementById("save-game-form");
+saveGameForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const nameOfGameToSave = saveGameForm.elements.gameToSave.value;
+  game.checkForSavedGame(nameOfGameToSave);
+  // TODO Finish this event listener
+  // call game.checkForSavedGame() to see if a game exists in localStorage by this name
+  // * if it does exist
+  // 1. call a utility function that opens the dialog for confirmOverwriteGame().  This dialog sits on top of saveGameModal.  Return out of checkForSavedGame() once the new confirmationModal is open.
+  // 2. if the user clicks no on the confirmOverwriteModal opened by confirmOverwriteGame(), close the dialog.  saveGameModal remains open and comes back into view, allowing the user to write a different name on the form.
+  // 3. if the user clicks yes on the confirmOverwriteModal opened by confirmOverwriteGame(), call game.saveGame() which replaces the game that has the same name.  close saveGameModal since save was successful.
+  // * else
+  // 1. call game.saveGame() which will save a new game in localStorage by the name on the nameOfGame text input on the form.
+  // 2. close saveGameModal since save was successful.
+  // TODO: component: reusable confirmationModal; utility functions: confirmOverwriteGame(), confirmQuitGame(); Tetris instance methods: checkForSavedGame(nameOfGame), saveGame(nameOfGame)
+});
+
 // Mouse Events
 pauseButton.addEventListener("click", () => {
   pauseModal.showModal();
@@ -169,6 +242,37 @@ openSettingsModalButton.addEventListener("click", () => {
 
 closeSettingsModalButton.addEventListener("click", () => {
   closeSettingsModal(settingsModal);
+});
+
+openSaveGameModalButton.addEventListener("click", () => {
+  // TODO write a function that opens the modal after clearing any previous value inside the nameOfGame text input
+  saveGameModal.showModal();
+});
+
+closeSaveGameModalButton.addEventListener("click", () => {
+  saveGameModal.close();
+});
+
+confirmOverwriteGameButton.addEventListener("click", () => {
+  game.saveGame();
+});
+
+closeConfirmOverwriteModalButton.addEventListener("click", () => {
+  game.nameOfGameToSave = null;
+  game.indexOfGameToOverwrite = -1;
+  confirmOverwriteGameModal.close();
+});
+
+quitGameButton.addEventListener("click", () => {
+  confirmQuitGameModal.showModal();
+});
+
+confirmQuitGameButton.addEventListener("click", () => {
+  game.quitGame();
+});
+
+closeQuitGameModalButton.addEventListener("click", () => {
+  confirmQuitGameModal.close();
 });
 
 rotateButton.addEventListener("click", () => {
@@ -222,7 +326,13 @@ window.addEventListener("keydown", (e) => {
     game.moveShape("right");
   } else if (keyName === settingsObj.keyControls.softDrop) {
     game.softDrop();
-  } else if (keyName === "Escape" && game.gamePaused && !settingsModal.open) {
+  } else if (
+    keyName === "Escape" &&
+    game.gamePaused &&
+    !settingsModal.open &&
+    !saveGameModal.open &&
+    !confirmQuitGameModal.open
+  ) {
     game.togglePause();
   } // * special case because Escape will close dialog elements!  We don't want the game to unpause if we are only closing the settingsModal inside the pauseModal.  Only closing the pauseModal should be tied to unpausing the game.
 });

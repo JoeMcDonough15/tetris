@@ -1,10 +1,10 @@
 import { GRID_SPACE } from "../../../utils/index.js";
 
 class GameGrid {
-  constructor(numRows, numCols) {
+  constructor(numRows, numCols, loadedGameGrid = null) {
     this.numRows = numRows;
     this.numCols = numCols;
-    this.grid = new Array(this.numRows);
+    this.grid = loadedGameGrid ? loadedGameGrid : new Array(this.numRows);
 
     for (let i = 0; i < this.grid.length; i++) {
       const newRow = new Array(this.numCols + 1).fill(null);
