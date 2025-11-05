@@ -107,33 +107,29 @@ const allModals = {
   },
   confirmOverwriteGameModal: {
     classes: ["modal-container"],
-    // * use this id to open the modal with utility function inside game.checkForSavedGame() if there is a match
     id: "confirm-overwrite-game-modal",
-    confirmationText: {
-      text: "Are you sure you want to overwrite this existing game?",
+    confirmationTextObj: {
       classes: [],
+      id: "confirm-overwrite-game-modal-text",
     },
     confirmationButtonsObj: {
       containerClasses: [],
       confirm: {
-        buttonText: "Yes, I'm sure",
+        buttonText: "Yes, Overwrite This Game",
         classes: [],
-        // * use this id with an event listener in index.js to launch game.saveGame() and close the saveGameModal
         id: "confirm-overwrite-button",
       },
       deny: {
         buttonText: "No, Rename This Game",
         classes: [],
-        // * use this id to close the modal with event listener in index.js, returning back to the saveGameModal
         id: "close-overwrite-game-modal-button",
       },
     },
   },
   confirmQuitGameModal: {
     classes: ["modal-container"],
-    // * use this id to open the modal with an event listener in index.js listening for a click on the pause menu button called Quit Game
     id: "confirm-quit-game-modal",
-    confirmationText: {
+    confirmationTextObj: {
       text: "Are you sure you want to quit the current game?",
       classes: [],
     },
@@ -142,23 +138,25 @@ const allModals = {
       confirm: {
         buttonText: "Yes, Return to Main Menu",
         classes: [],
-        // * use this id with an event listener in index.js to launch game.quitGame() or just redirect the user to main menu
         id: "confirm-quit-game-button",
       },
       deny: {
         buttonText: "No, Return to Pause Screen",
         classes: [],
-        // * use this id to close the modal with event listener in index.js
         id: "close-quit-game-modal-button",
       },
     },
   },
 };
 
-export const confirmOverwriteGame = () => {
+export const openConfirmOverwriteGameModal = (nameOfGameToOverwrite) => {
   const overwriteGameModal = document.getElementById(
     "confirm-overwrite-game-modal"
   );
+  const overwriteGameModalText = document.getElementById(
+    "confirm-overwrite-game-modal-text"
+  );
+  overwriteGameModalText.innerText = `Clicking save will overwrite game: ${nameOfGameToOverwrite}. Are you sure you want to continue?`;
   overwriteGameModal.showModal();
 };
 

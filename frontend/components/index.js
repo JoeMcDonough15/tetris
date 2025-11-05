@@ -427,12 +427,19 @@ const createConfirmationButtonsContainer = ({
 export const createConfirmationModal = ({
   classes,
   id,
-  confirmationText,
+  confirmationTextObj,
   confirmationButtonsObj,
 }) => {
   const confirmationModal = quickElement("dialog", classes, id);
-  const confirmationTextElement = quickElement("p", confirmationText.classes);
-  confirmationTextElement.innerText = confirmationText.text;
+  const confirmationTextElement = quickElement(
+    "p",
+    confirmationTextObj.classes,
+    confirmationTextObj.id
+  );
+  // if the confirmationText object includes
+  if (confirmationTextObj.text) {
+    confirmationTextElement.innerText = confirmationTextObj.text;
+  }
   const confirmationButtonsContainer = createConfirmationButtonsContainer(
     confirmationButtonsObj
   );

@@ -10,7 +10,7 @@ import {
   blockSound,
   rotateSound,
   clearedRowSound,
-  confirmOverwriteGame,
+  openConfirmOverwriteGameModal,
 } from "../../../utils/index.js";
 import {
   Line,
@@ -31,6 +31,8 @@ class Tetris {
 
     // Game State
     this.nameOfGame = nameOfGameToLoad; // possibly null
+    this.nameOfGameToSave = null;
+    this.indexOfGameToOverwrite = -1;
     this.gameOver = false;
     this.gamePaused = false;
     this.gameSpeed = 400;
@@ -55,16 +57,23 @@ class Tetris {
   // Game methods
 
   checkForSavedGame = (nameOfGameToSave) => {
-    const existingGame = window.localStorage.getItem(nameOfGameToSave);
-    if (existingGame) {
-      confirmOverwriteGame();
+    this.nameOfGameToSave = nameOfGameToSave;
+    const indexOfExistingGame = JSON.parse(
+      window.localStorage.getItem("savedGames")
+    ).findIndex((savedGame) => savedGame.nameOfGame === nameOfGameToSave);
+    console.log("index of existing game: ", indexOfExistingGame);
+    if (indexOfExistingGame > -1) {
+      this.indexOfGameToOverwrite = indexOfExistingGame;
+      openConfirmOverwriteGameModal(nameOfGameToSave);
       return;
     }
-    this.saveGame(nameOfGameToSave);
+    this.saveGame();
   };
 
-  saveGame = (nameOfGameToSave) => {
-    console.log("proceed to save game into local storage!");
+  saveGame = () => {
+    console.log(
+      `proceed to save game ${this.nameOfGameToSave} into local storage!`
+    );
     // this is called only when the form submits, inside an event listener on play-game/index.js
     // On pause menu, a button called Save Game must be clicked rendering a form to take in the name of the game to save.
     // On successful submission of that form, this method is called: game.saveGame(nameOfGameFromTextInput);

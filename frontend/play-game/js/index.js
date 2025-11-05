@@ -211,6 +211,7 @@ const saveGameForm = document.getElementById("save-game-form");
 saveGameForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const nameOfGameToSave = saveGameForm.elements.gameToSave.value;
+  game.checkForSavedGame(nameOfGameToSave);
   // TODO Finish this event listener
   // call game.checkForSavedGame() to see if a game exists in localStorage by this name
   // * if it does exist
@@ -252,7 +253,14 @@ closeSaveGameModalButton.addEventListener("click", () => {
   saveGameModal.close();
 });
 
+confirmOverwriteGameButton.addEventListener("click", () => {
+  game.saveGame();
+});
+
 closeConfirmOverwriteModalButton.addEventListener("click", () => {
+  // reset save game and overwrite existing game state inside Tetris
+  game.nameOfGameToSave = null;
+  game.indexOfGameToOverwrite = -1;
   confirmOverwriteGameModal.close();
 });
 
