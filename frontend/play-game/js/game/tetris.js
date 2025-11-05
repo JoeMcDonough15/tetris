@@ -10,6 +10,7 @@ import {
   blockSound,
   rotateSound,
   clearedRowSound,
+  confirmOverwriteGame,
 } from "../../../utils/index.js";
 import {
   Line,
@@ -53,13 +54,17 @@ class Tetris {
 
   // Game methods
 
-  checkForSavedGame = (nameOfGameToSearch) => {
-    // check localStorage for the game being searched
-    // if it exists, call a utility function that will open a confirmOverwriteModal
-    // if it does not exist, call this.saveGame()
+  checkForSavedGame = (nameOfGameToSave) => {
+    const existingGame = window.localStorage.getItem(nameOfGameToSave);
+    if (existingGame) {
+      confirmOverwriteGame();
+      return;
+    }
+    this.saveGame(nameOfGameToSave);
   };
 
   saveGame = (nameOfGameToSave) => {
+    console.log("proceed to save game into local storage!");
     // this is called only when the form submits, inside an event listener on play-game/index.js
     // On pause menu, a button called Save Game must be clicked rendering a form to take in the name of the game to save.
     // On successful submission of that form, this method is called: game.saveGame(nameOfGameFromTextInput);
@@ -86,6 +91,10 @@ class Tetris {
 
   startGame = () => {
     this.dequeuePiece();
+  };
+
+  quitGame = () => {
+    window.location.replace("/");
   };
 
   endGame = () => {

@@ -106,7 +106,8 @@ const allModals = {
     id: "save-game-modal",
   },
   confirmOverwriteGameModal: {
-    classes: [],
+    classes: ["modal-container"],
+    // * use this id to open the modal with utility function inside game.checkForSavedGame() if there is a match
     id: "confirm-overwrite-game-modal",
     confirmationText: {
       text: "Are you sure you want to overwrite this existing game?",
@@ -117,13 +118,20 @@ const allModals = {
       confirm: {
         buttonText: "Yes, I'm sure",
         classes: [],
+        // * use this id with an event listener in index.js to launch game.saveGame() and close the saveGameModal
         id: "confirm-overwrite-button",
       },
-      deny: { buttonText: "No", classes: [], id: "deny-overwrite-button" },
+      deny: {
+        buttonText: "No, Rename This Game",
+        classes: [],
+        // * use this id to close the modal with event listener in index.js, returning back to the saveGameModal
+        id: "close-overwrite-game-modal-button",
+      },
     },
   },
   confirmQuitGameModal: {
-    classes: [],
+    classes: ["modal-container"],
+    // * use this id to open the modal with an event listener in index.js listening for a click on the pause menu button called Quit Game
     id: "confirm-quit-game-modal",
     confirmationText: {
       text: "Are you sure you want to quit the current game?",
@@ -134,15 +142,24 @@ const allModals = {
       confirm: {
         buttonText: "Yes, Return to Main Menu",
         classes: [],
+        // * use this id with an event listener in index.js to launch game.quitGame() or just redirect the user to main menu
         id: "confirm-quit-game-button",
       },
       deny: {
         buttonText: "No, Return to Pause Screen",
         classes: [],
-        id: "deny-quit-game-button",
+        // * use this id to close the modal with event listener in index.js
+        id: "close-quit-game-modal-button",
       },
     },
   },
+};
+
+export const confirmOverwriteGame = () => {
+  const overwriteGameModal = document.getElementById(
+    "confirm-overwrite-game-modal"
+  );
+  overwriteGameModal.showModal();
 };
 
 // Destructure from allModals.settingsModal to access the createButtonText function and separate it from the remaining properties
@@ -214,6 +231,10 @@ const allMenuButtonObjs = {
   newGame: { navLink: buttonNavRoutes.playGame, buttonText: "New Game" },
   saveGame: { buttonText: "Save Game", id: "open-save-game-modal-button" },
   loadGame: { buttonText: "Load a Game", id: "open-load-game-modal-button" },
+  quitGame: {
+    buttonText: "Quit Game",
+    id: "open-confirm-quit-game-modal-button",
+  },
   createMainMenuObj: function (buttonText) {
     return {
       navLink: buttonNavRoutes.mainMenu,
@@ -243,7 +264,7 @@ export const pauseMenuButtonObjs = [
   allModals.pauseModal.closeButtonObj,
   allMenuButtonObjs.saveGame,
   allMenuButtonObjs.openSettings,
-  allMenuButtonObjs.createMainMenuObj("Quit Game"),
+  allMenuButtonObjs.quitGame,
 ];
 
 // Game State Sub Headers
@@ -697,7 +718,7 @@ export const saveGameFormData = {
   inputs: [
     {
       inputName: "saveGameText",
-      labelText: "Name The Game You Are Saving",
+      labelText: "Enter a Name For This Game",
       containerClasses: [],
       labelClasses: [],
       inputClasses: [],

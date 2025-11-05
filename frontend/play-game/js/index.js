@@ -141,6 +141,36 @@ const closeSaveGameModalButton = document.getElementById(
   "close-save-game-modal-button"
 );
 
+// ? confirm overwrite game event listeners
+// * use this id with an event listener in index.js to launch game.saveGame() and close the saveGameModal
+const confirmOverwriteGameButton = document.getElementById(
+  "confirm-overwrite-button"
+);
+
+// * use this id to close the modal with event listener in index.js, returning back to the saveGameModal
+const closeConfirmOverwriteModalButton = document.getElementById(
+  "close-overwrite-game-modal-button"
+);
+
+const quitGameButton = document.getElementById(
+  "open-confirm-quit-game-modal-button"
+);
+
+const confirmQuitGameButton = document.getElementById(
+  "confirm-quit-game-button"
+);
+
+const closeQuitGameModalButton = document.getElementById(
+  "close-quit-game-modal-button"
+);
+
+//
+//
+//
+//
+//
+//
+
 // Form Submit Events
 playerNameForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -222,6 +252,22 @@ closeSaveGameModalButton.addEventListener("click", () => {
   saveGameModal.close();
 });
 
+closeConfirmOverwriteModalButton.addEventListener("click", () => {
+  confirmOverwriteGameModal.close();
+});
+
+quitGameButton.addEventListener("click", () => {
+  confirmQuitGameModal.showModal();
+});
+
+confirmQuitGameButton.addEventListener("click", () => {
+  game.quitGame();
+});
+
+closeQuitGameModalButton.addEventListener("click", () => {
+  confirmQuitGameModal.close();
+});
+
 rotateButton.addEventListener("click", () => {
   game.rotatePiece();
 });
@@ -273,7 +319,13 @@ window.addEventListener("keydown", (e) => {
     game.moveShape("right");
   } else if (keyName === settingsObj.keyControls.softDrop) {
     game.softDrop();
-  } else if (keyName === "Escape" && game.gamePaused && !settingsModal.open) {
+  } else if (
+    keyName === "Escape" &&
+    game.gamePaused &&
+    !settingsModal.open &&
+    !saveGameModal.open &&
+    !confirmQuitGameModal.open
+  ) {
     game.togglePause();
   } // * special case because Escape will close dialog elements!  We don't want the game to unpause if we are only closing the settingsModal inside the pauseModal.  Only closing the pauseModal should be tied to unpausing the game.
 });
