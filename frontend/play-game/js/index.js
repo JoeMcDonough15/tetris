@@ -80,12 +80,6 @@ gameDetailsContainer.append(
 const settingsModal = createSettingsModal(settingsModalInGame);
 const pauseModal = createPauseModal();
 const saveGameModal = createSaveGameModal();
-// one of these buttons should a button to save the game.
-// The click event listener on that button should openModal(saveGameModal).  This shows a save game form also on a dialog.
-// the save game form should have a single input (text) for the name of the game to save.
-// on submit, the save game form should pull the input value off the form, and then pass it to
-// the Tetris instance method saveGame(), like this: game.saveGame(nameOfGameToSaveTakenFromForm);
-// after the game saves successfully, the save game form should be hidden with toggleDisplayById(idOfSaveGameForm)
 
 const playerNameForm = createPlayerNameForm();
 const postGameMenuButtons = createMenuButtons(
@@ -177,7 +171,17 @@ updateSettingsForm.addEventListener("submit", (e) => {
 const saveGameForm = document.getElementById("save-game-form");
 saveGameForm.addEventListener("submit", (e) => {
   e.preventDefault();
+  const nameOfGameToSave = saveGameForm.elements.gameToSave.value;
   // TODO Finish this event listener
+  // call game.checkForSavedGame() to see if a game exists in localStorage by this name
+  // * if it does exist
+  // 1. call a utility function that opens the dialog for confirmOverwriteGame().  This dialog sits on top of saveGameModal.  Return out of checkForSavedGame() once the new confirmationModal is open.
+  // 2. if the user clicks no on the confirmOverwriteModal opened by confirmOverwriteGame(), close the dialog.  saveGameModal remains open and comes back into view, allowing the user to write a different name on the form.
+  // 3. if the user clicks yes on the confirmOverwriteModal opened by confirmOverwriteGame(), call game.saveGame() which replaces the game that has the same name.  close saveGameModal since save was successful.
+  // * else
+  // 1. call game.saveGame() which will save a new game in localStorage by the name on the nameOfGame text input on the form.
+  // 2. close saveGameModal since save was successful.
+  // TODO: component: reusable confirmationModal; utility functions: confirmOverwriteGame(), confirmQuitGame(); Tetris instance methods: checkForSavedGame(nameOfGame), saveGame(nameOfGame)
 });
 
 // Mouse Events
@@ -201,6 +205,7 @@ closeSettingsModalButton.addEventListener("click", () => {
 });
 
 openSaveGameModalButton.addEventListener("click", () => {
+  // TODO write a function that opens the modal after clearing any previous value inside the nameOfGame text input
   saveGameModal.showModal();
 });
 
