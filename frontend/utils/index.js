@@ -135,6 +135,8 @@ export const pauseModalObj = allModals.pauseModal;
 
 export const loadGameModalObj = allModals.loadGameModal;
 
+export const saveGameModalObj = allModals.saveGameModal;
+
 // Button Navigation Routes
 const buttonNavRoutes = {
   mainMenu: "/",

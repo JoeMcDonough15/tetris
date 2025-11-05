@@ -7,6 +7,7 @@ import {
   pauseMenuButtonsContainerObj,
   pauseModalObj,
   saveGameFormData,
+  saveGameModalObj,
   updateSettingsFormData,
 } from "../utils/index.js";
 

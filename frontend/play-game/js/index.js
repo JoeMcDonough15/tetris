@@ -9,6 +9,7 @@ import {
   createPreviewImgContainer,
   createPlayerNameForm,
   createPauseModal,
+  createSaveGameModal,
 } from "../../components/index.js";
 import HighScores from "../../high-scores/js/api/highScoresApi.js";
 import Settings from "../../settings.js";
@@ -78,7 +79,7 @@ gameDetailsContainer.append(
 
 const settingsModal = createSettingsModal(settingsModalInGame);
 const pauseModal = createPauseModal();
-// const saveGameModal = createSaveGameModal(); //! Does not exist yet
+const saveGameModal = createSaveGameModal();
 // one of these buttons should a button to save the game.
 // The click event listener on that button should openModal(saveGameModal).  This shows a save game form also on a dialog.
 // the save game form should have a single input (text) for the name of the game to save.
@@ -97,7 +98,8 @@ gameGridContainer.after(
   playerNameForm,
   postGameMenuButtons,
   pauseModal,
-  settingsModal
+  settingsModal,
+  saveGameModal
 );
 
 // Instantiate Necessary Classes
