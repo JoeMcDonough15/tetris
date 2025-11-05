@@ -12,6 +12,7 @@ import {
   clearedRowSound,
   openConfirmOverwriteGameModal,
   saveGameBoard,
+  loadGameBoard,
 } from "../../../utils/index.js";
 import {
   Line,
@@ -126,12 +127,10 @@ class Tetris {
   };
 
   loadGame = () => {
-    // 1. pull the loadedGame out of local storage using this.nameOfGame, then JSON.parse: const loadedGame = JSON.parse(localStorage.getItem(this.nameOfGame))
     const loadedGame = JSON.parse(localStorage.getItem("savedGames")).find(
       (game) => game.nameOfGame === this.nameOfGameToLoad
     );
 
-    // 2. update all necessary game state using all game details from the loadedGame.gameObj
     this.gameOver = loadedGame.gameObj.gameOver;
     this.gameSpeed = loadedGame.gameObj.gameSpeed;
     this.level = loadedGame.gameObj.level;
@@ -151,7 +150,6 @@ class Tetris {
     this.game = new GameGrid(NUM_ROWS, NUM_COLS, loadedGame.gameObj.game.grid);
 
     loadedGame.gameObj.pieceQueue.forEach((pieceInQueue) => {
-      // instantiate the proper shape object
       let nextPieceForQueue;
       if (pieceInQueue.shapeName === "line") {
         nextPieceForQueue = new Line();
@@ -168,7 +166,6 @@ class Tetris {
       } else if (pieceInQueue.shapeName === "zShape") {
         nextPieceForQueue = new ZShape();
       }
-      // push to this.pieceQueue
       this.pieceQueue.push(nextPieceForQueue);
     });
 
@@ -191,9 +188,7 @@ class Tetris {
     this.currentPiecePlaced = loadedGame.gameObj.currentPiecePlaced;
     this.numRotations = loadedGame.gameObj.numRotations;
 
-    // 3. Then, call a utility function that updates the canvas element with the passed in string returned from .toDataURL() when game was saved. drawLoadedGameToCanvasCtx(loadedGame.gameBoardString);
-    // 4. That function inside utils would target the ctx by id, then create an img tag (no need to add this <img> to the DOM).  The src of the image tag would be set to the string passed into the function (which would be loadedGame.gameBoardString).
-    // 5. That same function inside utils would then call ctx.drawImage(imgTagCreatedByutilityFunction)
+    loadGameBoard(loadedGame.gameBoardString);
   };
 
   startGame = () => {

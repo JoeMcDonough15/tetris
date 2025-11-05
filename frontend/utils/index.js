@@ -464,8 +464,28 @@ export const grabSelectedOption = (selectElement) => {
 
 export const saveGameBoard = () => {
   const canvas = document.getElementById("canvas");
-  const canvasDataURL = canvas.toDataURL("image/png");
-  return canvasDataURL;
+  let canvasURL; // toBlob can't return, so we have to store its value then return that outside the function.
+
+  canvas.toBlob((blob) => {
+    canvasURL = URL.createObjectURL(blob);
+  });
+
+  return canvasURL;
+};
+
+export const loadGameBoard = (canvasURL) => {
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  const image = document.createElement("img");
+  image.width = NUM_COLS * GRID_SPACE;
+  image.height = NUM_ROWS * GRID_SPACE;
+  image.src = canvasURL;
+
+  image.onload = drawSavedCanvas; // wait for the image to load before trying to draw it on the ctx
+  function drawSavedCanvas() {
+    ctx.drawImage(this, 0, 0); // "this" is the img on which drawSavedCanvas is called.
+  }
 };
 
 export const updateSettingsFormData = {
