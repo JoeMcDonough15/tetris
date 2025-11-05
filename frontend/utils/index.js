@@ -104,7 +104,7 @@ export const settingsModalInMainMenu = {
 
 export const settingsModalInGame = {
   closeButtonObj: {
-    buttonText: createButtonText("Return to Game"),
+    buttonText: createButtonText("Return to Pause Menu"),
     ...remainingButtonProps,
   },
   ...remainingModalProps,

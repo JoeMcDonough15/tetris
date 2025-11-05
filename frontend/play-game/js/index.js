@@ -149,7 +149,6 @@ updateSettingsForm.addEventListener("submit", (e) => {
 
   settingsObj.updateSettings({ ...inputsObj });
   closeSettingsModal(settingsModal);
-  game.togglePause();
 });
 
 // Mouse Events
@@ -225,7 +224,7 @@ window.addEventListener("keydown", (e) => {
     game.softDrop();
   } else if (keyName === "Escape" && game.gamePaused && !settingsModal.open) {
     game.togglePause();
-  }
+  } // * special case because Escape will close dialog elements!  We don't want the game to unpause if we are only closing the settingsModal inside the pauseModal.  Only closing the pauseModal should be tied to unpausing the game.
 });
 
 game.startGame();
