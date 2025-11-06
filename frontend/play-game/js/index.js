@@ -208,7 +208,7 @@ saveGameForm.addEventListener("submit", (e) => {
 
 // Mouse Events
 pauseButton.addEventListener("click", () => {
-  // pauseModal.showModal();
+  pauseModal.showModal();
   game.togglePause();
 });
 
@@ -310,6 +310,7 @@ window.addEventListener("keydown", (e) => {
   } else if (
     keyName === "Escape" &&
     game.gamePaused &&
+    // TODO && !secondLevelModal.open && !confirmationModal.open (because secondLevelModal will inject with content for all 3 of these modals)
     !settingsModal.open &&
     !saveGameModal.open &&
     !confirmQuitGameModal.open

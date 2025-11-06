@@ -111,6 +111,7 @@ const allModals = {
     confirmationTextObj: {
       classes: [],
       id: "confirm-overwrite-game-modal-text",
+      // innerText set dynamically so it can include name of game to overwrite
     },
     confirmationButtonsObj: {
       containerClasses: [],
@@ -137,6 +138,7 @@ const allModals = {
     confirmationTextObj: {
       text: "Are you sure you want to quit the current game?",
       classes: [],
+      id: "confirm-quit-game-modal-text",
     },
     confirmationButtonsObj: {
       containerClasses: [],
@@ -156,12 +158,110 @@ const allModals = {
       ],
     },
   },
-  // TODO consolidate all confirmation modal data and eventually render only one confirmation modal with different content injected into it.
+  // TODO render only one confirmation modal with different content injected into it.
+  // TODO on close of confirmation modal, clear the div container so that there is never more than one #close-confirmation-modal-button on the DOM.
   confirmationModalData: {
-    confirmQuitGame: {},
-    confirmDeleteSavedGame: {},
-    confirmDeleteAllSavedGames: {},
-    confirmOverwriteSavedGame: {},
+    confirmDeleteSavedGame: {
+      containerClasses: [],
+      confirmationTextObj: {
+        // innerText set dynamically so we can include the name of the game to delete
+        classes: [],
+        id: "confirm-delete-game-modal-text",
+      },
+      confirmationButtonsObj: {
+        containerClasses: [],
+        buttonObjs: [
+          {
+            buttonName: "confirm",
+            buttonText: "Yes, Return to Main Menu",
+            classes: [],
+            id: "confirm-quit-game-button",
+          },
+          {
+            buttonName: "deny",
+            buttonText: "No, Return to Pause Screen",
+            classes: [],
+            id: "close-confirmation-modal-button",
+          },
+        ],
+      },
+    },
+    confirmDeleteAllSavedGames: {
+      containerClasses: [],
+      confirmationTextObj: {
+        text: "Are you sure you want to delete all saved games?",
+        classes: [],
+        id: "confirm-delete-game-modal-text",
+      },
+      confirmationButtonsObj: {
+        containerClasses: [],
+        buttonObjs: [
+          {
+            buttonName: "confirm",
+            buttonText: "Yes, Return to Main Menu",
+            classes: [],
+            id: "confirm-quit-game-button",
+          },
+          {
+            buttonName: "deny",
+            buttonText: "No, Return to Pause Screen",
+            classes: [],
+            id: "close-confirmation-modal-button",
+          },
+        ],
+      },
+    },
+    confirmOverwriteSavedGame: {
+      classes: ["modal-container"],
+      confirmationTextObj: {
+        classes: [],
+        id: "confirm-overwrite-game-modal-text",
+        // innerText set dynamically so it can include name of game to overwrite
+      },
+      confirmationButtonsObj: {
+        containerClasses: [],
+        buttonObjs: [
+          {
+            buttonName: "confirm",
+            buttonText: "Yes, Overwrite This Game",
+            classes: [],
+            id: "confirm-overwrite-button",
+          },
+          ,
+          {
+            buttonName: "deny",
+            buttonText: "No, Rename This Game",
+            classes: [],
+            id: "close-overwrite-game-modal-button",
+          },
+        ],
+      },
+    },
+    confirmQuitGame: {
+      classes: ["modal-container"],
+      confirmationTextObj: {
+        text: "Are you sure you want to quit the current game?",
+        classes: [],
+        id: "confirm-quit-game-modal-text",
+      },
+      confirmationButtonsObj: {
+        containerClasses: [],
+        buttonObjs: [
+          {
+            buttonName: "confirm",
+            buttonText: "Yes, Return to Main Menu",
+            classes: [],
+            id: "confirm-quit-game-button",
+          },
+          {
+            buttonName: "deny",
+            buttonText: "No, Return to Pause Screen",
+            classes: [],
+            id: "close-quit-game-modal-button",
+          },
+        ],
+      },
+    },
   },
 };
 

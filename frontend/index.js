@@ -1,4 +1,5 @@
 import {
+  createConfirmationModal,
   createContainer,
   createCustomHeading,
   createLoadGameModal,
@@ -31,6 +32,7 @@ const mainMenuContainer = createContainer(
 );
 const settingsModal = createSettingsModal(settingsModalInMainMenu);
 const loadGameModal = createLoadGameModal("Cancel");
+// const confirmationModal = createConfirmationModal()
 
 body.prepend(
   createCustomHeading("h1", "Main Menu", ["main-heading"], "main-heading"),

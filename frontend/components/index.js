@@ -443,3 +443,40 @@ export const createConfirmationModal = ({
 
   return confirmationModal;
 };
+
+export const createReusableConfirmationModal = (classes) => {
+  const confirmationModal = quickElement(
+    "dialog",
+    classes,
+    "confirmation-modal"
+  );
+  return confirmationModal;
+};
+
+export const createConfirmationModalContent = ({
+  classes,
+  confirmationTextObj,
+  confirmationButtonsObj,
+}) => {
+  const modalContentContainer = quickElement("div", classes);
+
+  const confirmationTextElement = quickElement(
+    "p",
+    confirmationTextObj.classes,
+    confirmationTextObj.id
+  );
+  // if the confirmationText object includes
+  if (confirmationTextObj.text) {
+    confirmationTextElement.innerText = confirmationTextObj.text;
+  }
+
+  const confirmationButtonsContainer = createButtons(confirmationButtonsObj);
+
+  confirmationModal.append(
+    confirmationTextElement,
+    confirmationButtonsContainer
+  );
+
+  return modalContentContainer; // in the event listner to open this, confirmationModal.appendChild(modalContentContainer);
+  // in the event listener to close this modal, it would confirmationModal.close() and then modalContentContainer.remove();
+};
