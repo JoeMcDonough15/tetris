@@ -27,14 +27,24 @@ class Shape {
     this.rotation = this.availableRotations[rotationIndex];
     this.drawShape();
   };
+
+  determineRotationIndex = (rotationName) => {
+    if (!this.availableRotations) return;
+    return this.availableRotations.findIndex(
+      (rotation) => rotation === rotationName
+    );
+  };
 }
 
 export class Line extends Shape {
-  constructor(optionalXCoordinate, optionalYCoordinate) {
+  constructor(optionalXCoordinate, optionalYCoordinate, optionalRotationName) {
     super(shapeColors.green, optionalXCoordinate, optionalYCoordinate);
     this.shapeName = "line";
     this.availableRotations = ["horizontal", "vertical"];
-    this.rotation = this.availableRotations[0];
+    this.rotationIndex = optionalRotationName
+      ? this.determineRotationIndex(optionalRotationName)
+      : 0;
+    this.rotation = this.availableRotations[this.rotationIndex];
     this.preview = generatePreviewImgPath(this.shapeName);
   }
 
@@ -157,11 +167,14 @@ export class Square extends Shape {
 }
 
 export class TShape extends Shape {
-  constructor(optionalXCoordinate, optionalYCoordinate) {
+  constructor(optionalXCoordinate, optionalYCoordinate, optionalRotationName) {
     super(shapeColors.red, optionalXCoordinate, optionalYCoordinate);
     this.shapeName = "tShape";
     this.availableRotations = ["down", "left", "up", "right"];
-    this.rotation = this.availableRotations[0];
+    this.rotationIndex = optionalRotationName
+      ? this.determineRotationIndex(optionalRotationName)
+      : 0;
+    this.rotation = this.availableRotations[this.rotationIndex];
     this.preview = generatePreviewImgPath(this.shapeName);
   }
 
@@ -338,11 +351,14 @@ export class TShape extends Shape {
 }
 
 export class LShape extends Shape {
-  constructor(optionalXCoordinate, optionalYCoordinate) {
+  constructor(optionalXCoordinate, optionalYCoordinate, optionalRotationName) {
     super(shapeColors.orange, optionalXCoordinate, optionalYCoordinate);
     this.shapeName = "lShape";
     this.availableRotations = ["left", "up", "right", "down"];
-    this.rotation = this.availableRotations[0];
+    this.rotationIndex = optionalRotationName
+      ? this.determineRotationIndex(optionalRotationName)
+      : 0;
+    this.rotation = this.availableRotations[this.rotationIndex];
     this.preview = generatePreviewImgPath(this.shapeName);
   }
 
@@ -515,11 +531,14 @@ export class LShape extends Shape {
 }
 
 export class JShape extends Shape {
-  constructor(optionalXCoordinate, optionalYCoordinate) {
+  constructor(optionalXCoordinate, optionalYCoordinate, optionalRotationName) {
     super(shapeColors.yellow, optionalXCoordinate, optionalYCoordinate);
     this.shapeName = "jShape";
     this.availableRotations = ["right", "down", "left", "up"];
-    this.rotation = this.availableRotations[0];
+    this.rotationIndex = optionalRotationName
+      ? this.determineRotationIndex(optionalRotationName)
+      : 0;
+    this.rotation = this.availableRotations[this.rotationIndex];
     this.preview = generatePreviewImgPath(this.shapeName);
   }
 
@@ -693,11 +712,14 @@ export class JShape extends Shape {
 }
 
 export class SShape extends Shape {
-  constructor(optionalXCoordinate, optionalYCoordinate) {
+  constructor(optionalXCoordinate, optionalYCoordinate, optionalRotationName) {
     super(shapeColors.pink, optionalXCoordinate, optionalYCoordinate);
     this.shapeName = "sShape";
     this.availableRotations = ["horizontal", "vertical"];
-    this.rotation = this.availableRotations[0];
+    this.rotationIndex = optionalRotationName
+      ? this.determineRotationIndex(optionalRotationName)
+      : 0;
+    this.rotation = this.availableRotations[this.rotationIndex];
     this.preview = generatePreviewImgPath(this.shapeName);
   }
 
@@ -789,11 +811,14 @@ export class SShape extends Shape {
 }
 
 export class ZShape extends Shape {
-  constructor(optionalXCoordinate, optionalYCoordinate) {
+  constructor(optionalXCoordinate, optionalYCoordinate, optionalRotationName) {
     super(shapeColors.purple, optionalXCoordinate, optionalYCoordinate);
     this.shapeName = "zShape";
     this.availableRotations = ["horizontal", "vertical"];
-    this.rotation = this.availableRotations[0];
+    this.rotationIndex = optionalRotationName
+      ? this.determineRotationIndex(optionalRotationName)
+      : 0;
+    this.rotation = this.availableRotations[this.rotationIndex];
     this.preview = generatePreviewImgPath(this.shapeName);
   }
 

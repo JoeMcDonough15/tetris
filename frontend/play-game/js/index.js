@@ -286,7 +286,7 @@ window.addEventListener("keyup", (e) => {
     if (pauseModal.open) {
       pauseModal.close();
     } else {
-      // pauseModal.showModal();
+      pauseModal.showModal();
     }
     game.togglePause();
   }

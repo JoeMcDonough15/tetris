@@ -183,26 +183,57 @@ class Tetris {
     // now set the preview-img to be the first shape in the queue
     updateImageSrcById("preview-img", this.pieceQueue[0].preview);
 
-    // now, set up the currentPiece.  Grab its x and y coordinates and instantiate the shape that it is with those coordinates.
+    // now, set up the currentPiece.  Grab its x and y coordinates and instantiate the shape that it is with those coordinates in the rotation it was in when game was saved.
     const previousXCoordinate =
       loadedGame.gameObj.currentPiece.anchorBlock.xCoordinate;
     const previousYCoordinate =
       loadedGame.gameObj.currentPiece.anchorBlock.yCoordinate;
+    const previousRotationName = loadedGame.gameObj.currentPiece.rotation;
+    console.log("previous rotation: ", previousRotationName);
     if (loadedGame.gameObj.currentPiece.shapeName === "line") {
-      this.currentPiece = new Line(previousXCoordinate, previousYCoordinate);
+      this.currentPiece = new Line(
+        previousXCoordinate,
+        previousYCoordinate,
+        previousRotationName
+      );
     } else if (loadedGame.gameObj.currentPiece.shapeName === "square") {
-      this.currentPiece = new Square(previousXCoordinate, previousYCoordinate);
+      this.currentPiece = new Square(
+        previousXCoordinate,
+        previousYCoordinate,
+        previousRotationName
+      );
     } else if (loadedGame.gameObj.currentPiece.shapeName === "tShape") {
-      this.currentPiece = new TShape(previousXCoordinate, previousYCoordinate);
+      this.currentPiece = new TShape(
+        previousXCoordinate,
+        previousYCoordinate,
+        previousRotationName
+      );
     } else if (loadedGame.gameObj.currentPiece.shapeName === "lShape") {
-      this.currentPiece = new LShape(previousXCoordinate, previousYCoordinate);
+      this.currentPiece = new LShape(
+        previousXCoordinate,
+        previousYCoordinate,
+        previousRotationName
+      );
     } else if (loadedGame.gameObj.currentPiece.shapeName === "jShape") {
-      this.currentPiece = new JShape(previousXCoordinate, previousYCoordinate);
+      this.currentPiece = new JShape(
+        previousXCoordinate,
+        previousYCoordinate,
+        previousRotationName
+      );
     } else if (loadedGame.gameObj.currentPiece.shapeName === "sShape") {
-      this.currentPiece = new SShape(previousXCoordinate, previousYCoordinate);
+      this.currentPiece = new SShape(
+        previousXCoordinate,
+        previousYCoordinate,
+        previousRotationName
+      );
     } else if (loadedGame.gameObj.currentPiece.shapeName === "zShape") {
-      this.currentPiece = new ZShape(previousXCoordinate, previousYCoordinate);
+      this.currentPiece = new ZShape(
+        previousXCoordinate,
+        previousYCoordinate,
+        previousRotationName
+      );
     }
+
     // now, draw that shape to the board to replace the existing one
     this.currentPiece.drawShape();
 
