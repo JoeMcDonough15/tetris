@@ -458,18 +458,13 @@ export const grabSelectedOption = (selectElement) => {
   return selectedOption;
 };
 
-export const saveGameBoard = () => {
+export const saveCanvas = () => {
   const canvas = document.getElementById("canvas");
-  let canvasURL; // toBlob can't return, so we have to store its value then return that outside the function.
-
-  canvas.toBlob((blob) => {
-    canvasURL = URL.createObjectURL(blob);
-  });
-
+  const canvasURL = canvas.toDataURL("image/png");
   return canvasURL;
 };
 
-export const loadGameBoard = (canvasURL) => {
+export const drawPreviousCanvas = (canvasURL) => {
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
 

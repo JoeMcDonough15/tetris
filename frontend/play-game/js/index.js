@@ -314,4 +314,4 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-// game.startGame();
+game.startGame();

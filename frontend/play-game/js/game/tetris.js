@@ -11,8 +11,8 @@ import {
   rotateSound,
   clearedRowSound,
   openConfirmOverwriteGameModal,
-  saveGameBoard,
-  loadGameBoard,
+  saveCanvas,
+  drawPreviousCanvas,
 } from "../../../utils/index.js";
 import {
   Line,
@@ -92,7 +92,7 @@ class Tetris {
       numRotations: this.numRotations,
     };
 
-    const gameBoardString = saveGameBoard();
+    const gameBoardString = saveCanvas();
 
     const gameToSave = {
       nameOfGame: this.nameOfGameToSave,
@@ -189,7 +189,7 @@ class Tetris {
     const previousYCoordinate =
       loadedGame.gameObj.currentPiece.anchorBlock.yCoordinate;
     const previousRotationName = loadedGame.gameObj.currentPiece.rotation;
-    console.log("previous rotation: ", previousRotationName);
+
     if (loadedGame.gameObj.currentPiece.shapeName === "line") {
       this.currentPiece = new Line(
         previousXCoordinate,
@@ -240,13 +240,16 @@ class Tetris {
     this.currentPiecePlaced = loadedGame.gameObj.currentPiecePlaced;
     this.numRotations = loadedGame.gameObj.numRotations;
 
-    loadGameBoard(loadedGame.gameBoardString);
-
-    this.gravityDrop();
+    drawPreviousCanvas(loadedGame.gameBoardString);
   };
 
   startGame = () => {
-    this.dequeuePiece();
+    if (this.nameOfGameToLoad) {
+      this.loadGame();
+      this.gravityDrop();
+    } else {
+      this.dequeuePiece();
+    }
   };
 
   quitGame = () => {
