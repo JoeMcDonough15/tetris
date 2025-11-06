@@ -123,6 +123,7 @@ class Tetris {
       (game) => game.nameOfGame === this.nameOfGameToLoad
     );
 
+    this.game = new GameGrid(NUM_ROWS, NUM_COLS, loadedGame.gameObj.game.grid);
     this.gameOver = loadedGame.gameObj.gameOver;
     this.gameSpeed = loadedGame.gameObj.gameSpeed;
     this.level = loadedGame.gameObj.level;
@@ -139,7 +140,6 @@ class Tetris {
       "total-score-heading",
       `Score: ${this.playerTotalScore}`
     );
-    this.game = new GameGrid(NUM_ROWS, NUM_COLS, loadedGame.gameObj.game.grid);
 
     loadedGame.gameObj.pieceQueue.forEach((pieceInQueue) => {
       let nextPieceForQueue;

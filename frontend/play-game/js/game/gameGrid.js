@@ -5,11 +5,12 @@ class GameGrid {
     this.numRows = numRows;
     this.numCols = numCols;
     this.grid = loadedGameGrid ? loadedGameGrid : new Array(this.numRows);
-
-    for (let i = 0; i < this.grid.length; i++) {
-      const newRow = new Array(this.numCols + 1).fill(null);
-      newRow[newRow.length - 1] = 0; // last index acts as the column count so we can know if a row has cleared
-      this.grid[i] = newRow;
+    if (!loadedGameGrid) {
+      for (let i = 0; i < this.grid.length; i++) {
+        const newRow = new Array(this.numCols + 1).fill(null);
+        newRow[newRow.length - 1] = 0; // last index acts as the column count so we can know if a row has cleared
+        this.grid[i] = newRow;
+      }
     }
   }
 
