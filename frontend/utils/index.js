@@ -160,14 +160,11 @@ export const openConfirmOverwriteGameModal = (nameOfGameToOverwrite) => {
   overwriteGameModal.showModal();
 };
 
-// Destructure from allModals.settingsModal to access the createButtonText function and separate it from the remaining properties
 const {
   closeButtonObj: { createButtonText, ...remainingButtonProps },
   ...remainingModalProps
 } = allModals.settingsModal;
 
-// Then, use the createButtonText function to make dynamic close modal button text, spreading in the remaining properties,
-// for the two different settingsModals in the app
 export const settingsModalInMainMenu = {
   closeButtonObj: {
     buttonText: createButtonText("Close Settings"),
@@ -456,24 +453,18 @@ export const closeLoadGameModal = (loadGameModal) => {
 
 export const grabSelectedOption = (selectElement) => {
   const indexOfSelectedOption = selectElement.selectedIndex;
-  // return if the option selected is the dropdown instructions
   if (indexOfSelectedOption === 0) return;
   const selectedOption = selectElement[indexOfSelectedOption].value;
   return selectedOption;
 };
 
-export const saveGameBoard = () => {
+export const saveCanvas = () => {
   const canvas = document.getElementById("canvas");
-  let canvasURL; // toBlob can't return, so we have to store its value then return that outside the function.
-
-  canvas.toBlob((blob) => {
-    canvasURL = URL.createObjectURL(blob);
-  });
-
+  const canvasURL = canvas.toDataURL("image/png");
   return canvasURL;
 };
 
-export const loadGameBoard = (canvasURL) => {
+export const drawPreviousCanvas = (canvasURL) => {
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
 

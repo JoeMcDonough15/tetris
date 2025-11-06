@@ -11,8 +11,8 @@ import {
   rotateSound,
   clearedRowSound,
   openConfirmOverwriteGameModal,
-  saveGameBoard,
-  loadGameBoard,
+  saveCanvas,
+  drawPreviousCanvas,
 } from "../../../utils/index.js";
 import {
   Line,
@@ -23,6 +23,7 @@ import {
   SShape,
   ZShape,
 } from "./shapes.js";
+import Block from "./block.js";
 import GameGrid from "./gameGrid.js";
 
 class Tetris {
@@ -76,7 +77,6 @@ class Tetris {
   };
 
   saveGame = () => {
-    // this method grabs all the current game state and puts it in an object called gameObj
     const gameObj = {
       gameOver: this.gameOver,
       gameSpeed: this.gameSpeed,
@@ -92,18 +92,14 @@ class Tetris {
       numRotations: this.numRotations,
     };
 
-    // it also saves the state of the canvas with a utility function that targets the canvas element by id, and copies with canvas.toDataURL()
-    const gameBoardString = saveGameBoard();
+    const gameBoardString = saveCanvas();
 
-    // Both the gameObj and the gameBoard get stored in one object that will go into the savedGames array
     const gameToSave = {
       nameOfGame: this.nameOfGameToSave,
       gameObj,
       gameBoardString,
     };
 
-    // Then, gameToSave would be set inside localStorage as part of the array savedGames.
-    // * get the item from localStorage and parse it back into an array, using const savedGames = JSON.parse(window.localStorage.getItem("savedGames"))
     const existingSavedGames = JSON.parse(
       window.localStorage.getItem("savedGames")
     );
@@ -112,18 +108,30 @@ class Tetris {
       : [];
 
     if (this.indexOfGameToOverwrite > -1) {
-      // * splice out the existing game object at the indexOfGameToOverwrite, and replace it with the current game
       allSavedGames.splice(this.indexOfGameToOverwrite, 1, gameToSave);
     } else {
-      // * push the current game to the savedGames array
       allSavedGames.push(gameToSave);
     }
 
-    // * Then replace the entire array using window.localStorage.setItem('savedGames', JSON.stringify(savedGames))
     window.localStorage.setItem("savedGames", JSON.stringify(allSavedGames));
-    // * reset save game and overwrite existing game state inside Tetris
+
     this.nameOfGameToSave = null;
     this.indexOfGameToOverwrite = -1;
+  };
+
+  convertAllPreviouslyPlacedPiecesToBlocks = (loadedGrid) => {
+    for (let i = 0; i < loadedGrid.length; i++) {
+      const currentRow = loadedGrid[i];
+      for (let j = 0; j < currentRow.length; j++) {
+        const gridItem = loadedGrid[i][j];
+        if (gridItem && isNaN(gridItem)) {
+          const { xCoordinate, yCoordinate, fillColor: color } = gridItem;
+          const newBlock = new Block(color, xCoordinate, yCoordinate);
+          loadedGrid[i][j] = newBlock;
+        }
+      }
+    }
+    return loadedGrid;
   };
 
   loadGame = () => {
@@ -131,23 +139,27 @@ class Tetris {
       (game) => game.nameOfGame === this.nameOfGameToLoad
     );
 
+    const loadedGameGrid = this.convertAllPreviouslyPlacedPiecesToBlocks(
+      loadedGame.gameObj.game.grid
+    );
+
+    this.game = new GameGrid(NUM_ROWS, NUM_COLS, loadedGameGrid);
     this.gameOver = loadedGame.gameObj.gameOver;
     this.gameSpeed = loadedGame.gameObj.gameSpeed;
     this.level = loadedGame.gameObj.level;
     updateElementTextById("level-heading", `Level: ${this.level}`);
     this.totalRowsCleared = loadedGame.gameObj.totalRowsCleared;
-    this.softDropPoints = loadedGame.gameObj.softDropPoints;
-    this.rowsCleared = loadedGame.gameObj.rowsCleared;
     updateElementTextById(
       "rows-cleared-heading",
       `Rows: ${this.totalRowsCleared}`
     );
+    this.softDropPoints = loadedGame.gameObj.softDropPoints;
+    this.rowsCleared = loadedGame.gameObj.rowsCleared;
     this.playerTotalScore = loadedGame.gameObj.playerTotalScore;
     updateElementTextById(
       "total-score-heading",
       `Score: ${this.playerTotalScore}`
     );
-    this.game = new GameGrid(NUM_ROWS, NUM_COLS, loadedGame.gameObj.game.grid);
 
     loadedGame.gameObj.pieceQueue.forEach((pieceInQueue) => {
       let nextPieceForQueue;
@@ -168,31 +180,76 @@ class Tetris {
       }
       this.pieceQueue.push(nextPieceForQueue);
     });
+    // now set the preview-img to be the first shape in the queue
+    updateImageSrcById("preview-img", this.pieceQueue[0].preview);
+
+    // now, set up the currentPiece.  Grab its x and y coordinates and instantiate the shape that it is with those coordinates in the rotation it was in when game was saved.
+    const previousXCoordinate =
+      loadedGame.gameObj.currentPiece.anchorBlock.xCoordinate;
+    const previousYCoordinate =
+      loadedGame.gameObj.currentPiece.anchorBlock.yCoordinate;
+    const previousRotationName = loadedGame.gameObj.currentPiece.rotation;
 
     if (loadedGame.gameObj.currentPiece.shapeName === "line") {
-      this.currentPiece = new Line();
+      this.currentPiece = new Line(
+        previousXCoordinate,
+        previousYCoordinate,
+        previousRotationName
+      );
     } else if (loadedGame.gameObj.currentPiece.shapeName === "square") {
-      this.currentPiece = new Square();
+      this.currentPiece = new Square(
+        previousXCoordinate,
+        previousYCoordinate,
+        previousRotationName
+      );
     } else if (loadedGame.gameObj.currentPiece.shapeName === "tShape") {
-      this.currentPiece = new TShape();
+      this.currentPiece = new TShape(
+        previousXCoordinate,
+        previousYCoordinate,
+        previousRotationName
+      );
     } else if (loadedGame.gameObj.currentPiece.shapeName === "lShape") {
-      this.currentPiece = new LShape();
+      this.currentPiece = new LShape(
+        previousXCoordinate,
+        previousYCoordinate,
+        previousRotationName
+      );
     } else if (loadedGame.gameObj.currentPiece.shapeName === "jShape") {
-      this.currentPiece = new JShape();
+      this.currentPiece = new JShape(
+        previousXCoordinate,
+        previousYCoordinate,
+        previousRotationName
+      );
     } else if (loadedGame.gameObj.currentPiece.shapeName === "sShape") {
-      this.currentPiece = new SShape();
+      this.currentPiece = new SShape(
+        previousXCoordinate,
+        previousYCoordinate,
+        previousRotationName
+      );
     } else if (loadedGame.gameObj.currentPiece.shapeName === "zShape") {
-      this.currentPiece = new ZShape();
+      this.currentPiece = new ZShape(
+        previousXCoordinate,
+        previousYCoordinate,
+        previousRotationName
+      );
     }
+
+    // now, draw that shape to the board to replace the existing one
+    this.currentPiece.drawShape();
 
     this.currentPiecePlaced = loadedGame.gameObj.currentPiecePlaced;
     this.numRotations = loadedGame.gameObj.numRotations;
 
-    loadGameBoard(loadedGame.gameBoardString);
+    drawPreviousCanvas(loadedGame.gameBoardString);
   };
 
   startGame = () => {
-    this.dequeuePiece();
+    if (this.nameOfGameToLoad) {
+      this.loadGame();
+      this.gravityDrop();
+    } else {
+      this.dequeuePiece();
+    }
   };
 
   quitGame = () => {
@@ -228,6 +285,9 @@ class Tetris {
 
   togglePause = () => {
     this.gamePaused = !this.gamePaused;
+    if (!this.gamePaused) {
+      this.gravityDrop();
+    }
   };
 
   addBlocksToGrid = () => {
@@ -251,7 +311,6 @@ class Tetris {
         this.game.grid[rowNum][index] = null;
       }
     });
-    // reset the cleared row's column count to 0
     currentRow[currentRow.length - 1] = 0;
   };
 
@@ -387,9 +446,9 @@ class Tetris {
 
   gravityDrop = () => {
     const fallInterval = setInterval(() => {
-      if (this.currentPiecePlaced) {
+      if (this.currentPiecePlaced || this.gamePaused) {
         clearInterval(fallInterval);
-        if (!this.gameOver) {
+        if (!this.gameOver && !this.gamePaused) {
           this.dequeuePiece();
         }
         return;
@@ -399,17 +458,18 @@ class Tetris {
   };
 
   moveShape = (direction) => {
-    if (this.currentPiecePlaced || this.gamePaused) {
-      return;
-    }
-
     if (this.willCollide(direction === "down" ? "bottom" : direction)) {
       if (direction === "down") {
         this.placePiece();
       }
+
       return;
     }
+
+    // clear the shape
     this.currentPiece.clearShape();
+
+    // move the shape
     if (direction === "left") {
       this.currentPiece.anchorBlock.xCoordinate -= GRID_SPACE;
     } else if (direction === "right") {
@@ -417,6 +477,8 @@ class Tetris {
     } else if (direction === "down") {
       this.currentPiece.anchorBlock.yCoordinate += GRID_SPACE;
     }
+
+    // redraw the shape in its new position
     this.currentPiece.drawShape();
   };
 
@@ -496,7 +558,7 @@ class Tetris {
 
     this.currentPiecePlaced = false;
     this.numRotations = 0;
-    this.currentPiece.drawShape();
+    // this.currentPiece.drawShape();
     this.gravityDrop();
   };
 }
