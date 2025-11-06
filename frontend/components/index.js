@@ -74,6 +74,21 @@ const createErrorMessage = (errorText, id) => {
   return error;
 };
 
+// render a row of buttons to act as the cancel or confirm buttons in a confirmationModal or delete buttons in the loadGameForm
+const createButtons = ({ containerClasses, buttonObjs }) => {
+  const buttonsContainer = createContainer("div", containerClasses);
+
+  buttonObjs.forEach((buttonObj) => {
+    const button = quickElement("button", buttonObj.classes, buttonObj.id);
+    button.innerText = buttonObj.buttonText;
+    button.type = "button";
+
+    buttonsContainer.appendChild(button);
+  });
+
+  return buttonsContainer;
+};
+
 const createLoadGameForm = () => {
   const loadGameForm = quickElement(
     "form",
@@ -84,12 +99,13 @@ const createLoadGameForm = () => {
     loadGameFormData.inputs[0],
     "isSelect"
   );
+  const deleteButtons = createButtons(loadGameFormData.deleteButtons);
   const submitButton = createSubmitButton(loadGameFormData.submitButton);
   const error = createErrorMessage(
     "Please Select a Game To Load",
     "no-game-selected-error-message"
   );
-  loadGameForm.append(selectInputContainer, submitButton, error);
+  loadGameForm.append(selectInputContainer, deleteButtons, submitButton, error);
   return loadGameForm;
 };
 
@@ -400,29 +416,6 @@ export const createPauseModal = () => {
   return pauseModal;
 };
 
-// render a row of buttons to act as the deny or confirm buttons in a confirmationModal
-const createConfirmationButtonsContainer = ({
-  containerClasses,
-  deny,
-  confirm,
-}) => {
-  const buttonsContainer = createContainer("div", containerClasses);
-
-  const buttonDeny = quickElement("button", deny.classes, deny.id);
-  buttonDeny.innerText = deny.buttonText;
-
-  const buttonConfirm = quickElement("button", confirm.classes, confirm.id);
-  buttonConfirm.innerText = confirm.buttonText;
-
-  [buttonDeny, buttonConfirm].forEach((button) => {
-    button.type = "button";
-  });
-
-  buttonsContainer.append(buttonDeny, buttonConfirm);
-
-  return buttonsContainer;
-};
-
 // render a modal to confirm an action like overwriting a game in memory, or quitting a game from the pause menu
 export const createConfirmationModal = ({
   classes,
@@ -440,9 +433,8 @@ export const createConfirmationModal = ({
   if (confirmationTextObj.text) {
     confirmationTextElement.innerText = confirmationTextObj.text;
   }
-  const confirmationButtonsContainer = createConfirmationButtonsContainer(
-    confirmationButtonsObj
-  );
+
+  const confirmationButtonsContainer = createButtons(confirmationButtonsObj);
 
   confirmationModal.append(
     confirmationTextElement,

@@ -114,16 +114,21 @@ const allModals = {
     },
     confirmationButtonsObj: {
       containerClasses: [],
-      confirm: {
-        buttonText: "Yes, Overwrite This Game",
-        classes: [],
-        id: "confirm-overwrite-button",
-      },
-      deny: {
-        buttonText: "No, Rename This Game",
-        classes: [],
-        id: "close-overwrite-game-modal-button",
-      },
+      buttonObjs: [
+        {
+          buttonName: "confirm",
+          buttonText: "Yes, Overwrite This Game",
+          classes: [],
+          id: "confirm-overwrite-button",
+        },
+        ,
+        {
+          buttonName: "deny",
+          buttonText: "No, Rename This Game",
+          classes: [],
+          id: "close-overwrite-game-modal-button",
+        },
+      ],
     },
   },
   confirmQuitGameModal: {
@@ -135,17 +140,28 @@ const allModals = {
     },
     confirmationButtonsObj: {
       containerClasses: [],
-      confirm: {
-        buttonText: "Yes, Return to Main Menu",
-        classes: [],
-        id: "confirm-quit-game-button",
-      },
-      deny: {
-        buttonText: "No, Return to Pause Screen",
-        classes: [],
-        id: "close-quit-game-modal-button",
-      },
+      buttonObjs: [
+        {
+          buttonName: "confirm",
+          buttonText: "Yes, Return to Main Menu",
+          classes: [],
+          id: "confirm-quit-game-button",
+        },
+        {
+          buttonName: "deny",
+          buttonText: "No, Return to Pause Screen",
+          classes: [],
+          id: "close-quit-game-modal-button",
+        },
+      ],
     },
+  },
+  // TODO consolidate all confirmation modal data and eventually render only one confirmation modal with different content injected into it.
+  confirmationModalData: {
+    confirmQuitGame: {},
+    confirmDeleteSavedGame: {},
+    confirmDeleteAllSavedGames: {},
+    confirmOverwriteSavedGame: {},
   },
 };
 
@@ -714,6 +730,23 @@ export const loadGameFormData = {
       },
     },
   ],
+  deleteButtons: {
+    containerClasses: [],
+    buttonObjs: [
+      {
+        buttonText: "Delete Selected Game",
+        type: "button",
+        id: "delete-saved-game-button",
+        classes: [],
+      },
+      {
+        buttonText: "Delete All Saved Games",
+        type: "button",
+        id: "delete-all-saved-games-button",
+        classes: [],
+      },
+    ],
+  },
   submitButton: {
     id: "",
     classes: [],
