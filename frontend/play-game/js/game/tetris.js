@@ -23,6 +23,7 @@ import {
   SShape,
   ZShape,
 } from "./shapes.js";
+import Block from "./block.js";
 import GameGrid from "./gameGrid.js";
 
 class Tetris {
@@ -118,12 +119,31 @@ class Tetris {
     this.indexOfGameToOverwrite = -1;
   };
 
+  convertAllPreviouslyPlacedPiecesToBlocks = (loadedGrid) => {
+    for (let i = 0; i < loadedGrid.length; i++) {
+      const currentRow = loadedGrid[i];
+      for (let j = 0; j < currentRow.length; j++) {
+        const gridItem = loadedGrid[i][j];
+        if (gridItem && isNaN(gridItem)) {
+          const { xCoordinate, yCoordinate, fillColor: color } = gridItem;
+          const newBlock = new Block(color, xCoordinate, yCoordinate);
+          loadedGrid[i][j] = newBlock;
+        }
+      }
+    }
+    return loadedGrid;
+  };
+
   loadGame = () => {
     const loadedGame = JSON.parse(localStorage.getItem("savedGames")).find(
       (game) => game.nameOfGame === this.nameOfGameToLoad
     );
 
-    this.game = new GameGrid(NUM_ROWS, NUM_COLS, loadedGame.gameObj.game.grid);
+    const loadedGameGrid = this.convertAllPreviouslyPlacedPiecesToBlocks(
+      loadedGame.gameObj.game.grid
+    );
+
+    this.game = new GameGrid(NUM_ROWS, NUM_COLS, loadedGameGrid);
     this.gameOver = loadedGame.gameObj.gameOver;
     this.gameSpeed = loadedGame.gameObj.gameSpeed;
     this.level = loadedGame.gameObj.level;
