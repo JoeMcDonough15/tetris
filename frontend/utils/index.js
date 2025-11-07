@@ -65,7 +65,7 @@ export const rotateSound = new Audio(generateSoundPath("rotate"));
 export const clearedRowSound = new Audio(generateSoundPath("cleared-row"));
 
 // Modals with Respective Close Buttons
-const allModals = {
+export const allModals = {
   settingsModal: {
     closeButtonObj: {
       createButtonText: function (buttonText) {
@@ -173,13 +173,13 @@ const allModals = {
         buttonObjs: [
           {
             buttonName: "confirm",
-            buttonText: "Yes, Return to Main Menu",
+            buttonText: "Yes, Delete This Game",
             classes: [],
-            id: "confirm-quit-game-button",
+            id: "confirm-delete-saved-game-button",
           },
           {
             buttonName: "deny",
-            buttonText: "No, Return to Pause Screen",
+            buttonText: "Cancel",
             classes: [],
             id: "close-confirmation-modal-button",
           },
@@ -198,13 +198,13 @@ const allModals = {
         buttonObjs: [
           {
             buttonName: "confirm",
-            buttonText: "Yes, Return to Main Menu",
+            buttonText: "Yes, Delete All My Saved Games",
             classes: [],
-            id: "confirm-quit-game-button",
+            id: "confirm-delete-all-saved-games-button",
           },
           {
             buttonName: "deny",
-            buttonText: "No, Return to Pause Screen",
+            buttonText: "Cancel",
             classes: [],
             id: "close-confirmation-modal-button",
           },
@@ -232,7 +232,7 @@ const allModals = {
             buttonName: "deny",
             buttonText: "No, Rename This Game",
             classes: [],
-            id: "close-overwrite-game-modal-button",
+            id: "close-confirmation-modal-button",
           },
         ],
       },
@@ -257,7 +257,7 @@ const allModals = {
             buttonName: "deny",
             buttonText: "No, Return to Pause Screen",
             classes: [],
-            id: "close-quit-game-modal-button",
+            id: "close-confirmation-modal-button",
           },
         ],
       },
@@ -557,13 +557,30 @@ export const openLoadGameModal = (loadGameModal) => {
   loadGameModal.showModal();
 };
 
-export const closeLoadGameModal = (loadGameModal) => {
-  const allExistingGameLoadOptions = Array.from(
+export const getAllSavedGameOptions = () => {
+  return Array.from(
     document.getElementsByClassName("game-to-load-select-option")
   );
+};
+
+export const removeLoadGameOptions = () => {
+  const allExistingGameLoadOptions = getAllSavedGameOptions();
   allExistingGameLoadOptions.forEach((gameLoadOption) => {
     gameLoadOption.remove();
   });
+};
+
+export const removeSingleLoadGameOption = (nameOfGame) => {
+  const allExistingGameLoadOptions = getAllSavedGameOptions();
+  allExistingGameLoadOptions.forEach((existingOption) => {
+    if (existingOption.value === nameOfGame) {
+      existingOption.remove();
+    }
+  });
+};
+
+export const closeLoadGameModal = (loadGameModal) => {
+  removeLoadGameOptions();
   loadGameModal.close();
 };
 

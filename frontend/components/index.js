@@ -379,8 +379,14 @@ export const createSettingsModal = (settingsDataObj) => {
 // render a modal that has a form to select which game to load.  Game names are pulled from localStorage, and on submit, user is redirected to /play-game with the loaded game state
 export const createLoadGameModal = () => {
   const loadGameModal = createModalWithButton(loadGameModalObj);
+  const noGamesToLoadHeading = createCustomHeading(
+    "h2",
+    "No Saved Games",
+    ["no-display"],
+    "no-saved-games-heading"
+  );
   const loadGameForm = createLoadGameForm();
-  loadGameModal.appendChild(loadGameForm);
+  loadGameModal.append(noGamesToLoadHeading, loadGameForm);
   return loadGameModal;
 };
 
@@ -444,28 +450,29 @@ export const createConfirmationModal = ({
   return confirmationModal;
 };
 
-export const createReusableConfirmationModal = (classes) => {
+// ! rename createConfirmationModal
+export const createReusableConfirmationModal = () => {
   const confirmationModal = quickElement(
     "dialog",
-    classes,
+    ["confirmation-modal"],
     "confirmation-modal"
   );
   return confirmationModal;
 };
 
 export const createConfirmationModalContent = ({
-  classes,
+  containerClasses,
   confirmationTextObj,
   confirmationButtonsObj,
 }) => {
-  const modalContentContainer = quickElement("div", classes);
+  const modalContentContainer = quickElement("div", containerClasses);
 
   const confirmationTextElement = quickElement(
     "p",
     confirmationTextObj.classes,
     confirmationTextObj.id
   );
-  // if the confirmationText object includes
+  // if the confirmationText object includes hard coded text to put on it, do so; otherwise, the text is generated dynamically using its confirmationTextElement.id inside an event listener.
   if (confirmationTextObj.text) {
     confirmationTextElement.innerText = confirmationTextObj.text;
   }

@@ -1,9 +1,11 @@
 import {
   createConfirmationModal,
+  createConfirmationModalContent,
   createContainer,
   createCustomHeading,
   createLoadGameModal,
   createMenuButtons,
+  createReusableConfirmationModal,
   createSettingsModal,
 } from "./components/index.js";
 import Settings from "./settings.js";
@@ -21,6 +23,9 @@ import {
   closeLoadGameModal,
   grabSelectedOption,
   settingsModalInMainMenu,
+  allModals,
+  removeSingleLoadGameOption,
+  removeLoadGameOptions,
 } from "./utils/index.js";
 
 // Build out the UI
@@ -32,13 +37,16 @@ const mainMenuContainer = createContainer(
 );
 const settingsModal = createSettingsModal(settingsModalInMainMenu);
 const loadGameModal = createLoadGameModal("Cancel");
-// const confirmationModal = createConfirmationModal()
+// ! use line 37 after component gets renamed
+// const confirmationModal = createConfirmationModal();
+const confirmationModal = createReusableConfirmationModal();
 
 body.prepend(
   createCustomHeading("h1", "Main Menu", ["main-heading"], "main-heading"),
   mainMenuContainer,
   settingsModal,
-  loadGameModal
+  loadGameModal,
+  confirmationModal
 );
 
 const mainMenuButtons = createMenuButtons(
@@ -81,7 +89,7 @@ loadGameForm.addEventListener("submit", (e) => {
   }
   // now set that selected game name in window.sessionStorage as gameToLoad, then close the modal (clearing the options) and navigate to /play-game
   window.sessionStorage.setItem("gameToLoad", selectedOption);
-  closeLoadGameModal(loadGameModal);
+  closeLoadGameModal(loadGameModal); // which removes all option elements from the select element
   window.location.assign("/play-game");
 });
 
@@ -108,6 +116,79 @@ document
   .getElementById("close-load-game-modal-button")
   .addEventListener("click", () => {
     closeLoadGameModal(loadGameModal);
+  });
+
+// delete one game event listener
+document
+  .getElementById("delete-saved-game-button")
+  .addEventListener("click", () => {
+    // open the confirmation modal with modalContentContainer using all the data in utils for delete saved game confirmation modal
+    const modalContent = createConfirmationModalContent(
+      allModals.confirmationModalData.confirmDeleteSavedGame
+    );
+
+    confirmationModal.appendChild(modalContent);
+    confirmationModal.showModal();
+  });
+
+// delete all games event listener
+document
+  .getElementById("delete-all-saved-games-button")
+  .addEventListener("click", () => {
+    const modalContent = createConfirmationModalContent(
+      allModals.confirmationModalData.confirmDeleteAllSavedGames
+    );
+    confirmationModal.appendChild(modalContent);
+    confirmationModal.showModal();
+  });
+
+//* CONFIRM DELETE SINGLE GAME EVENT LISTENER
+document
+  .getElementById("confirm-delete-saved-game-button")
+  .addEventListener("click", () => {
+    const loadGameSelectElement = loadGameForm.elements[0];
+    const selectedOption = grabSelectedOption(loadGameSelectElement); // either an option.value or undefined
+    if (!selectedOption) {
+      showErrorById("no-game-selected-error-message");
+      return;
+    }
+
+    // 1. remove the game whose name matches the selected option from localStorage
+    const allSavedGames = JSON.parse(window.localStorage.getItem("savedGames"));
+    const nameOfGameToDelete = selectedOption.value;
+    const indexOfGameToDelete = allSavedGames.findIndex((savedGame) => {
+      return savedGame.nameOfGame === nameOfGameToDelete;
+    });
+    // splice out the game to delete, modifying the array allSavedGames
+    allSavedGames.splice(indexOfGameToDelete, 1);
+    // put allSavedGames back into localStorage at the property savedGames
+    window.localStorage.setItem("savedGames", allSavedGames);
+
+    // 2. finally, remove the option whose name matches the game we just deleted from the select options on the loadGameForm
+    removeSingleLoadGameOption(nameOfGameToDelete);
+
+    // TODO 3. finally, check to see if this was the last game and if so, swap the display classes of the "load-game-form" and "no-saved-games-heading"
+  });
+
+//* CONFIRM DELETE ALL GAMES EVENT LISTENER
+document
+  .getElementById("confirm-delete-all-saved-games-button")
+  .addEventListener("click", () => {
+    // 1. remove the savedGames property from localStorage
+    window.localStorage.removeItem("savedGames");
+    // 2. remove all options from form
+    removeLoadGameOptions();
+    // TODO 3. finally, check to see if this was the last game and if so, swap the display classes of the "load-game-form" and "no-saved-games-heading"
+  });
+
+//* CANCEL AND CLOSE CONFIRMATION MODAL EVENT LISTENER
+
+// close confirmationModal event listener
+document
+  .getElementById("close-confirmation-modal-button")
+  .addEventListener("click", () => {
+    confirmationModal.children[0].remove(); // remove the div returned by createConfirmationModalContent that was appended when the modal opened
+    confirmationModal.close();
   });
 
 // Keyboard Events
