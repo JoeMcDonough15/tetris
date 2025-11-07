@@ -371,6 +371,7 @@ export const createControllerRow = (containerClassName, controllerObjs) => {
 // render a settings modal that can be used as a dialog element for whenever user opens settings in main menu or from the pause menu during game play
 export const createSettingsModal = (settingsDataObj) => {
   const settingsModal = createModalWithButton(settingsDataObj);
+  settingsModal.setAttribute("closedby", "none");
   const updateSettingsForm = createUpdateSettingsForm();
   settingsModal.append(updateSettingsForm);
   return settingsModal;
@@ -394,6 +395,7 @@ export const createLoadGameModal = () => {
 // render a modal that has a form to save your game to localStorage
 export const createSaveGameModal = () => {
   const saveGameModal = createModalWithButton(saveGameModalObj);
+  saveGameModal.setAttribute("closedby", "none");
   const saveGameForm = createSaveGameForm();
   saveGameModal.appendChild(saveGameForm);
   return saveGameModal;
@@ -414,6 +416,7 @@ export const createPauseModal = () => {
     pauseModalObj.classes,
     pauseModalObj.id
   );
+  pauseModal.setAttribute("closedby", "none");
   const pauseMenuButtons = createMenuButtons(
     pauseMenuButtonsContainerObj,
     pauseMenuButtonObjs
@@ -431,6 +434,7 @@ export const createConfirmationModal = ({
   confirmationButtonsObj,
 }) => {
   const confirmationModal = quickElement("dialog", classes, id);
+  confirmationModal.setAttribute("closedby", "none");
   const confirmationTextElement = quickElement(
     "p",
     confirmationTextObj.classes,
@@ -458,6 +462,7 @@ export const createReusableConfirmationModal = () => {
     ["modal-container"],
     "confirmation-modal"
   );
+  confirmationModal.setAttribute("closedby", "none");
 
   return confirmationModal;
 };

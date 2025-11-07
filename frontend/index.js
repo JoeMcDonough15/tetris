@@ -125,6 +125,12 @@ document
 document
   .getElementById("delete-saved-game-button")
   .addEventListener("click", () => {
+    const loadGameSelectElement = loadGameForm.elements[0];
+    const selectedOption = grabSelectedOption(loadGameSelectElement); // either an option.value or undefined
+    if (!selectedOption) {
+      showErrorById("no-game-selected-error-message");
+      return;
+    }
     // open the confirmation modal with modalContentContainer using all the data in utils for delete saved game confirmation modal
     const modalContent = createConfirmationModalContent(
       allModals.confirmationModalData.confirmDeleteSavedGame
@@ -134,13 +140,6 @@ document
     document
       .getElementById("confirm-delete-saved-game-button")
       .addEventListener("click", () => {
-        const loadGameSelectElement = loadGameForm.elements[0];
-        const selectedOption = grabSelectedOption(loadGameSelectElement); // either an option.value or undefined
-        if (!selectedOption) {
-          showErrorById("no-game-selected-error-message");
-          return;
-        }
-
         // 1. remove the game whose name matches the selected option from localStorage
         const allSavedGames = JSON.parse(
           window.localStorage.getItem("savedGames")
@@ -223,13 +222,26 @@ window.addEventListener("keyup", (e) => {
   }
 });
 
+// window.addEventListener("keydown", (e) => {
+//   const keyName = e.key;
+//   if (keyName === "Escape") {
+//     if (!confirmationModal.open) {
+//       closeLoadGameModal(loadGameModal);
+//     } else {
+//       closeConfirmationModal(confirmationModal);
+//     }
+//   }
+// });
+
 window.addEventListener("keydown", (e) => {
   const keyName = e.key;
   if (keyName === "Escape") {
-    if (!confirmationModal.open) {
-      closeLoadGameModal(loadGameModal);
-    } else {
+    if (confirmationModal.open) {
       closeConfirmationModal(confirmationModal);
+    } else if (settingsModal.open) {
+      settingsModal.close();
+    } else {
+      closeLoadGameModal(loadGameModal);
     }
   }
 });

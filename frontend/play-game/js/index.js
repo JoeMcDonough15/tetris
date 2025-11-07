@@ -337,15 +337,28 @@ window.addEventListener("keydown", (e) => {
     game.moveShape("right");
   } else if (keyName === settingsObj.keyControls.softDrop) {
     game.softDrop();
-  } else if (
-    keyName === "Escape" &&
-    game.gamePaused &&
-    // TODO && !secondLevelModal.open && !confirmationModal.open (because secondLevelModal will inject with content for all 3 of these modals)
-    !settingsModal.open &&
-    !saveGameModal.open &&
-    !confirmQuitGameModal.open
-  ) {
-    game.togglePause();
+  }
+  // else if (
+  //   keyName === "Escape" &&
+  //   game.gamePaused &&
+  //   // TODO && !secondLevelModal.open && !confirmationModal.open (because secondLevelModal will inject with content for all 3 of these modals)
+  //   !settingsModal.open &&
+  //   !saveGameModal.open &&
+  //   !confirmQuitGameModal.open
+  // ) {
+  //   game.togglePause();
+  // }
+  else if (keyName === "Escape") {
+    if (confirmationModal.open) {
+      closeConfirmationModal();
+    } else if (settingsModal.open) {
+      settingsModal.close();
+    } else if (saveGameModal.open) {
+      saveGameModal.close();
+    } else if (game.gamePaused) {
+      pauseModal.close();
+      game.togglePause();
+    }
   }
 });
 
