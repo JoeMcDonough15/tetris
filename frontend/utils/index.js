@@ -160,9 +160,11 @@ export const allModals = {
   },
   // TODO render only one confirmation modal with different content injected into it.
   // TODO on close of confirmation modal, clear the div container so that there is never more than one #close-confirmation-modal-button on the DOM.
+
   confirmationModalData: {
     confirmDeleteSavedGame: {
       containerClasses: [],
+      containerId: "confirm-delete-saved-game-modal-content",
       confirmationTextObj: {
         // innerText set dynamically so we can include the name of the game to delete
         classes: [],
@@ -188,6 +190,7 @@ export const allModals = {
     },
     confirmDeleteAllSavedGames: {
       containerClasses: [],
+      containerId: "confirm-delete-all-saved-games-modal-content",
       confirmationTextObj: {
         text: "Are you sure you want to delete all saved games?",
         classes: [],
@@ -212,7 +215,8 @@ export const allModals = {
       },
     },
     confirmOverwriteSavedGame: {
-      classes: ["modal-container"],
+      classes: [],
+      containerId: "confirm-overwrite-saved-game-modal-content",
       confirmationTextObj: {
         classes: [],
         id: "confirm-overwrite-game-modal-text",
@@ -238,7 +242,8 @@ export const allModals = {
       },
     },
     confirmQuitGame: {
-      classes: ["modal-container"],
+      classes: [],
+      containerId: "confirm-quit-game-modal-content",
       confirmationTextObj: {
         text: "Are you sure you want to quit the current game?",
         classes: [],
@@ -477,13 +482,6 @@ export const updateImageSrcById = (id, newSrc) => {
   imageElement.src = newSrc;
 };
 
-export const toggleDisplayById = (...ids) => {
-  ids.forEach((id) => {
-    const element = document.getElementById(id);
-    element.classList.toggle("no-display");
-  });
-};
-
 export const injectValueToInputById = (id, valueToInject) => {
   const element = document.getElementById(id);
   element.value = valueToInject;
@@ -520,6 +518,27 @@ export const verifyUniqueStrings = (strArray) => {
   return true;
 };
 
+export const showElementById = (...ids) => {
+  ids.forEach((id) => {
+    const element = document.getElementById(id);
+    element.classList.remove("no-display");
+  });
+};
+
+export const hideElementById = (...ids) => {
+  ids.forEach((id) => {
+    const element = document.getElementById(id);
+    element.classList.add("no-display");
+  });
+};
+
+export const toggleDisplayById = (...ids) => {
+  ids.forEach((id) => {
+    const element = document.getElementById(id);
+    element.classList.toggle("no-display");
+  });
+};
+
 export const showErrorById = (errorId) => {
   const errorMessage = document.getElementById(errorId);
   errorMessage.classList.remove("no-display");
@@ -549,10 +568,18 @@ const getNamesOfAllSavedGames = () => {
 
 export const openLoadGameModal = (loadGameModal) => {
   const namesOfAllSavedGames = getNamesOfAllSavedGames();
-  const selectInput = document.getElementById("load-game-select");
-  namesOfAllSavedGames.forEach((nameOfSavedGame) => {
-    selectInput.appendChild(createGameToLoadOption(nameOfSavedGame));
-  });
+  if (namesOfAllSavedGames.length) {
+    showElementById("load-game-form");
+    hideElementById("no-saved-games-heading");
+  } else {
+    showElementById("no-saved-games-heading");
+    hideElementById("load-game-form");
+    const selectInput = document.getElementById("load-game-select");
+    namesOfAllSavedGames.forEach((nameOfSavedGame) => {
+      selectInput.appendChild(createGameToLoadOption(nameOfSavedGame));
+    });
+  }
+
   removeErrorById("no-game-selected-error-message");
   loadGameModal.showModal();
 };
@@ -610,6 +637,23 @@ export const drawPreviousCanvas = (canvasURL) => {
   function drawSavedCanvas() {
     ctx.drawImage(this, 0, 0); // "this" is the img on which drawSavedCanvas is called.
   }
+};
+
+export const closeConfirmationModal = (confirmationModal) => {
+  // get all the id's of modalContent that is rendered on this shared confirmationModal across every page
+  const keys = Object.keys(allModals.confirmationModalData);
+  const allContainerIds = keys.map(
+    (key) => allModals.confirmationModalData[key].containerId
+  );
+  allContainerIds.forEach((containerId) => {
+    const modalContent = document.getElementById(containerId);
+    // remove whatever modal content is currently displayed
+    if (modalContent) {
+      modalContent.remove();
+    }
+  });
+  // close the modal
+  confirmationModal.close();
 };
 
 export const updateSettingsFormData = {

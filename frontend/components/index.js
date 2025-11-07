@@ -382,7 +382,7 @@ export const createLoadGameModal = () => {
   const noGamesToLoadHeading = createCustomHeading(
     "h2",
     "No Saved Games",
-    ["no-display"],
+    ["no-games-to-display-heading"],
     "no-saved-games-heading"
   );
   const loadGameForm = createLoadGameForm();
@@ -454,18 +454,24 @@ export const createConfirmationModal = ({
 export const createReusableConfirmationModal = () => {
   const confirmationModal = quickElement(
     "dialog",
-    ["confirmation-modal"],
+    ["modal-container"],
     "confirmation-modal"
   );
+
   return confirmationModal;
 };
 
 export const createConfirmationModalContent = ({
   containerClasses,
+  containerId,
   confirmationTextObj,
   confirmationButtonsObj,
 }) => {
-  const modalContentContainer = quickElement("div", containerClasses);
+  const modalContentContainer = quickElement(
+    "div",
+    containerClasses,
+    containerId
+  );
 
   const confirmationTextElement = quickElement(
     "p",
@@ -479,7 +485,7 @@ export const createConfirmationModalContent = ({
 
   const confirmationButtonsContainer = createButtons(confirmationButtonsObj);
 
-  confirmationModal.append(
+  modalContentContainer.append(
     confirmationTextElement,
     confirmationButtonsContainer
   );

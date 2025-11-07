@@ -96,9 +96,9 @@ gameGridContainer.after(
   gameDetailsContainer,
   playerNameForm,
   postGameMenuButtons,
-  // * top level modal - pauseModal
+  // * top level modal - pauseModal --> either settingsModal or saveGameModal
   pauseModal,
-  // * second level modal - either settingsModal or saveGameModal
+  // * second level modal - either settingsModal or saveGameModal --> confirmationModal
   settingsModal,
   saveGameModal,
   // * third level confirmation modal - either confirmOverwriteGameModal or confirmQuitGameModal
