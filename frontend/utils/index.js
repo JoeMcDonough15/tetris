@@ -620,7 +620,11 @@ export const removeLoadGameOptions = () => {
 export const removeSingleLoadGameOption = (nameOfGame) => {
   const allExistingGameLoadOptions = getAllSavedGameOptions();
   allExistingGameLoadOptions.forEach((existingOption) => {
+    console.log("existing game option element: ", existingOption);
+    console.log("name of game to remove: ", nameOfGame);
+    console.log("value of existing option: ", existingOption.value);
     if (existingOption.value === nameOfGame) {
+      console.log("element to remove: ", existingOption);
       existingOption.remove();
     }
   });

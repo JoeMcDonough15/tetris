@@ -144,14 +144,30 @@ document
         const allSavedGames = JSON.parse(
           window.localStorage.getItem("savedGames")
         );
-        const nameOfGameToDelete = selectedOption.value;
+        const nameOfGameToDelete = selectedOption;
+        console.log("name of game to delete: ", nameOfGameToDelete);
         const indexOfGameToDelete = allSavedGames.findIndex((savedGame) => {
           return savedGame.nameOfGame === nameOfGameToDelete;
         });
+        console.log(
+          "name of game to delete before splicing out game to delete: ",
+          nameOfGameToDelete
+        );
         // splice out the game to delete, modifying the array allSavedGames
         allSavedGames.splice(indexOfGameToDelete, 1);
         // put allSavedGames back into localStorage at the property savedGames
-        window.localStorage.setItem("savedGames", allSavedGames);
+        console.log(
+          "name of game to delete before resetting localStorage: ",
+          nameOfGameToDelete
+        );
+        window.localStorage.setItem(
+          "savedGames",
+          JSON.stringify(allSavedGames)
+        );
+        console.log(
+          "name of game to delete before calling removeSingleLoadGameOption: ",
+          nameOfGameToDelete
+        );
 
         // 2. remove the option whose name matches the game we just deleted from the select options on the loadGameForm
         removeSingleLoadGameOption(nameOfGameToDelete);
