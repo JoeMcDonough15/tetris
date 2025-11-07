@@ -54,7 +54,7 @@ export const returnBody = () => {
   const body = bodyArrayFromCollection[0];
   return body;
 };
-export const generatePreviewImgPath = (shapeName) => {
+const generatePreviewImgPath = (shapeName) => {
   return `${previewImgPathObj.prefix}${shapeName}${previewImgPathObj.suffix}`;
 };
 
@@ -501,7 +501,8 @@ export const updateElementTextById = (id, newVal) => {
   element.innerText = newVal;
 };
 
-export const updateImageSrcById = (id, newSrc) => {
+export const updateImageSrcById = (id, shapeName) => {
+  const newSrc = generatePreviewImgPath(shapeName);
   const imageElement = document.getElementById(id);
   imageElement.src = newSrc;
 };

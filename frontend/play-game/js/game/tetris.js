@@ -514,25 +514,21 @@ class Tetris {
     this.currentPiece.rotate(this.numRotations);
   };
 
-  selectNewPiece = () => {
-    const generatedIndex = Math.floor(Math.random() * availableShapes.length);
-
-    const pieceName = availableShapes[generatedIndex];
-
+  instantiateShape = (shapeName) => {
     let newPiece;
-    if (pieceName === "line") {
+    if (shapeName === "line") {
       newPiece = new Line();
-    } else if (pieceName === "square") {
+    } else if (shapeName === "square") {
       newPiece = new Square();
-    } else if (pieceName === "tShape") {
+    } else if (shapeName === "tShape") {
       newPiece = new TShape();
-    } else if (pieceName === "lShape") {
+    } else if (shapeName === "lShape") {
       newPiece = new LShape();
-    } else if (pieceName === "jShape") {
+    } else if (shapeName === "jShape") {
       newPiece = new JShape();
-    } else if (pieceName === "sShape") {
+    } else if (shapeName === "sShape") {
       newPiece = new SShape();
-    } else if (pieceName === "zShape") {
+    } else if (shapeName === "zShape") {
       newPiece = new ZShape();
     }
 
@@ -540,8 +536,9 @@ class Tetris {
   };
 
   addPieceToQueue = () => {
-    const newPiece = this.selectNewPiece();
-    this.pieceQueue.push(newPiece);
+    const generatedIndex = Math.floor(Math.random() * availableShapes.length);
+    const pieceName = availableShapes[generatedIndex];
+    this.pieceQueue.push(pieceName);
   };
 
   dequeuePiece = () => {
@@ -553,13 +550,13 @@ class Tetris {
       this.addPieceToQueue();
     }
 
-    this.currentPiece = this.pieceQueue.shift();
+    const nameOfNextShape = this.pieceQueue.shift();
+    this.currentPiece = this.instantiateShape(nameOfNextShape);
     const nextPieceInQueue = this.pieceQueue[0];
-    updateImageSrcById("preview-img", nextPieceInQueue.preview);
+    updateImageSrcById("preview-img", nextPieceInQueue);
 
     this.currentPiecePlaced = false;
     this.numRotations = 0;
-    // this.currentPiece.drawShape();
     this.gravityDrop();
   };
 }
