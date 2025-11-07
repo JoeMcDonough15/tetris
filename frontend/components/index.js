@@ -379,6 +379,7 @@ export const createSettingsModal = (settingsDataObj) => {
 // render a modal that has a form to select which game to load.  Game names are pulled from localStorage, and on submit, user is redirected to /play-game with the loaded game state
 export const createLoadGameModal = () => {
   const loadGameModal = createModalWithButton(loadGameModalObj);
+  loadGameModal.setAttribute("closedby", "none");
   const noGamesToLoadHeading = createCustomHeading(
     "h2",
     "No Saved Games",

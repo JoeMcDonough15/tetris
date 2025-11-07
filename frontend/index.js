@@ -226,9 +226,11 @@ window.addEventListener("keyup", (e) => {
 
 window.addEventListener("keydown", (e) => {
   const keyName = e.key;
-  if (keyName === "Escape" && !confirmationModal.open) {
-    closeLoadGameModal(loadGameModal);
-  } else {
-    closeConfirmationModal(confirmationModal);
+  if (keyName === "Escape") {
+    if (!confirmationModal.open) {
+      closeLoadGameModal(loadGameModal);
+    } else {
+      closeConfirmationModal(confirmationModal);
+    }
   }
 });

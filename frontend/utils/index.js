@@ -571,13 +571,13 @@ export const openLoadGameModal = (loadGameModal) => {
   if (namesOfAllSavedGames.length) {
     showElementById("load-game-form");
     hideElementById("no-saved-games-heading");
-  } else {
-    showElementById("no-saved-games-heading");
-    hideElementById("load-game-form");
     const selectInput = document.getElementById("load-game-select");
     namesOfAllSavedGames.forEach((nameOfSavedGame) => {
       selectInput.appendChild(createGameToLoadOption(nameOfSavedGame));
     });
+  } else {
+    showElementById("no-saved-games-heading");
+    hideElementById("load-game-form");
   }
 
   removeErrorById("no-game-selected-error-message");
