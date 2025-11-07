@@ -1,4 +1,7 @@
-import { createGameToLoadOption } from "../components/index.js";
+import {
+  createConfirmationModalContent,
+  createGameToLoadOption,
+} from "../components/index.js";
 
 // Game Grid Values
 export const NUM_ROWS = 18;
@@ -215,7 +218,7 @@ export const allModals = {
       },
     },
     confirmOverwriteSavedGame: {
-      classes: [],
+      containerClasses: [],
       containerId: "confirm-overwrite-saved-game-modal-content",
       confirmationTextObj: {
         classes: [],
@@ -242,7 +245,7 @@ export const allModals = {
       },
     },
     confirmQuitGame: {
-      classes: [],
+      containerClasses: [],
       containerId: "confirm-quit-game-modal-content",
       confirmationTextObj: {
         text: "Are you sure you want to quit the current game?",
@@ -270,15 +273,36 @@ export const allModals = {
   },
 };
 
-export const openConfirmOverwriteGameModal = (nameOfGameToOverwrite) => {
-  const overwriteGameModal = document.getElementById(
-    "confirm-overwrite-game-modal"
+export const openConfirmOverwriteGameModal = (tetrisClass) => {
+  const confirmationModal = document.getElementById("confirmation-modal");
+  const modalContent = createConfirmationModalContent(
+    allModals.confirmationModalData.confirmOverwriteSavedGame
   );
+  confirmationModal.appendChild(modalContent);
   const overwriteGameModalText = document.getElementById(
     "confirm-overwrite-game-modal-text"
   );
-  overwriteGameModalText.innerText = `Clicking save will overwrite game: ${nameOfGameToOverwrite}. Are you sure you want to continue?`;
-  overwriteGameModal.showModal();
+  overwriteGameModalText.innerText = `Clicking save will overwrite game: ${tetrisClass.nameOfGameToSave}. Are you sure you want to continue?`;
+
+  // * now we need to add event listeners since this is the only place these elements are being added to the DOM
+  document
+    .getElementById("confirm-overwrite-button")
+    .addEventListener("click", () => {
+      tetrisClass.saveGame();
+      tetrisClass.nameOfGameToSave = null;
+      tetrisClass.indexOfGameToOverwrite = -1;
+      closeConfirmationModal();
+    });
+
+  // * CANCEL AND CLOSE CONFIRMATION MODAL
+  document
+    .getElementById("close-confirmation-modal-button")
+    .addEventListener("click", () => {
+      closeConfirmationModal();
+    });
+
+  // now we are ready to open the modal
+  confirmationModal.showModal();
 };
 
 const {
@@ -555,10 +579,6 @@ export const openSettingsModal = (settingsObj, settingsModal) => {
   settingsModal.showModal();
 };
 
-export const closeSettingsModal = (settingsModal) => {
-  settingsModal.close();
-};
-
 const getNamesOfAllSavedGames = () => {
   const namesOfAllSavedGames = JSON.parse(
     localStorage.getItem("savedGames")
@@ -639,7 +659,8 @@ export const drawPreviousCanvas = (canvasURL) => {
   }
 };
 
-export const closeConfirmationModal = (confirmationModal) => {
+export const closeConfirmationModal = () => {
+  const confirmationModal = document.getElementById("confirmation-modal");
   // get all the id's of modalContent that is rendered on this shared confirmationModal across every page
   const keys = Object.keys(allModals.confirmationModalData);
   const allContainerIds = keys.map(

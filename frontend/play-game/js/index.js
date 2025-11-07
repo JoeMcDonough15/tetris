@@ -11,6 +11,8 @@ import {
   createPauseModal,
   createSaveGameModal,
   createConfirmationModal,
+  createReusableConfirmationModal,
+  createConfirmationModalContent,
 } from "../../components/index.js";
 import HighScores from "../../high-scores/js/api/highScoresApi.js";
 import Settings from "../../settings.js";
@@ -26,10 +28,11 @@ import {
   grabInputValuesFromForm,
   showErrorById,
   openSettingsModal,
-  closeSettingsModal,
   settingsModalInGame,
-  confirmOverwriteGameModalObj,
-  confirmQuitGameModalObj,
+  // confirmOverwriteGameModalObj,
+  // confirmQuitGameModalObj,
+  closeConfirmationModal,
+  allModals,
 } from "../../utils/index.js";
 import Tetris from "./game/tetris.js";
 
@@ -78,13 +81,15 @@ gameDetailsContainer.append(
   controllerContainer
 );
 
+const pauseModal = createPauseModal(); // * ----------> confirmQuitModal
 const settingsModal = createSettingsModal(settingsModalInGame);
-const pauseModal = createPauseModal();
-const saveGameModal = createSaveGameModal();
-const confirmOverwriteGameModal = createConfirmationModal(
-  confirmOverwriteGameModalObj
-);
-const confirmQuitGameModal = createConfirmationModal(confirmQuitGameModalObj);
+const saveGameModal = createSaveGameModal(); // * ----------> confirmOverwriteGameModal
+const confirmationModal = createReusableConfirmationModal();
+
+// const confirmOverwriteGameModal = createConfirmationModal(
+//   confirmOverwriteGameModalObj
+// );
+// const confirmQuitGameModal = createConfirmationModal(confirmQuitGameModalObj);
 
 const playerNameForm = createPlayerNameForm();
 const postGameMenuButtons = createMenuButtons(
@@ -103,8 +108,9 @@ gameGridContainer.after(
   saveGameModal,
   // * third level confirmation modal - either confirmOverwriteGameModal or confirmQuitGameModal
   // TODO - one confirmation modal that gets different content injected into it whenever it opens
-  confirmOverwriteGameModal,
-  confirmQuitGameModal
+  // confirmOverwriteGameModal,
+  // confirmQuitGameModal
+  confirmationModal
 );
 
 // Instantiate Necessary Classes
@@ -143,25 +149,25 @@ const closeSaveGameModalButton = document.getElementById(
   "close-save-game-modal-button"
 );
 
-const confirmOverwriteGameButton = document.getElementById(
-  "confirm-overwrite-button"
-);
+// const confirmOverwriteGameButton = document.getElementById(
+//   "confirm-overwrite-button"
+// );
 
-const closeConfirmOverwriteModalButton = document.getElementById(
-  "close-overwrite-game-modal-button"
-);
+// const closeConfirmOverwriteModalButton = document.getElementById(
+//   "close-overwrite-game-modal-button"
+// );
 
 const quitGameButton = document.getElementById(
   "open-confirm-quit-game-modal-button"
 );
 
-const confirmQuitGameButton = document.getElementById(
-  "confirm-quit-game-button"
-);
+// const confirmQuitGameButton = document.getElementById(
+//   "confirm-quit-game-button"
+// );
 
-const closeQuitGameModalButton = document.getElementById(
-  "close-quit-game-modal-button"
-);
+// const closeQuitGameModalButton = document.getElementById(
+//   "close-quit-game-modal-button"
+// );
 
 // Form Submit Events
 playerNameForm.addEventListener("submit", async (e) => {
@@ -196,7 +202,7 @@ updateSettingsForm.addEventListener("submit", (e) => {
   }
 
   settingsObj.updateSettings({ ...inputsObj });
-  closeSettingsModal(settingsModal);
+  settingsModal.close();
 });
 
 const saveGameForm = document.getElementById("save-game-form");
@@ -222,7 +228,7 @@ openSettingsModalButton.addEventListener("click", () => {
 });
 
 closeSettingsModalButton.addEventListener("click", () => {
-  closeSettingsModal(settingsModal);
+  settingsModal.close();
 });
 
 openSaveGameModalButton.addEventListener("click", () => {
@@ -234,27 +240,51 @@ closeSaveGameModalButton.addEventListener("click", () => {
   saveGameModal.close();
 });
 
-confirmOverwriteGameButton.addEventListener("click", () => {
-  game.saveGame();
-});
+// confirmOverwriteGameButton.addEventListener("click", () => {
+//   game.saveGame();
+// });
 
-closeConfirmOverwriteModalButton.addEventListener("click", () => {
-  game.nameOfGameToSave = null;
-  game.indexOfGameToOverwrite = -1;
-  confirmOverwriteGameModal.close();
-});
+// closeConfirmOverwriteModalButton.addEventListener("click", () => {
+//   game.nameOfGameToSave = null;
+//   game.indexOfGameToOverwrite = -1;
+//   confirmOverwriteGameModal.close();
+// });
 
 quitGameButton.addEventListener("click", () => {
-  confirmQuitGameModal.showModal();
+  const modalContent = createConfirmationModalContent(
+    allModals.confirmationModalData.confirmQuitGame
+  );
+
+  confirmationModal.appendChild(modalContent);
+
+  //!
+
+  //* ADD THE CONFIRM QUIT GAME GAME EVENT LISTENER, since this element now exists on the DOM
+  document
+    .getElementById("confirm-quit-game-button")
+    .addEventListener("click", () => {
+      game.quitGame();
+    });
+
+  //* CANCEL AND CLOSE CONFIRMATION MODAL EVENT LISTENER
+  document
+    .getElementById("close-confirmation-modal-button")
+    .addEventListener("click", () => {
+      closeConfirmationModal(confirmationModal);
+    });
+
+  //!
+
+  confirmationModal.showModal();
 });
 
-confirmQuitGameButton.addEventListener("click", () => {
-  game.quitGame();
-});
+// confirmQuitGameButton.addEventListener("click", () => {
+//   game.quitGame();
+// });
 
-closeQuitGameModalButton.addEventListener("click", () => {
-  confirmQuitGameModal.close();
-});
+// closeQuitGameModalButton.addEventListener("click", () => {
+//   confirmQuitGameModal.close();
+// });
 
 rotateButton.addEventListener("click", () => {
   game.rotatePiece();

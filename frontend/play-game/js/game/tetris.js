@@ -75,7 +75,7 @@ class Tetris {
 
     if (indexOfExistingGame > -1) {
       this.indexOfGameToOverwrite = indexOfExistingGame;
-      openConfirmOverwriteGameModal(nameOfGameToSave);
+      openConfirmOverwriteGameModal(this);
       return;
     }
 

@@ -15,7 +15,6 @@ import {
   returnBody,
   settingsInputIds,
   openSettingsModal,
-  closeSettingsModal,
   grabInputValuesFromForm,
   verifyUniqueStrings,
   showErrorById,
@@ -78,7 +77,7 @@ updateSettingsForm.addEventListener("submit", (e) => {
   }
 
   settingsObj.updateSettings({ ...inputsObj });
-  closeSettingsModal(settingsModal);
+  settingsModal.close();
 });
 
 const loadGameForm = document.getElementById("load-game-form");
@@ -107,7 +106,7 @@ document
 document
   .getElementById("close-settings-modal-button")
   .addEventListener("click", () => {
-    closeSettingsModal(settingsModal);
+    settingsModal.close();
   });
 
 document
