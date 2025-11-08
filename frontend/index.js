@@ -27,6 +27,8 @@ import {
   removeLoadGameOptions,
   toggleDisplayById,
   closeConfirmationModal,
+  changeTextOfErrorById,
+  removeErrorById,
 } from "./utils/index.js";
 
 // Build out the UI
@@ -87,6 +89,10 @@ loadGameForm.addEventListener("submit", (e) => {
   const loadGameSelectElement = loadGameForm.elements[0];
   const selectedOption = grabSelectedOption(loadGameSelectElement); // either an option.value or undefined
   if (!selectedOption) {
+    changeTextOfErrorById(
+      "no-game-selected-error-message",
+      "Please Select a Game to Load"
+    );
     showErrorById("no-game-selected-error-message");
     return;
   }
@@ -128,6 +134,10 @@ document
     const loadGameSelectElement = loadGameForm.elements[0];
     const selectedOption = grabSelectedOption(loadGameSelectElement); // either an option.value or undefined
     if (!selectedOption) {
+      changeTextOfErrorById(
+        "no-game-selected-error-message",
+        "Please Select a Game to Delete"
+      );
       showErrorById("no-game-selected-error-message");
       return;
     }
@@ -188,6 +198,7 @@ document
       });
 
     // * NOW open the modal
+    removeErrorById("no-game-selected-error-message"); // clear any error state on the previous loadGameModal
     confirmationModal.showModal();
   });
 
@@ -221,6 +232,7 @@ document
         closeConfirmationModal(confirmationModal);
       });
 
+    removeErrorById("no-game-selected-error-message"); // clear any error state on the previous loadGameModal
     confirmationModal.showModal();
   });
 

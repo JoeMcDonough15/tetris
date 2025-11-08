@@ -569,9 +569,14 @@ export const showErrorById = (errorId) => {
   errorMessage.classList.remove("no-display");
 };
 
-const removeErrorById = (errorId) => {
+export const removeErrorById = (errorId) => {
   const errorMessage = document.getElementById(errorId);
   errorMessage.classList.add("no-display");
+};
+
+export const changeTextOfErrorById = (errorId, message) => {
+  const errorMessage = document.getElementById(errorId);
+  errorMessage.innerText = message;
 };
 
 export const openSettingsModal = (settingsObj, settingsModal) => {

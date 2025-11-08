@@ -67,13 +67,6 @@ const createSubmitButton = (buttonObj) => {
   return submit;
 };
 
-const createErrorMessage = (errorText, id) => {
-  const error = quickElement("p", ["error-message", "no-display"], id);
-  error.innerText = errorText;
-
-  return error;
-};
-
 // render a row of buttons to act as the cancel or confirm buttons in a confirmationModal or delete buttons in the loadGameForm
 const createButtons = ({ containerClasses, buttonObjs }) => {
   const buttonsContainer = createContainer("div", containerClasses);
@@ -220,6 +213,14 @@ const createCloseModalButton = ({ buttonText, classes, id }) => {
 };
 
 // * Component Functions to be Exported
+
+// render a custom error message for any of the components here or on the fly throughout the app
+export const createErrorMessage = (errorText, id) => {
+  const error = quickElement("p", ["error-message", "no-display"], id);
+  error.innerText = errorText;
+
+  return error;
+};
 
 // render a player name form with a custom method to be called on submit
 export const createPlayerNameForm = () => {
