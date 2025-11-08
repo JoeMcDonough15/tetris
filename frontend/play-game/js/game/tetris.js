@@ -62,21 +62,17 @@ class Tetris {
   checkForSavedGame = (nameOfGameToSave) => {
     this.nameOfGameToSave = nameOfGameToSave;
     const existingGames = JSON.parse(window.localStorage.getItem("savedGames")); // possibly null
-    if (!existingGames) {
-      // if there are not any saved games yet, create an empty array for the first game we are about to save
-      window.localStorage.setItem("savedGames", JSON.stringify([])); // guarantees that when you get to this.saveGame(), there is definitely an array of savedGames to get out of localStorage
-    }
 
-    const indexOfExistingGame = existingGames
-      ? existingGames.findIndex(
-          (savedGame) => savedGame.nameOfGame === nameOfGameToSave // will be >= -1
-        )
-      : -1; // force it to be -1 if existingGames is null
+    if (existingGames) {
+      const indexOfExistingGame = existingGames.findIndex(
+        (savedGame) => savedGame.nameOfGame === nameOfGameToSave // will be index of the existing game or -1
+      );
 
-    if (indexOfExistingGame > -1) {
-      this.indexOfGameToOverwrite = indexOfExistingGame;
-      openConfirmOverwriteGameModal(this);
-      return;
+      if (indexOfExistingGame > -1) {
+        this.indexOfGameToOverwrite = indexOfExistingGame;
+        openConfirmOverwriteGameModal(this);
+        return;
+      }
     }
 
     this.saveGame();
@@ -106,7 +102,10 @@ class Tetris {
       gameBoardString,
     };
 
-    const allSavedGames = JSON.parse(window.localStorage.getItem("savedGames"));
+    let allSavedGames = JSON.parse(window.localStorage.getItem("savedGames"));
+    if (!allSavedGames) {
+      allSavedGames = []; // if we are saving the first game
+    }
 
     if (this.indexOfGameToOverwrite > -1) {
       allSavedGames.splice(this.indexOfGameToOverwrite, 1, gameToSave);

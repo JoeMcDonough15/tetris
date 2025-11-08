@@ -581,27 +581,32 @@ export const openSettingsModal = (settingsObj, settingsModal) => {
 };
 
 const getNamesOfAllSavedGames = () => {
-  const namesOfAllSavedGames = JSON.parse(
-    localStorage.getItem("savedGames")
-  ).map((savedGame) => savedGame.nameOfGame);
-  return namesOfAllSavedGames;
+  const savedGames = JSON.parse(localStorage.getItem("savedGames"));
+  if (!savedGames) return;
+  return savedGames.map((savedGame) => savedGame.nameOfGame);
+};
+
+const addSavedGamesToDropdown = (namesOfAllSavedGames) => {
+  const dropDownMenuOfSavedGames = document.getElementById("load-game-select");
+  namesOfAllSavedGames.forEach((nameOfSavedGame) => {
+    dropDownMenuOfSavedGames.appendChild(
+      createGameToLoadOption(nameOfSavedGame)
+    );
+  });
 };
 
 export const openLoadGameModal = (loadGameModal) => {
   const namesOfAllSavedGames = getNamesOfAllSavedGames();
-  if (namesOfAllSavedGames.length) {
-    showElementById("load-game-form");
-    hideElementById("no-saved-games-heading");
-    const selectInput = document.getElementById("load-game-select");
-    namesOfAllSavedGames.forEach((nameOfSavedGame) => {
-      selectInput.appendChild(createGameToLoadOption(nameOfSavedGame));
-    });
-  } else {
+  if (!namesOfAllSavedGames) {
     showElementById("no-saved-games-heading");
     hideElementById("load-game-form");
+  } else {
+    showElementById("load-game-form");
+    hideElementById("no-saved-games-heading");
+    addSavedGamesToDropdown(namesOfAllSavedGames);
   }
 
-  removeErrorById("no-game-selected-error-message");
+  removeErrorById("no-game-selected-error-message"); // reset error state before opening modal so no past errors appear if modal is reopneed
   loadGameModal.showModal();
 };
 
@@ -632,7 +637,7 @@ export const removeSingleLoadGameOption = (nameOfGame) => {
 };
 
 export const closeLoadGameModal = (loadGameModal) => {
-  removeLoadGameOptions();
+  removeLoadGameOptions(); // so no options are ever appended more than once
   loadGameModal.close();
 };
 
