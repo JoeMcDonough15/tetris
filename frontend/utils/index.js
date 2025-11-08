@@ -917,7 +917,7 @@ export const loadGameFormData = {
   inputs: [
     {
       inputName: "loadGameSelect",
-      labelText: "Select a Game To Load",
+      labelText: "Select a Saved Game",
       containerClasses: [],
       labelClasses: [],
       inputClasses: [],
