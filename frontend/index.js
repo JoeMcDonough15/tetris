@@ -150,47 +150,38 @@ document
     document
       .getElementById("confirm-delete-saved-game-button")
       .addEventListener("click", () => {
-        // 1. remove the game whose name matches the selected option from localStorage
+        // remove the game whose name matches the selected option from localStorage
         const allSavedGames = JSON.parse(
           window.localStorage.getItem("savedGames")
         );
         const nameOfGameToDelete = selectedOption;
-        console.log("name of game to delete: ", nameOfGameToDelete);
         const indexOfGameToDelete = allSavedGames.findIndex((savedGame) => {
           return savedGame.nameOfGame === nameOfGameToDelete;
         });
-        console.log(
-          "name of game to delete before splicing out game to delete: ",
-          nameOfGameToDelete
-        );
         // splice out the game to delete, modifying the array allSavedGames
         allSavedGames.splice(indexOfGameToDelete, 1);
-        // put allSavedGames back into localStorage at the property savedGames
-        console.log(
-          "name of game to delete before resetting localStorage: ",
-          nameOfGameToDelete
-        );
-        window.localStorage.setItem(
-          "savedGames",
-          JSON.stringify(allSavedGames)
-        );
-        console.log(
-          "name of game to delete before calling removeSingleLoadGameOption: ",
-          nameOfGameToDelete
-        );
+        if (!allSavedGames.length) {
+          // if splicing that game out made the array empty, remove the entire property savedGames from localStorage so we don't keep an empty array stored
+          window.localStorage.removeItem("savedGames");
+          // render the no saved games heading and hide the form on the loadGameModal
+          toggleDisplayById("no-saved-games-heading", "load-game-form");
+        } else {
+          // if there are still games after deleting the one we just removed, put the remaining allSavedGames back into localStorage
+          window.localStorage.setItem(
+            "savedGames",
+            JSON.stringify(allSavedGames)
+          );
+        }
 
-        // 2. remove the option whose name matches the game we just deleted from the select options on the loadGameForm
+        // remove the option whose name matches the game we just deleted from the select options on the loadGameForm
         removeSingleLoadGameOption(nameOfGameToDelete);
 
-        // 3. finally, check to see if this was the last game and if so, swap the display classes of the "load-game-form" and "no-saved-games-heading"
-        if (!allSavedGames.length) {
-          toggleDisplayById("no-saved-games-heading", "load-game-form");
-        }
+        // finally, close the modal on successful delete
+        // TODO make a notification saying the game was successfully deleted that disappears after a setTimeout expires
+        closeConfirmationModal(confirmationModal);
       });
 
     //* CANCEL AND CLOSE CONFIRMATION MODAL EVENT LISTENER
-
-    // close confirmationModal event listener
     document
       .getElementById("close-confirmation-modal-button")
       .addEventListener("click", () => {
@@ -221,6 +212,9 @@ document
         removeLoadGameOptions();
         // 3. finally, check to see if this was the last game and if so, swap the display classes of the "load-game-form" and "no-saved-games-heading"
         toggleDisplayById("no-saved-games-heading", "load-game-form");
+        // 4. close the modal on successful delete of all games
+        // TODO make a notification saying all games were successfully deleted that disappears after a setTimeout expires
+        closeConfirmationModal(confirmationModal);
       });
 
     //* CANCEL AND CLOSE CONFIRMATION MODAL EVENT LISTENER
