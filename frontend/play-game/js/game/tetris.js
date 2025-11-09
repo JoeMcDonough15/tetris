@@ -443,8 +443,9 @@ class Tetris {
   };
 
   moveShape = (direction) => {
+    if (this.currentPiecePlaced) return; // never allow movement of a piece if it is placed on the grid
     if (this.willCollide(direction === "down" ? "bottom" : direction)) {
-      if (direction === "down" && !this.currentPiecePlaced) {
+      if (direction === "down") {
         this.placePiece();
       }
       return;
