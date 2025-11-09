@@ -1,4 +1,7 @@
-import { createGameToLoadOption } from "../components/index.js";
+import {
+  createConfirmationModalContent,
+  createGameToLoadOption,
+} from "../components/index.js";
 
 // Game Grid Values
 export const NUM_ROWS = 18;
@@ -51,7 +54,7 @@ export const returnBody = () => {
   const body = bodyArrayFromCollection[0];
   return body;
 };
-export const generatePreviewImgPath = (shapeName) => {
+const generatePreviewImgPath = (shapeName) => {
   return `${previewImgPathObj.prefix}${shapeName}${previewImgPathObj.suffix}`;
 };
 
@@ -65,7 +68,7 @@ export const rotateSound = new Audio(generateSoundPath("rotate"));
 export const clearedRowSound = new Audio(generateSoundPath("cleared-row"));
 
 // Modals with Respective Close Buttons
-const allModals = {
+export const allModals = {
   settingsModal: {
     closeButtonObj: {
       createButtonText: function (buttonText) {
@@ -111,19 +114,25 @@ const allModals = {
     confirmationTextObj: {
       classes: [],
       id: "confirm-overwrite-game-modal-text",
+      // innerText set dynamically so it can include name of game to overwrite
     },
     confirmationButtonsObj: {
       containerClasses: [],
-      confirm: {
-        buttonText: "Yes, Overwrite This Game",
-        classes: [],
-        id: "confirm-overwrite-button",
-      },
-      deny: {
-        buttonText: "No, Rename This Game",
-        classes: [],
-        id: "close-overwrite-game-modal-button",
-      },
+      buttonObjs: [
+        {
+          buttonName: "confirm",
+          buttonText: "Yes, Overwrite This Game",
+          classes: [],
+          id: "confirm-overwrite-button",
+        },
+        ,
+        {
+          buttonName: "deny",
+          buttonText: "No, Rename This Game",
+          classes: [],
+          id: "close-overwrite-game-modal-button",
+        },
+      ],
     },
   },
   confirmQuitGameModal: {
@@ -132,32 +141,168 @@ const allModals = {
     confirmationTextObj: {
       text: "Are you sure you want to quit the current game?",
       classes: [],
+      id: "confirm-quit-game-modal-text",
     },
     confirmationButtonsObj: {
       containerClasses: [],
-      confirm: {
-        buttonText: "Yes, Return to Main Menu",
+      buttonObjs: [
+        {
+          buttonName: "confirm",
+          buttonText: "Yes, Return to Main Menu",
+          classes: [],
+          id: "confirm-quit-game-button",
+        },
+        {
+          buttonName: "deny",
+          buttonText: "No, Return to Pause Screen",
+          classes: [],
+          id: "close-quit-game-modal-button",
+        },
+      ],
+    },
+  },
+  // TODO render only one confirmation modal with different content injected into it.
+  // TODO on close of confirmation modal, clear the div container so that there is never more than one #close-confirmation-modal-button on the DOM.
+
+  confirmationModalData: {
+    confirmDeleteSavedGame: {
+      containerClasses: [],
+      containerId: "confirm-delete-saved-game-modal-content",
+      confirmationTextObj: {
+        // innerText set dynamically so we can include the name of the game to delete
         classes: [],
-        id: "confirm-quit-game-button",
+        id: "confirm-delete-game-modal-text",
       },
-      deny: {
-        buttonText: "No, Return to Pause Screen",
+      confirmationButtonsObj: {
+        containerClasses: [],
+        buttonObjs: [
+          {
+            buttonName: "confirm",
+            buttonText: "Yes, Delete This Game",
+            classes: [],
+            id: "confirm-delete-saved-game-button",
+          },
+          {
+            buttonName: "deny",
+            buttonText: "Cancel",
+            classes: [],
+            id: "close-confirmation-modal-button",
+          },
+        ],
+      },
+    },
+    confirmDeleteAllSavedGames: {
+      containerClasses: [],
+      containerId: "confirm-delete-all-saved-games-modal-content",
+      confirmationTextObj: {
+        text: "Are you sure you want to delete all saved games?",
         classes: [],
-        id: "close-quit-game-modal-button",
+        id: "confirm-delete-game-modal-text",
+      },
+      confirmationButtonsObj: {
+        containerClasses: [],
+        buttonObjs: [
+          {
+            buttonName: "confirm",
+            buttonText: "Yes, Delete All My Saved Games",
+            classes: [],
+            id: "confirm-delete-all-saved-games-button",
+          },
+          {
+            buttonName: "deny",
+            buttonText: "Cancel",
+            classes: [],
+            id: "close-confirmation-modal-button",
+          },
+        ],
+      },
+    },
+    confirmOverwriteSavedGame: {
+      containerClasses: [],
+      containerId: "confirm-overwrite-saved-game-modal-content",
+      confirmationTextObj: {
+        classes: [],
+        id: "confirm-overwrite-game-modal-text",
+        // innerText set dynamically so it can include name of game to overwrite
+      },
+      confirmationButtonsObj: {
+        containerClasses: [],
+        buttonObjs: [
+          {
+            buttonName: "confirm",
+            buttonText: "Yes, Overwrite This Game",
+            classes: [],
+            id: "confirm-overwrite-button",
+          },
+          ,
+          {
+            buttonName: "deny",
+            buttonText: "No, Rename This Game",
+            classes: [],
+            id: "close-confirmation-modal-button",
+          },
+        ],
+      },
+    },
+    confirmQuitGame: {
+      containerClasses: [],
+      containerId: "confirm-quit-game-modal-content",
+      confirmationTextObj: {
+        text: "Are you sure you want to quit the current game?",
+        classes: [],
+        id: "confirm-quit-game-modal-text",
+      },
+      confirmationButtonsObj: {
+        containerClasses: [],
+        buttonObjs: [
+          {
+            buttonName: "confirm",
+            buttonText: "Yes, Return to Main Menu",
+            classes: [],
+            id: "confirm-quit-game-button",
+          },
+          {
+            buttonName: "deny",
+            buttonText: "No, Return to Pause Screen",
+            classes: [],
+            id: "close-confirmation-modal-button",
+          },
+        ],
       },
     },
   },
 };
 
-export const openConfirmOverwriteGameModal = (nameOfGameToOverwrite) => {
-  const overwriteGameModal = document.getElementById(
-    "confirm-overwrite-game-modal"
+export const openConfirmOverwriteGameModal = (tetrisClass) => {
+  const confirmationModal = document.getElementById("confirmation-modal");
+  const modalContent = createConfirmationModalContent(
+    allModals.confirmationModalData.confirmOverwriteSavedGame
   );
+  confirmationModal.appendChild(modalContent);
   const overwriteGameModalText = document.getElementById(
     "confirm-overwrite-game-modal-text"
   );
-  overwriteGameModalText.innerText = `Clicking save will overwrite game: ${nameOfGameToOverwrite}. Are you sure you want to continue?`;
-  overwriteGameModal.showModal();
+  overwriteGameModalText.innerText = `Clicking save will overwrite game: ${tetrisClass.nameOfGameToSave}. Are you sure you want to continue?`;
+
+  // * now we need to add event listeners since this is the only place these elements are being added to the DOM
+  document
+    .getElementById("confirm-overwrite-button")
+    .addEventListener("click", () => {
+      tetrisClass.saveGame();
+      tetrisClass.nameOfGameToSave = null;
+      tetrisClass.indexOfGameToOverwrite = -1;
+      closeConfirmationModal();
+    });
+
+  // * CANCEL AND CLOSE CONFIRMATION MODAL
+  document
+    .getElementById("close-confirmation-modal-button")
+    .addEventListener("click", () => {
+      closeConfirmationModal();
+    });
+
+  // now we are ready to open the modal
+  confirmationModal.showModal();
 };
 
 const {
@@ -356,16 +501,10 @@ export const updateElementTextById = (id, newVal) => {
   element.innerText = newVal;
 };
 
-export const updateImageSrcById = (id, newSrc) => {
+export const updateImageSrcById = (id, shapeName) => {
+  const newSrc = generatePreviewImgPath(shapeName);
   const imageElement = document.getElementById(id);
   imageElement.src = newSrc;
-};
-
-export const toggleDisplayById = (...ids) => {
-  ids.forEach((id) => {
-    const element = document.getElementById(id);
-    element.classList.toggle("no-display");
-  });
 };
 
 export const injectValueToInputById = (id, valueToInject) => {
@@ -404,14 +543,40 @@ export const verifyUniqueStrings = (strArray) => {
   return true;
 };
 
+export const showElementById = (...ids) => {
+  ids.forEach((id) => {
+    const element = document.getElementById(id);
+    element.classList.remove("no-display");
+  });
+};
+
+export const hideElementById = (...ids) => {
+  ids.forEach((id) => {
+    const element = document.getElementById(id);
+    element.classList.add("no-display");
+  });
+};
+
+export const toggleDisplayById = (...ids) => {
+  ids.forEach((id) => {
+    const element = document.getElementById(id);
+    element.classList.toggle("no-display");
+  });
+};
+
 export const showErrorById = (errorId) => {
   const errorMessage = document.getElementById(errorId);
   errorMessage.classList.remove("no-display");
 };
 
-const removeErrorById = (errorId) => {
+export const removeErrorById = (errorId) => {
   const errorMessage = document.getElementById(errorId);
   errorMessage.classList.add("no-display");
+};
+
+export const changeTextOfErrorById = (errorId, message) => {
+  const errorMessage = document.getElementById(errorId);
+  errorMessage.innerText = message;
 };
 
 export const openSettingsModal = (settingsObj, settingsModal) => {
@@ -420,34 +585,60 @@ export const openSettingsModal = (settingsObj, settingsModal) => {
   settingsModal.showModal();
 };
 
-export const closeSettingsModal = (settingsModal) => {
-  settingsModal.close();
+const getNamesOfAllSavedGames = () => {
+  const savedGames = JSON.parse(localStorage.getItem("savedGames"));
+  if (!savedGames) return;
+  return savedGames.map((savedGame) => savedGame.nameOfGame);
 };
 
-const getNamesOfAllSavedGames = () => {
-  const namesOfAllSavedGames = JSON.parse(
-    localStorage.getItem("savedGames")
-  ).map((savedGame) => savedGame.nameOfGame);
-  return namesOfAllSavedGames;
+const addSavedGamesToDropdown = (namesOfAllSavedGames) => {
+  const dropDownMenuOfSavedGames = document.getElementById("load-game-select");
+  namesOfAllSavedGames.forEach((nameOfSavedGame) => {
+    dropDownMenuOfSavedGames.appendChild(
+      createGameToLoadOption(nameOfSavedGame)
+    );
+  });
 };
 
 export const openLoadGameModal = (loadGameModal) => {
   const namesOfAllSavedGames = getNamesOfAllSavedGames();
-  const selectInput = document.getElementById("load-game-select");
-  namesOfAllSavedGames.forEach((nameOfSavedGame) => {
-    selectInput.appendChild(createGameToLoadOption(nameOfSavedGame));
-  });
-  removeErrorById("no-game-selected-error-message");
+  if (!namesOfAllSavedGames) {
+    showElementById("no-saved-games-heading");
+    hideElementById("load-game-form");
+  } else {
+    showElementById("load-game-form");
+    hideElementById("no-saved-games-heading");
+    addSavedGamesToDropdown(namesOfAllSavedGames);
+  }
+
+  removeErrorById("no-game-selected-error-message"); // reset error state before opening modal so no past errors appear if modal is reopneed
   loadGameModal.showModal();
 };
 
-export const closeLoadGameModal = (loadGameModal) => {
-  const allExistingGameLoadOptions = Array.from(
+export const getAllSavedGameOptions = () => {
+  return Array.from(
     document.getElementsByClassName("game-to-load-select-option")
   );
+};
+
+export const removeLoadGameOptions = () => {
+  const allExistingGameLoadOptions = getAllSavedGameOptions();
   allExistingGameLoadOptions.forEach((gameLoadOption) => {
     gameLoadOption.remove();
   });
+};
+
+export const removeSingleLoadGameOption = (nameOfGame) => {
+  const allExistingGameLoadOptions = getAllSavedGameOptions();
+  allExistingGameLoadOptions.forEach((existingOption) => {
+    if (existingOption.value === nameOfGame) {
+      existingOption.remove();
+    }
+  });
+};
+
+export const closeLoadGameModal = (loadGameModal) => {
+  removeLoadGameOptions(); // so no options are ever appended more than once
   loadGameModal.close();
 };
 
@@ -477,6 +668,24 @@ export const drawPreviousCanvas = (canvasURL) => {
   function drawSavedCanvas() {
     ctx.drawImage(this, 0, 0); // "this" is the img on which drawSavedCanvas is called.
   }
+};
+
+export const closeConfirmationModal = () => {
+  const confirmationModal = document.getElementById("confirmation-modal");
+  // get all the id's of modalContent that is rendered on this shared confirmationModal across every page
+  const keys = Object.keys(allModals.confirmationModalData);
+  const allContainerIds = keys.map(
+    (key) => allModals.confirmationModalData[key].containerId
+  );
+  allContainerIds.forEach((containerId) => {
+    const modalContent = document.getElementById(containerId);
+    // remove whatever modal content is currently displayed
+    if (modalContent) {
+      modalContent.remove();
+    }
+  });
+  // close the modal
+  confirmationModal.close();
 };
 
 export const updateSettingsFormData = {
@@ -704,7 +913,7 @@ export const loadGameFormData = {
   inputs: [
     {
       inputName: "loadGameSelect",
-      labelText: "Select a Game To Load",
+      labelText: "Select a Saved Game",
       containerClasses: [],
       labelClasses: [],
       inputClasses: [],
@@ -714,6 +923,23 @@ export const loadGameFormData = {
       },
     },
   ],
+  deleteButtons: {
+    containerClasses: [],
+    buttonObjs: [
+      {
+        buttonText: "Delete Selected Game",
+        type: "button",
+        id: "delete-saved-game-button",
+        classes: [],
+      },
+      {
+        buttonText: "Delete All Saved Games",
+        type: "button",
+        id: "delete-all-saved-games-button",
+        classes: [],
+      },
+    ],
+  },
   submitButton: {
     id: "",
     classes: [],

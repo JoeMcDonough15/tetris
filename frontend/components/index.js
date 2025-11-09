@@ -44,9 +44,7 @@ const createInputContainer = (data, isSelect = null) => {
   label.setAttribute("for", data.input.id);
   const input = quickElement(isSelect ? "select" : "input", [], data.input.id);
   if (isSelect) {
-    const dropDownInstructions = createGameToLoadOption(
-      "Select a Game To Load"
-    );
+    const dropDownInstructions = createGameToLoadOption("Saved Games");
     dropDownInstructions.classList.remove("game-to-load-select-option");
     input.appendChild(dropDownInstructions);
   }
@@ -67,11 +65,19 @@ const createSubmitButton = (buttonObj) => {
   return submit;
 };
 
-const createErrorMessage = (errorText, id) => {
-  const error = quickElement("p", ["error-message", "no-display"], id);
-  error.innerText = errorText;
+// render a row of buttons to act as the cancel or confirm buttons in a confirmationModal or delete buttons in the loadGameForm
+const createButtons = ({ containerClasses, buttonObjs }) => {
+  const buttonsContainer = createContainer("div", containerClasses);
 
-  return error;
+  buttonObjs.forEach((buttonObj) => {
+    const button = quickElement("button", buttonObj.classes, buttonObj.id);
+    button.innerText = buttonObj.buttonText;
+    button.type = "button";
+
+    buttonsContainer.appendChild(button);
+  });
+
+  return buttonsContainer;
 };
 
 const createLoadGameForm = () => {
@@ -84,12 +90,13 @@ const createLoadGameForm = () => {
     loadGameFormData.inputs[0],
     "isSelect"
   );
+  const deleteButtons = createButtons(loadGameFormData.deleteButtons);
   const submitButton = createSubmitButton(loadGameFormData.submitButton);
   const error = createErrorMessage(
     "Please Select a Game To Load",
     "no-game-selected-error-message"
   );
-  loadGameForm.append(selectInputContainer, submitButton, error);
+  loadGameForm.append(selectInputContainer, deleteButtons, submitButton, error);
   return loadGameForm;
 };
 
@@ -204,6 +211,14 @@ const createCloseModalButton = ({ buttonText, classes, id }) => {
 };
 
 // * Component Functions to be Exported
+
+// render a custom error message for any of the components here or on the fly throughout the app
+export const createErrorMessage = (errorText, id) => {
+  const error = quickElement("p", ["error-message", "no-display"], id);
+  error.innerText = errorText;
+
+  return error;
+};
 
 // render a player name form with a custom method to be called on submit
 export const createPlayerNameForm = () => {
@@ -355,6 +370,7 @@ export const createControllerRow = (containerClassName, controllerObjs) => {
 // render a settings modal that can be used as a dialog element for whenever user opens settings in main menu or from the pause menu during game play
 export const createSettingsModal = (settingsDataObj) => {
   const settingsModal = createModalWithButton(settingsDataObj);
+  settingsModal.setAttribute("closedby", "none");
   const updateSettingsForm = createUpdateSettingsForm();
   settingsModal.append(updateSettingsForm);
   return settingsModal;
@@ -363,14 +379,22 @@ export const createSettingsModal = (settingsDataObj) => {
 // render a modal that has a form to select which game to load.  Game names are pulled from localStorage, and on submit, user is redirected to /play-game with the loaded game state
 export const createLoadGameModal = () => {
   const loadGameModal = createModalWithButton(loadGameModalObj);
+  loadGameModal.setAttribute("closedby", "none");
+  const noGamesToLoadHeading = createCustomHeading(
+    "h2",
+    "No Saved Games",
+    ["no-games-to-display-heading"],
+    "no-saved-games-heading"
+  );
   const loadGameForm = createLoadGameForm();
-  loadGameModal.appendChild(loadGameForm);
+  loadGameModal.append(noGamesToLoadHeading, loadGameForm);
   return loadGameModal;
 };
 
 // render a modal that has a form to save your game to localStorage
 export const createSaveGameModal = () => {
   const saveGameModal = createModalWithButton(saveGameModalObj);
+  saveGameModal.setAttribute("closedby", "none");
   const saveGameForm = createSaveGameForm();
   saveGameModal.appendChild(saveGameForm);
   return saveGameModal;
@@ -391,6 +415,7 @@ export const createPauseModal = () => {
     pauseModalObj.classes,
     pauseModalObj.id
   );
+  pauseModal.setAttribute("closedby", "none");
   const pauseMenuButtons = createMenuButtons(
     pauseMenuButtonsContainerObj,
     pauseMenuButtonObjs
@@ -398,29 +423,6 @@ export const createPauseModal = () => {
   pauseModal.appendChild(pauseMenuButtons);
 
   return pauseModal;
-};
-
-// render a row of buttons to act as the deny or confirm buttons in a confirmationModal
-const createConfirmationButtonsContainer = ({
-  containerClasses,
-  deny,
-  confirm,
-}) => {
-  const buttonsContainer = createContainer("div", containerClasses);
-
-  const buttonDeny = quickElement("button", deny.classes, deny.id);
-  buttonDeny.innerText = deny.buttonText;
-
-  const buttonConfirm = quickElement("button", confirm.classes, confirm.id);
-  buttonConfirm.innerText = confirm.buttonText;
-
-  [buttonDeny, buttonConfirm].forEach((button) => {
-    button.type = "button";
-  });
-
-  buttonsContainer.append(buttonDeny, buttonConfirm);
-
-  return buttonsContainer;
 };
 
 // render a modal to confirm an action like overwriting a game in memory, or quitting a game from the pause menu
@@ -431,6 +433,7 @@ export const createConfirmationModal = ({
   confirmationButtonsObj,
 }) => {
   const confirmationModal = quickElement("dialog", classes, id);
+  confirmationModal.setAttribute("closedby", "none");
   const confirmationTextElement = quickElement(
     "p",
     confirmationTextObj.classes,
@@ -440,9 +443,8 @@ export const createConfirmationModal = ({
   if (confirmationTextObj.text) {
     confirmationTextElement.innerText = confirmationTextObj.text;
   }
-  const confirmationButtonsContainer = createConfirmationButtonsContainer(
-    confirmationButtonsObj
-  );
+
+  const confirmationButtonsContainer = createButtons(confirmationButtonsObj);
 
   confirmationModal.append(
     confirmationTextElement,
@@ -450,4 +452,49 @@ export const createConfirmationModal = ({
   );
 
   return confirmationModal;
+};
+
+// ! rename createConfirmationModal
+export const createReusableConfirmationModal = () => {
+  const confirmationModal = quickElement(
+    "dialog",
+    ["modal-container"],
+    "confirmation-modal"
+  );
+  confirmationModal.setAttribute("closedby", "none");
+
+  return confirmationModal;
+};
+
+export const createConfirmationModalContent = ({
+  containerClasses,
+  containerId,
+  confirmationTextObj,
+  confirmationButtonsObj,
+}) => {
+  const modalContentContainer = quickElement(
+    "div",
+    containerClasses,
+    containerId
+  );
+
+  const confirmationTextElement = quickElement(
+    "p",
+    confirmationTextObj.classes,
+    confirmationTextObj.id
+  );
+  // if the confirmationText object includes hard coded text to put on it, do so; otherwise, the text is generated dynamically using its confirmationTextElement.id inside an event listener.
+  if (confirmationTextObj.text) {
+    confirmationTextElement.innerText = confirmationTextObj.text;
+  }
+
+  const confirmationButtonsContainer = createButtons(confirmationButtonsObj);
+
+  modalContentContainer.append(
+    confirmationTextElement,
+    confirmationButtonsContainer
+  );
+
+  return modalContentContainer; // in the event listner to open this, confirmationModal.appendChild(modalContentContainer);
+  // in the event listener to close this modal, it would confirmationModal.close() and then modalContentContainer.remove();
 };

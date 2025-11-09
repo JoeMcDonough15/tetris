@@ -1,4 +1,4 @@
-import { generatePreviewImgPath, shapeColors } from "../../../utils/index.js";
+import { shapeColors } from "../../../utils/index.js";
 import Block from "./block.js";
 import { GRID_SPACE } from "../../../utils/index.js";
 
@@ -45,7 +45,6 @@ export class Line extends Shape {
       ? this.determineRotationIndex(optionalRotationName)
       : 0;
     this.rotation = this.availableRotations[this.rotationIndex];
-    this.preview = generatePreviewImgPath(this.shapeName);
   }
 
   drawShape = () => {
@@ -135,7 +134,6 @@ export class Square extends Shape {
   constructor(optionalXCoordinate, optionalYCoordinate) {
     super(shapeColors.blue, optionalXCoordinate, optionalYCoordinate);
     this.shapeName = "square";
-    this.preview = generatePreviewImgPath(this.shapeName);
   }
 
   drawShape = () => {
@@ -175,7 +173,6 @@ export class TShape extends Shape {
       ? this.determineRotationIndex(optionalRotationName)
       : 0;
     this.rotation = this.availableRotations[this.rotationIndex];
-    this.preview = generatePreviewImgPath(this.shapeName);
   }
 
   drawShape = () => {
@@ -359,7 +356,6 @@ export class LShape extends Shape {
       ? this.determineRotationIndex(optionalRotationName)
       : 0;
     this.rotation = this.availableRotations[this.rotationIndex];
-    this.preview = generatePreviewImgPath(this.shapeName);
   }
 
   drawShape = () => {
@@ -539,7 +535,6 @@ export class JShape extends Shape {
       ? this.determineRotationIndex(optionalRotationName)
       : 0;
     this.rotation = this.availableRotations[this.rotationIndex];
-    this.preview = generatePreviewImgPath(this.shapeName);
   }
 
   drawShape = () => {
@@ -720,7 +715,6 @@ export class SShape extends Shape {
       ? this.determineRotationIndex(optionalRotationName)
       : 0;
     this.rotation = this.availableRotations[this.rotationIndex];
-    this.preview = generatePreviewImgPath(this.shapeName);
   }
 
   drawShape = () => {
@@ -819,7 +813,6 @@ export class ZShape extends Shape {
       ? this.determineRotationIndex(optionalRotationName)
       : 0;
     this.rotation = this.availableRotations[this.rotationIndex];
-    this.preview = generatePreviewImgPath(this.shapeName);
   }
 
   drawShape = () => {
