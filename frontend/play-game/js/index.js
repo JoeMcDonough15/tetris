@@ -214,7 +214,7 @@ saveGameForm.addEventListener("submit", (e) => {
 
 // Mouse Events
 pauseButton.addEventListener("click", () => {
-  pauseModal.showModal();
+  // pauseModal.showModal();
   game.togglePause();
 });
 

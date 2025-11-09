@@ -161,27 +161,12 @@ class Tetris {
       `Score: ${this.playerTotalScore}`
     );
 
-    loadedGame.gameObj.pieceQueue.forEach((pieceInQueue) => {
-      let nextPieceForQueue;
-      if (pieceInQueue.shapeName === "line") {
-        nextPieceForQueue = new Line();
-      } else if (pieceInQueue.shapeName === "square") {
-        nextPieceForQueue = new Square();
-      } else if (pieceInQueue.shapeName === "tShape") {
-        nextPieceForQueue = new TShape();
-      } else if (pieceInQueue.shapeName === "lShape") {
-        nextPieceForQueue = new LShape();
-      } else if (pieceInQueue.shapeName === "jShape") {
-        nextPieceForQueue = new JShape();
-      } else if (pieceInQueue.shapeName === "sShape") {
-        nextPieceForQueue = new SShape();
-      } else if (pieceInQueue.shapeName === "zShape") {
-        nextPieceForQueue = new ZShape();
-      }
-      this.pieceQueue.push(nextPieceForQueue);
+    loadedGame.gameObj.pieceQueue.forEach((nameOfShape) => {
+      this.pieceQueue.push(nameOfShape);
     });
+
     // now set the preview-img to be the first shape in the queue
-    updateImageSrcById("preview-img", this.pieceQueue[0].preview);
+    updateImageSrcById("preview-img", this.pieceQueue[0]);
 
     // now, set up the currentPiece.  Grab its x and y coordinates and instantiate the shape that it is with those coordinates in the rotation it was in when game was saved.
     const previousXCoordinate =
@@ -458,11 +443,11 @@ class Tetris {
   };
 
   moveShape = (direction) => {
+    if (this.currentPiecePlaced) return; // never allow movement of a piece if it is placed on the grid
     if (this.willCollide(direction === "down" ? "bottom" : direction)) {
       if (direction === "down") {
         this.placePiece();
       }
-
       return;
     }
 
