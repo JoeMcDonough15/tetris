@@ -27,11 +27,8 @@ const createMenuButton = (buttonObj) => {
   if (buttonObj.autofocus) {
     button.setAttribute("autofocus", true);
   }
-  const buttonContent = quickElement(buttonObj.navLink ? "a" : "span", []);
+  const buttonContent = quickElement("span", []);
   buttonContent.innerText = buttonObj.buttonText;
-  if (buttonObj.navLink) {
-    buttonContent.setAttribute("href", buttonObj.navLink);
-  }
   button.appendChild(buttonContent);
   return button;
 };
@@ -301,13 +298,13 @@ export const createMenuButtons = (containerObj, arrayOfButtonObjs) => {
   // create nav buttons and place in their own separate nav tag
   const navButtonsContainer = quickElement("nav", ["nav-buttons"]);
   const navButtons = arrayOfButtonObjs
-    .filter((buttonObj) => buttonObj.navLink)
+    .filter((buttonObj) => buttonObj.navButton)
     .map((buttonObj) => createMenuButton(buttonObj));
   navButtonsContainer.append(...navButtons);
 
   // create all non-nav buttons
   const menuButtons = arrayOfButtonObjs
-    .filter((buttonObj) => !buttonObj.navLink)
+    .filter((buttonObj) => !buttonObj.navButton)
     .map((buttonObj) => createMenuButton(buttonObj));
 
   menuButtonsContainer.append(navButtonsContainer, ...menuButtons);
