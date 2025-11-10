@@ -3,10 +3,10 @@ class Settings {
     this.savedSettings = JSON.parse(
       window.sessionStorage.getItem("savedSettings")
     );
-    this.soundFx = this.savedSettings?.soundFx || "on";
-    this.music = this.savedSettings?.music || "on";
+    this.soundFx = this.savedSettings?.soundFx || "off";
+    this.music = this.savedSettings?.music || "off";
     this.gameMusicSelection =
-      this.savedSettings?.gameMusicSelection || "theme-1";
+      this.savedSettings?.gameMusicSelection || "theme-2"; // ! should be theme-1 this is for testing only
     this.colorPaletteSelection =
       this.savedSettings?.colorPaletteSelection || "classic";
     this.keyControls = this.savedSettings?.keyControls || {
