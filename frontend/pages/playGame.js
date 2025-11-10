@@ -34,7 +34,7 @@ import {
   closeConfirmationModal,
   allModals,
 } from "../utils/index.js";
-import Tetris from "../play-game/js/game/tetris.js";
+import Tetris from "../game/tetris.js";
 
 import mainMenuPageBuilder from "./mainMenu.js";
 

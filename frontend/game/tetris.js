@@ -13,7 +13,7 @@ import {
   openConfirmOverwriteGameModal,
   saveCanvas,
   drawPreviousCanvas,
-} from "../../../utils/index.js";
+} from "../utils/index.js";
 import {
   Line,
   Square,
