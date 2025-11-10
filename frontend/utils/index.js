@@ -371,7 +371,7 @@ const allMenuButtonObjs = {
     id: "open-settings-modal-button",
     navButton: false,
   },
-  newGame: { navButton: true, buttonText: "New Game" },
+  newGame: { navButton: true, buttonText: "New Game", id: "new-game-button" },
   saveGame: {
     buttonText: "Save Game",
     navButton: false,

@@ -62,9 +62,8 @@ const mainMenuPageBuilder = (settingsObj) => {
 
   // * Add Event Listeners
 
-  // Form Submit Events
-  const updateSettingsForm = document.getElementById("update-settings-form");
-  updateSettingsForm.addEventListener("submit", (e) => {
+  // Form Submit Event Callbacks
+  const handleUpdateSettingsFormSubmit = (e) => {
     e.preventDefault();
     const inputsObj = grabInputValuesFromForm(updateSettingsForm);
     const keyControlInputVals = Object.values(inputsObj.keyControls);
@@ -77,10 +76,9 @@ const mainMenuPageBuilder = (settingsObj) => {
 
     settingsObj.updateSettings({ ...inputsObj });
     settingsModal.close();
-  });
+  };
 
-  const loadGameForm = document.getElementById("load-game-form");
-  loadGameForm.addEventListener("submit", (e) => {
+  const handleLoadGameFormSubmit = (e) => {
     e.preventDefault();
 
     const loadGameSelectElement = loadGameForm.elements[0];
@@ -93,120 +91,171 @@ const mainMenuPageBuilder = (settingsObj) => {
       showErrorById("no-game-selected-error-message");
       return;
     }
-    // ! REMOVE SESSION STORAGE now set that selected game name in window.sessionStorage as gameToLoad, then close the modal (clearing the options) and navigate to /play-game
+
+    // * clean up any event listeners on this page
+    // * remove the main container from the DOM
+    // * call playGamePageBuilder and pass in the settings object as well as the name of the game to load
+    // * close load game modal
+
+    // ! REMOVE ALL OF THIS
     window.sessionStorage.setItem("gameToLoad", selectedOption);
     closeLoadGameModal(loadGameModal);
     window.location.assign("/play-game");
-  });
+    // !
+  };
+
+  // Form Submit Events
+  const updateSettingsForm = document.getElementById("update-settings-form");
+  updateSettingsForm.addEventListener("submit", handleUpdateSettingsFormSubmit);
+
+  const loadGameForm = document.getElementById("load-game-form");
+  loadGameForm.addEventListener("submit", handleLoadGameFormSubmit);
+
+  // Click Event Callbacks
+  const handleNewGamebutton = () => {
+    // * clean up any event listeners on this page
+    // * remove the main container from the DOM
+    cleanupFunction();
+    // * call playGamePageBuilder and pass in the settings object
+  };
+
+  const handleOpenSettingsModal = () => {
+    openSettingsModal(settingsObj, settingsModal);
+  };
+
+  const handleCloseSettingsModal = () => {
+    settingsModal.close();
+  };
+
+  const handleOpenLoadGameModal = () => {
+    openLoadGameModal(loadGameModal);
+  };
+
+  const handleCloseLoadGameModal = () => {
+    closeLoadGameModal(loadGameModal);
+  };
+
+  const handleCloseConfirmationModalButton = () => {
+    closeConfirmationModal(confirmationModal);
+  };
+
+  const handleDeleteSavedGameButton = () => {
+    const loadGameSelectElement = loadGameForm.elements[0];
+    const selectedOption = grabSelectedOption(loadGameSelectElement);
+    if (!selectedOption) {
+      changeTextOfErrorById(
+        "no-game-selected-error-message",
+        "Please Select a Game to Delete"
+      );
+      showErrorById("no-game-selected-error-message");
+      return;
+    }
+
+    const modalContent = createConfirmationModalContent(
+      allModals.confirmationModalData.confirmDeleteSavedGame
+    );
+    confirmationModal.appendChild(modalContent);
+
+    const handleConfirmDeleteSavedGameButton = () => {
+      const allSavedGames = JSON.parse(
+        window.localStorage.getItem("savedGames")
+      );
+      const nameOfGameToDelete = selectedOption;
+      const indexOfGameToDelete = allSavedGames.findIndex((savedGame) => {
+        return savedGame.nameOfGame === nameOfGameToDelete;
+      });
+      allSavedGames.splice(indexOfGameToDelete, 1);
+      if (!allSavedGames.length) {
+        window.localStorage.removeItem("savedGames");
+        toggleDisplayById("no-saved-games-heading", "load-game-form");
+      } else {
+        window.localStorage.setItem(
+          "savedGames",
+          JSON.stringify(allSavedGames)
+        );
+      }
+      removeSingleLoadGameOption(nameOfGameToDelete);
+      // TODO make a notification saying the game was successfully deleted that disappears after a setTimeout expires
+      closeConfirmationModal(confirmationModal);
+    };
+
+    document
+      .getElementById("confirm-delete-saved-game-button")
+      .addEventListener("click", handleConfirmDeleteSavedGameButton, {
+        once: true,
+      });
+
+    document
+      .getElementById("close-confirmation-modal-button")
+      .addEventListener("click", handleCloseConfirmationModalButton, {
+        once: true,
+      });
+
+    removeErrorById("no-game-selected-error-message");
+    confirmationModal.showModal();
+  };
+
+  const handleDeleteAllSavedGamesButton = () => {
+    const modalContent = createConfirmationModalContent(
+      allModals.confirmationModalData.confirmDeleteAllSavedGames
+    );
+    confirmationModal.appendChild(modalContent);
+
+    const handleConfirmDeleteAllSavedGamesButton = () => {
+      window.localStorage.removeItem("savedGames");
+      removeLoadGameOptions();
+      toggleDisplayById("no-saved-games-heading", "load-game-form");
+      // TODO make a notification saying all games were successfully deleted that disappears after a setTimeout expires
+      closeConfirmationModal(confirmationModal);
+    };
+
+    document
+      .getElementById("confirm-delete-all-saved-games-button")
+      .addEventListener("click", handleConfirmDeleteAllSavedGamesButton, {
+        once: true,
+      });
+
+    document
+      .getElementById("close-confirmation-modal-button")
+      .addEventListener("click", handleCloseConfirmationModalButton, {
+        once: true,
+      });
+
+    removeErrorById("no-game-selected-error-message");
+    confirmationModal.showModal();
+  };
 
   // Mouse Events
   document
+    .getElementById("new-game-button")
+    .addEventListener("click", handleNewGamebutton);
+
+  document
     .getElementById("open-settings-modal-button")
-    .addEventListener("click", () => {
-      openSettingsModal(settingsObj, settingsModal);
-    });
+    .addEventListener("click", handleOpenSettingsModal);
 
   document
     .getElementById("close-settings-modal-button")
-    .addEventListener("click", () => {
-      settingsModal.close();
-    });
+    .addEventListener("click", handleCloseSettingsModal);
 
   document
     .getElementById("open-load-game-modal-button")
-    .addEventListener("click", () => {
-      openLoadGameModal(loadGameModal);
-    });
+    .addEventListener("click", handleOpenLoadGameModal);
 
   document
     .getElementById("close-load-game-modal-button")
-    .addEventListener("click", () => {
-      closeLoadGameModal(loadGameModal);
-    });
+    .addEventListener("click", handleCloseLoadGameModal);
 
   document
     .getElementById("delete-saved-game-button")
-    .addEventListener("click", () => {
-      const loadGameSelectElement = loadGameForm.elements[0];
-      const selectedOption = grabSelectedOption(loadGameSelectElement);
-      if (!selectedOption) {
-        changeTextOfErrorById(
-          "no-game-selected-error-message",
-          "Please Select a Game to Delete"
-        );
-        showErrorById("no-game-selected-error-message");
-        return;
-      }
-
-      const modalContent = createConfirmationModalContent(
-        allModals.confirmationModalData.confirmDeleteSavedGame
-      );
-      confirmationModal.appendChild(modalContent);
-      document
-        .getElementById("confirm-delete-saved-game-button")
-        .addEventListener("click", () => {
-          const allSavedGames = JSON.parse(
-            window.localStorage.getItem("savedGames")
-          );
-          const nameOfGameToDelete = selectedOption;
-          const indexOfGameToDelete = allSavedGames.findIndex((savedGame) => {
-            return savedGame.nameOfGame === nameOfGameToDelete;
-          });
-          allSavedGames.splice(indexOfGameToDelete, 1);
-          if (!allSavedGames.length) {
-            window.localStorage.removeItem("savedGames");
-            toggleDisplayById("no-saved-games-heading", "load-game-form");
-          } else {
-            window.localStorage.setItem(
-              "savedGames",
-              JSON.stringify(allSavedGames)
-            );
-          }
-          removeSingleLoadGameOption(nameOfGameToDelete);
-          // TODO make a notification saying the game was successfully deleted that disappears after a setTimeout expires
-          closeConfirmationModal(confirmationModal);
-        });
-
-      document
-        .getElementById("close-confirmation-modal-button")
-        .addEventListener("click", () => {
-          closeConfirmationModal(confirmationModal);
-        });
-
-      removeErrorById("no-game-selected-error-message");
-      confirmationModal.showModal();
-    });
+    .addEventListener("click", handleDeleteSavedGameButton);
 
   document
     .getElementById("delete-all-saved-games-button")
-    .addEventListener("click", () => {
-      const modalContent = createConfirmationModalContent(
-        allModals.confirmationModalData.confirmDeleteAllSavedGames
-      );
-      confirmationModal.appendChild(modalContent);
+    .addEventListener("click", handleDeleteAllSavedGamesButton);
 
-      document
-        .getElementById("confirm-delete-all-saved-games-button")
-        .addEventListener("click", () => {
-          window.localStorage.removeItem("savedGames");
-          removeLoadGameOptions();
-          toggleDisplayById("no-saved-games-heading", "load-game-form");
-          // TODO make a notification saying all games were successfully deleted that disappears after a setTimeout expires
-          closeConfirmationModal(confirmationModal);
-        });
-
-      document
-        .getElementById("close-confirmation-modal-button")
-        .addEventListener("click", () => {
-          closeConfirmationModal(confirmationModal);
-        });
-
-      removeErrorById("no-game-selected-error-message");
-      confirmationModal.showModal();
-    });
-
-  // Keyboard Events
-  window.addEventListener("keyup", (e) => {
+  // Keyboard Event Callbacks
+  const handleKeyUp = (e) => {
     const keyName = e.key;
     const activeElement = document.activeElement;
     if (
@@ -214,9 +263,9 @@ const mainMenuPageBuilder = (settingsObj) => {
     ) {
       activeElement.value = keyName;
     }
-  });
+  };
 
-  window.addEventListener("keydown", (e) => {
+  const handleKeyDown = (e) => {
     const keyName = e.key;
     if (keyName === "Escape") {
       if (confirmationModal.open) {
@@ -227,7 +276,81 @@ const mainMenuPageBuilder = (settingsObj) => {
         closeLoadGameModal(loadGameModal);
       }
     }
-  });
+  };
+
+  // Keyboard Event Listeners
+  window.addEventListener("keyup", handleKeyUp);
+  window.addEventListener("keydown", handleKeyDown);
+
+  const cleanupFunction = () => {
+    // aggregates all elements that have event listeners on them in the form of: [ {"id-of-element", "type-of-event"} ];
+    const objsWithEventListeners = [
+      {
+        idOfElement: "update-settings-form",
+        typeOfEvent: "submit",
+        callBack: handleUpdateSettingsFormSubmit,
+      },
+      {
+        idOfElement: "load-game-form",
+        typeOfEvent: "submit",
+        callBack: handleLoadGameFormSubmit,
+      },
+      {
+        idOfElement: "new-game-button",
+        typeOfEvent: "click",
+        callBack: handleNewGamebutton,
+      },
+      {
+        idOfElement: "open-settings-modal-button",
+        typeOfEvent: "click",
+        callBack: handleOpenSettingsModal,
+      },
+      {
+        idOfElement: "close-settings-modal-button",
+        typeOfEvent: "click",
+        callBack: handleCloseSettingsModal,
+      },
+      {
+        idOfElement: "open-load-game-modal-button",
+        typeOfEvent: "click",
+        callBack: handleOpenLoadGameModal,
+      },
+      {
+        idOfElement: "close-load-game-modal-button",
+        typeOfEvent: "click",
+        callBack: handleCloseLoadGameModal,
+      },
+      {
+        idOfElement: "delete-saved-game-button",
+        typeOfEvent: "click",
+        callBack: handleDeleteSavedGameButton,
+      },
+      {
+        idOfElement: "delete-all-saved-games-button",
+        typeOfEvent: "click",
+        callBack: handleDeleteAllSavedGamesButton,
+      },
+
+      { objOfListener: window, typeOfEvent: "keyup", callBack: handleKeyUp },
+      {
+        objOfListener: window,
+        typeOfEvent: "keydown",
+        callBack: handleKeyDown,
+      },
+    ];
+    // loop over the array of elements and for each id-of-element, remove the type-of-event
+    objsWithEventListeners.forEach((obj) => {
+      if (obj.idOfElement) {
+        document
+          .getElementById(obj.idOfElement)
+          .removeEventListener(obj.typeOfEvent, obj.callBack);
+      } else {
+        obj.objOfListener.removeEventListener(obj.typeOfEvent, obj.callBack);
+      }
+    });
+
+    // remove the main-menu-container
+  };
 };
 
 export default mainMenuPageBuilder;

@@ -189,6 +189,8 @@ const playGamePageBuilder = () => {
 
     await highScoresObj.addScoreToHighScores(playerDetails);
 
+    // ! navigate to high scores page
+
     toggleDisplayById("player-name-form");
     toggleDisplayById("post-game-menu-buttons");
   });
