@@ -36,14 +36,19 @@ const buttonsImgPathObj = {
   suffix: ".png",
 };
 
-export const gameSoundsPathObj = {
+const gameSoundsPathObj = {
   prefix: "/sounds/",
   suffix: ".mp3",
 };
 
-export const previewImgPathObj = {
+const previewImgPathObj = {
   prefix: "/images/previews/",
   suffix: "-preview.png",
+};
+
+const gameMusicPathObj = {
+  prefix: "/music/",
+  suffix: ".mp3",
 };
 
 // Utility Functions
@@ -60,6 +65,10 @@ const generatePreviewImgPath = (shapeName) => {
 
 const generateSoundPath = (soundEffect) => {
   return `${gameSoundsPathObj.prefix}${soundEffect}${gameSoundsPathObj.suffix}`;
+};
+
+export const generateMusicPath = (themeName) => {
+  return `${gameMusicPathObj.prefix}${themeName}${gameMusicPathObj.suffix}`;
 };
 
 // In Game Sounds Audio Objects

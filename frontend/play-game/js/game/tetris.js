@@ -25,6 +25,7 @@ import {
 } from "./shapes.js";
 import Block from "./block.js";
 import GameGrid from "./gameGrid.js";
+import GameMusic from "./music.js";
 
 class Tetris {
   constructor(gameSettingsObj, highScoresObj, nameOfGameToLoad) {
@@ -33,7 +34,7 @@ class Tetris {
     this.highScoresObj = highScoresObj;
 
     // Game State
-    this.nameOfGameToLoad = nameOfGameToLoad; // possibly null
+    this.nameOfGameToLoad = nameOfGameToLoad; // possibly undefined
     this.nameOfGameToSave = null;
     this.indexOfGameToOverwrite = -1;
     this.gameOver = false;
@@ -50,6 +51,7 @@ class Tetris {
     this.currentPiece = null;
     this.currentPiecePlaced = false;
     this.numRotations = 0;
+    this.gameMusic = new GameMusic(this.gameSettings.gameMusicSelection);
 
     // load game if it exists
     if (this.nameOfGameToLoad) {
@@ -230,10 +232,17 @@ class Tetris {
 
   startGame = () => {
     if (this.nameOfGameToLoad) {
+      // load a previous game and continue with gravityDrop
       this.loadGame();
       this.gravityDrop();
     } else {
+      // or start the new game by dequeueing the first piece
       this.dequeuePiece();
+    }
+    // play music if user has not turned it off
+    // ! This will be more applicable when the app is a SPA because right now, music is always off when the play game page loads
+    if (this.gameSettings.music === "on") {
+      this.gameMusic.player.play();
     }
   };
 
@@ -272,6 +281,18 @@ class Tetris {
     this.gamePaused = !this.gamePaused;
     if (!this.gamePaused) {
       this.gravityDrop();
+      // if the music was changed while game was paused, we have to reflect that in the music player
+      const playerSelectedMusic = this.gameSettings.gameMusicSelection;
+      if (this.gameMusic.selectedMusic !== playerSelectedMusic) {
+        this.gameMusic.changeMusic(playerSelectedMusic);
+      }
+      // play music on unpause only if user wants music on
+      if (this.gameSettings.music === "on") {
+        this.gameMusic.player.play();
+      }
+    } else {
+      // pause music every time game is paused
+      this.gameMusic.player.pause();
     }
   };
 
