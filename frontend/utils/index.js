@@ -345,13 +345,6 @@ export const confirmOverwriteGameModalObj = allModals.confirmOverwriteGameModal;
 
 export const confirmQuitGameModalObj = allModals.confirmQuitGameModal;
 
-// Button Navigation Routes
-const buttonNavRoutes = {
-  mainMenu: "/",
-  playGame: "/play-game",
-  highScores: "/high-scores",
-};
-
 // Menu Button Containers
 export const mainMenuButtonsContainerObj = {
   elementName: "div",
@@ -368,25 +361,35 @@ export const pauseMenuButtonsContainerObj = mainMenuButtonsContainerObj;
 
 // Menu Buttons
 const allMenuButtonObjs = {
-  startGame: { buttonText: "Start Game", navLink: buttonNavRoutes.playGame },
+  startGame: { buttonText: "Start Game", navButton: true },
   viewHighScores: {
     buttonText: "View High Scores",
-    navLink: buttonNavRoutes.highScores,
+    navButton: true,
   },
   openSettings: {
     buttonText: "Settings",
     id: "open-settings-modal-button",
+    navButton: false,
   },
-  newGame: { navLink: buttonNavRoutes.playGame, buttonText: "New Game" },
-  saveGame: { buttonText: "Save Game", id: "open-save-game-modal-button" },
-  loadGame: { buttonText: "Load a Game", id: "open-load-game-modal-button" },
+  newGame: { navButton: true, buttonText: "New Game" },
+  saveGame: {
+    buttonText: "Save Game",
+    navButton: false,
+    id: "open-save-game-modal-button",
+  },
+  loadGame: {
+    buttonText: "Load a Game",
+    navButton: false,
+    id: "open-load-game-modal-button",
+  },
   quitGame: {
+    navButton: false,
     buttonText: "Quit Game",
     id: "open-confirm-quit-game-modal-button",
   },
   createMainMenuObj: function (buttonText) {
     return {
-      navLink: buttonNavRoutes.mainMenu,
+      navButton: true,
       buttonText: buttonText,
     };
   },

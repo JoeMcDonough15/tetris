@@ -11,7 +11,6 @@ import {
   createPauseModal,
   createSaveGameModal,
   createConfirmationModal,
-  createReusableConfirmationModal,
   createConfirmationModalContent,
 } from "../components/index.js";
 import HighScores from "../high-scores/js/api/highScoresApi.js";
@@ -89,7 +88,7 @@ const playGamePageBuilder = () => {
   const pauseModal = createPauseModal(); // * ----------> confirmQuitModal
   const settingsModal = createSettingsModal(settingsModalInGame);
   const saveGameModal = createSaveGameModal(); // * ----------> confirmOverwriteGameModal
-  const confirmationModal = createReusableConfirmationModal();
+  const confirmationModal = createConfirmationModal();
 
   // const confirmOverwriteGameModal = createConfirmationModal(
   //   confirmOverwriteGameModalObj
