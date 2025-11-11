@@ -27,11 +27,11 @@ import {
   grabInputValuesFromForm,
   showErrorById,
   openSettingsModal,
-  settingsModalInGame,
   // confirmOverwriteGameModalObj,
   // confirmQuitGameModalObj,
   closeConfirmationModal,
   allModals,
+  settingsModalInGameObj,
 } from "../utils/index.js";
 import Tetris from "../game/tetris.js";
 
@@ -86,7 +86,7 @@ const playGamePageBuilder = () => {
   );
 
   const pauseModal = createPauseModal(); // * ----------> confirmQuitModal
-  const settingsModal = createSettingsModal(settingsModalInGame);
+  const settingsModal = createSettingsModal(settingsModalInGameObj);
   const saveGameModal = createSaveGameModal(); // * ----------> confirmOverwriteGameModal
   const confirmationModal = createConfirmationModal();
 

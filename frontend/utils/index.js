@@ -80,9 +80,6 @@ export const clearedRowSound = new Audio(generateSoundPath("cleared-row"));
 export const allModals = {
   settingsModal: {
     closeButtonObj: {
-      createButtonText: function (buttonText) {
-        return buttonText;
-      },
       classes: [],
       id: "close-settings-modal-button",
     },
@@ -282,55 +279,23 @@ export const allModals = {
   },
 };
 
-export const openConfirmOverwriteGameModal = (tetrisClass) => {
-  const confirmationModal = document.getElementById("confirmation-modal");
-  const modalContent = createConfirmationModalContent(
-    allModals.confirmationModalData.confirmOverwriteSavedGame
-  );
-  confirmationModal.appendChild(modalContent);
-  const overwriteGameModalText = document.getElementById(
-    "confirm-overwrite-game-modal-text"
-  );
-  overwriteGameModalText.innerText = `Clicking save will overwrite game: ${tetrisClass.nameOfGameToSave}. Are you sure you want to continue?`;
-
-  // * now we need to add event listeners since this is the only place these elements are being added to the DOM
-  document
-    .getElementById("confirm-overwrite-button")
-    .addEventListener("click", () => {
-      tetrisClass.saveGame();
-      tetrisClass.nameOfGameToSave = null;
-      tetrisClass.indexOfGameToOverwrite = -1;
-      closeConfirmationModal();
-    });
-
-  // * CANCEL AND CLOSE CONFIRMATION MODAL
-  document
-    .getElementById("close-confirmation-modal-button")
-    .addEventListener("click", () => {
-      closeConfirmationModal();
-    });
-
-  // now we are ready to open the modal
-  confirmationModal.showModal();
-};
-
 const {
-  closeButtonObj: { createButtonText, ...remainingButtonProps },
+  closeButtonObj: { ...buttonClassesAndIds },
   ...remainingModalProps
 } = allModals.settingsModal;
 
-export const settingsModalInMainMenu = {
+export const settingsModalInMainMenuObj = {
   closeButtonObj: {
-    buttonText: createButtonText("Close Settings"),
-    ...remainingButtonProps,
+    buttonText: "Close Settings",
+    ...buttonClassesAndIds,
   },
   ...remainingModalProps,
 };
 
-export const settingsModalInGame = {
+export const settingsModalInGameObj = {
   closeButtonObj: {
-    buttonText: createButtonText("Return to Pause Menu"),
-    ...remainingButtonProps,
+    buttonText: "Return to Pause Menu",
+    ...buttonClassesAndIds,
   },
   ...remainingModalProps,
 };
@@ -344,6 +309,42 @@ export const saveGameModalObj = allModals.saveGameModal;
 export const confirmOverwriteGameModalObj = allModals.confirmOverwriteGameModal;
 
 export const confirmQuitGameModalObj = allModals.confirmQuitGameModal;
+
+export const openConfirmOverwriteGameModal = (tetrisClass) => {
+  const confirmationModal = document.getElementById("confirmation-modal");
+  const modalContent = createConfirmationModalContent(
+    allModals.confirmationModalData.confirmOverwriteSavedGame
+  );
+  confirmationModal.appendChild(modalContent);
+  const overwriteGameModalText = document.getElementById(
+    "confirm-overwrite-game-modal-text"
+  );
+  overwriteGameModalText.innerText = `Clicking save will overwrite game: ${tetrisClass.nameOfGameToSave}. Are you sure you want to continue?`;
+
+  // * now we need to add event listeners since this is the only place these elements are being added to the DOM
+  document.getElementById("confirm-overwrite-button").addEventListener(
+    "click",
+    () => {
+      tetrisClass.saveGame();
+      tetrisClass.nameOfGameToSave = null;
+      tetrisClass.indexOfGameToOverwrite = -1;
+      closeConfirmationModal();
+    },
+    { once: true }
+  );
+
+  // * CANCEL AND CLOSE CONFIRMATION MODAL
+  document.getElementById("close-confirmation-modal-button").addEventListener(
+    "click",
+    () => {
+      closeConfirmationModal();
+    },
+    { once: true }
+  );
+
+  // now we are ready to open the modal
+  confirmationModal.showModal();
+};
 
 // Menu Button Containers
 export const mainMenuButtonsContainerObj = {
@@ -387,11 +388,8 @@ const allMenuButtonObjs = {
     buttonText: "Quit Game",
     id: "open-confirm-quit-game-modal-button",
   },
-  createMainMenuObj: function (buttonText) {
-    return {
-      navButton: true,
-      buttonText: buttonText,
-    };
+  mainMenu: {
+    navButton: true,
   },
 };
 
@@ -404,11 +402,11 @@ export const mainMenuButtonObjs = [
 
 export const highScoresMenuButtonObjs = [
   allMenuButtonObjs.newGame,
-  allMenuButtonObjs.createMainMenuObj("Main Menu"),
+  { ...allMenuButtonObjs.mainMenu, buttonText: "Main Menu" },
 ];
 
 export const postGameMenuButtonObjs = [
-  allMenuButtonObjs.createMainMenuObj("Return to Main Menu"),
+  { ...allMenuButtonObjs.mainMenu, buttonText: "Return to Main Menu" },
   allMenuButtonObjs.viewHighScores,
 ];
 
@@ -418,6 +416,8 @@ export const pauseMenuButtonObjs = [
   allMenuButtonObjs.openSettings,
   allMenuButtonObjs.quitGame,
 ];
+
+console.log(allMenuButtonObjs.mainMenu); // we do not expect to see buttonText
 
 // Game State Sub Headers
 export const playGameSubHeaders = [

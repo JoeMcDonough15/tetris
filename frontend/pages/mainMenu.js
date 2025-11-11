@@ -20,7 +20,6 @@ import {
   openLoadGameModal,
   closeLoadGameModal,
   grabSelectedOption,
-  settingsModalInMainMenu,
   allModals,
   removeSingleLoadGameOption,
   removeLoadGameOptions,
@@ -28,6 +27,7 @@ import {
   closeConfirmationModal,
   changeTextOfErrorById,
   removeErrorById,
+  settingsModalInMainMenuObj,
 } from "../utils/index.js";
 
 import playGamePageBuilder from "./playGame.js";
@@ -42,7 +42,7 @@ const mainMenuPageBuilder = (settingsObj) => {
     ["main-container", "main-menu-container"],
     "main-menu-container"
   );
-  const settingsModal = createSettingsModal(settingsModalInMainMenu);
+  const settingsModal = createSettingsModal(settingsModalInMainMenuObj);
   const loadGameModal = createLoadGameModal("Cancel");
   const confirmationModal = createConfirmationModal();
 
