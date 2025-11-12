@@ -25,7 +25,7 @@ const highScoresPageBuilder = async (settingsObj) => {
   );
   const highScoresContainer = createContainer(
     "main",
-    ["high-scores-container"],
+    ["high-scores-container", "main-container"],
     "high-scores-container"
   );
 

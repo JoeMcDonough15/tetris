@@ -3,6 +3,7 @@ import {
   createConfirmationModalContent,
   createContainer,
   createCustomHeading,
+  createImage,
   createLoadGameModal,
   createMenuButtons,
   createSettingsModal,
@@ -28,6 +29,7 @@ import {
   changeTextOfErrorById,
   removeErrorById,
   settingsModalInMainMenuObj,
+  mainMenuImageData,
 } from "../utils/index.js";
 
 import playGamePageBuilder from "./playGame.js";
@@ -51,11 +53,13 @@ const mainMenuPageBuilder = (settingsObj) => {
   const loadGameModal = createLoadGameModal("Cancel");
   const confirmationModal = createConfirmationModal();
 
+  const tetrisImage = createImage(mainMenuImageData);
+
   const mainMenuButtons = createMenuButtons(
     mainMenuButtonsContainerObj,
     mainMenuButtonObjs
   );
-  mainMenuContainer.appendChild(mainMenuButtons);
+  mainMenuContainer.append(tetrisImage, mainMenuButtons);
 
   const body = returnBody();
   body.prepend(

@@ -260,12 +260,12 @@ export const createPlayerNameForm = () => {
 
 // render a table of existing high scores
 export const createHighScoresTable = (highScores) => {
-  const highScoresTable = quickElement("table", []);
+  const highScoresTable = quickElement("table", ["high-scores-table"]);
   const highScoresTableHeader = quickElement("thead", []);
   const highScoresTableHeaderRow = quickElement("tr", []);
 
   highScoresTableFields.forEach((fieldName) => {
-    const fieldDataCell = quickElement("td", []);
+    const fieldDataCell = quickElement("td", ["high-scores-table-heading"]);
     fieldDataCell.innerText = fieldName;
     highScoresTableHeaderRow.appendChild(fieldDataCell);
   });
@@ -274,13 +274,15 @@ export const createHighScoresTable = (highScores) => {
   highScores.forEach((scoreObj, indexOfObj) => {
     const highScoreBodyRow = quickElement("tr", []);
     for (let i = 0; i < highScoresTableFields.length; i++) {
-      const fieldDataCell = quickElement("td", []);
+      const fieldDataCell = quickElement("td", ["high-scores-table-field"]);
       if (i === 0) {
         fieldDataCell.innerText = (indexOfObj + 1).toString();
+        fieldDataCell.classList.add("high-scores-number-field");
       } else if (i === 1) {
         fieldDataCell.innerText = scoreObj.name;
       } else {
         fieldDataCell.innerText = scoreObj.score;
+        fieldDataCell.classList.add("high-scores-number-field");
       }
       highScoreBodyRow.appendChild(fieldDataCell);
     }
@@ -296,6 +298,22 @@ export const createCustomHeading = (headingLevel, headingText, classes, id) => {
   const headingElement = quickElement(headingLevel, classes, id);
   headingElement.innerText = headingText;
   return headingElement;
+};
+
+export const createImage = ({
+  containerClasses,
+  containerId,
+  imageClasses,
+  imageId,
+  imageSrc,
+  imageAltText,
+}) => {
+  const container = createContainer("div", containerClasses, containerId);
+  const image = quickElement("img", imageClasses, imageId);
+  image.src = imageSrc;
+  image.alt = imageAltText;
+  container.appendChild(image);
+  return container;
 };
 
 // render a custom container element with any number of classes and an optional id

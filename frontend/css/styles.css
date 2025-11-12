@@ -12,7 +12,7 @@ body {
 
 body,
 h3 {
-  font-size: min(4.5vw, 32px);
+  font-size: clamp(16px, 4.5vw, 32px);
 }
 
 a,
@@ -29,6 +29,10 @@ button {
   border: 0;
 }
 
+img {
+  max-width: 100%;
+}
+
 .no-display.no-display.no-display.no-display {
   display: none;
 }
@@ -42,10 +46,11 @@ button {
 
 .modal-container {
   height: 50vh;
+  max-width: 600px;
   position: fixed;
   margin: auto;
   top: 10%;
-  width: 100vw;
+  width: 90vw;
 }
 
 ::backdrop {
@@ -69,7 +74,7 @@ button {
 .main-container {
   margin: auto;
   max-width: 600px;
-  width: 95%;
+  width: 90%;
 }
 
 .main-menu-container,
@@ -85,8 +90,8 @@ button {
   flex-direction: column;
 }
 
-.main-menu-container {
-  height: 100vh;
+.main-menu-image-container {
+  margin: 0 0 60px;
 }
 
 /* menu buttons that exist on any page, not just on the main menu. */
@@ -97,8 +102,17 @@ button {
   gap: 20px;
 }
 
+.menu-buttons {
+  margin-bottom: 40px;
+  width: 100%;
+}
+
 .menu-button {
   background: pink;
+}
+
+.menu-button:hover {
+  cursor: pointer;
 }
 
 .menu-button > a,
@@ -106,6 +120,31 @@ button {
   display: inline-block;
   padding: 10px;
   width: 100%;
+}
+
+.high-scores-table,
+.high-scores-table-heading,
+.high-scores-table-field {
+  border: 1px solid pink;
+}
+
+.high-scores-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.high-scores-table-heading,
+.high-scores-table-field {
+  padding: 10px 0;
+  text-align: center;
+}
+
+.high-scores-table-heading {
+  font-size: clamp(28px, 4.5vw, 40px);
+}
+
+.high-scores-number-field {
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .game-grid-container,
@@ -205,6 +244,10 @@ button {
 @media screen and (max-width: 300px) {
   .main-container {
     width: 100%;
+  }
+
+  .menu-buttons {
+    width: 90%;
   }
 
   .game-details-container {

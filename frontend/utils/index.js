@@ -1019,6 +1019,17 @@ export const saveGameFormData = {
   },
 };
 
+// * Image Data
+
+export const mainMenuImageData = {
+  containerClasses: ["main-menu-image-container"],
+  containerId: "main-menu-image-container",
+  imageClasses: [],
+  imageId: "main-menu-image",
+  imageSrc: "/images/tetris.png",
+  imageAltText: "Stock image of Tetris blocks",
+};
+
 // * High Scores Table Data
 
 export const highScoresTableFields = ["No.", "Player", "Score"];
