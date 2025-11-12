@@ -3,12 +3,12 @@ import {
   createGameToLoadOption,
 } from "../components/index.js";
 
-// Game Grid Values
+// * Game Grid Values
 export const NUM_ROWS = 18;
 export const NUM_COLS = 10;
 export const GRID_SPACE = 20;
 
-// Available Shapes
+// * Available Shapes
 export const availableShapes = [
   "line",
   "square",
@@ -19,7 +19,7 @@ export const availableShapes = [
   "zShape",
 ];
 
-// Shape Colors
+// * Shape Colors
 export const shapeColors = {
   green: "rgb(0 255 0)",
   blue: "rgb(0 100 255)",
@@ -30,7 +30,7 @@ export const shapeColors = {
   purple: "rgb(127 0 127)",
 };
 
-// Path Objects
+// * Path Objects
 const buttonsImgPathObj = {
   prefix: "/images/buttons/",
   suffix: ".png",
@@ -51,7 +51,7 @@ const gameMusicPathObj = {
   suffix: ".mp3",
 };
 
-// Utility Functions
+// * Utility Functions
 export const returnBody = () => {
   const bodyArrayFromCollection = Array.from(
     document.getElementsByTagName("body")
@@ -71,12 +71,12 @@ export const generateMusicPath = (themeName) => {
   return `${gameMusicPathObj.prefix}${themeName}${gameMusicPathObj.suffix}`;
 };
 
-// In Game Sounds Audio Objects
+// * In Game Sounds Audio Objects
 export const blockSound = new Audio(generateSoundPath("block-landing"));
 export const rotateSound = new Audio(generateSoundPath("rotate"));
 export const clearedRowSound = new Audio(generateSoundPath("cleared-row"));
 
-// Modals with Respective Close Buttons
+// * Modals with Respective Close Buttons
 export const allModals = {
   settingsModal: {
     closeButtonObj: {
@@ -321,7 +321,6 @@ export const openConfirmOverwriteGameModal = (tetrisClass) => {
   );
   overwriteGameModalText.innerText = `Clicking save will overwrite game: ${tetrisClass.nameOfGameToSave}. Are you sure you want to continue?`;
 
-  // * now we need to add event listeners since this is the only place these elements are being added to the DOM
   document.getElementById("confirm-overwrite-button").addEventListener(
     "click",
     () => {
@@ -333,7 +332,6 @@ export const openConfirmOverwriteGameModal = (tetrisClass) => {
     { once: true }
   );
 
-  // * CANCEL AND CLOSE CONFIRMATION MODAL
   document.getElementById("close-confirmation-modal-button").addEventListener(
     "click",
     () => {
@@ -342,11 +340,10 @@ export const openConfirmOverwriteGameModal = (tetrisClass) => {
     { once: true }
   );
 
-  // now we are ready to open the modal
   confirmationModal.showModal();
 };
 
-// Menu Button Containers
+// * Menu Button Containers
 export const mainMenuButtonsContainerObj = {
   elementName: "div",
   classes: ["menu-buttons"],
@@ -360,19 +357,19 @@ export const postGameMenuButtonsContainerObj = {
 
 export const pauseMenuButtonsContainerObj = mainMenuButtonsContainerObj;
 
-// Menu Buttons
+// * Menu Buttons
 const allMenuButtonObjs = {
-  startGame: { buttonText: "Start Game", navButton: true },
+  newGame: { navButton: true, buttonText: "New Game", id: "new-game-button" },
   viewHighScores: {
     buttonText: "View High Scores",
     navButton: true,
+    id: "view-high-scores-button",
   },
   openSettings: {
     buttonText: "Settings",
     id: "open-settings-modal-button",
     navButton: false,
   },
-  newGame: { navButton: true, buttonText: "New Game", id: "new-game-button" },
   saveGame: {
     buttonText: "Save Game",
     navButton: false,
@@ -390,6 +387,7 @@ const allMenuButtonObjs = {
   },
   mainMenu: {
     navButton: true,
+    id: "main-menu-button",
   },
 };
 
@@ -417,14 +415,14 @@ export const pauseMenuButtonObjs = [
   allMenuButtonObjs.quitGame,
 ];
 
-// Game State Sub Headers
+// * Game State Sub Headers
 export const playGameSubHeaders = [
   { headerText: "Level: 0", id: "level-heading" },
   { headerText: "Score: 0", id: "total-score-heading" },
   { headerText: "Rows: 0", id: "rows-cleared-heading" },
 ];
 
-// Game Controller Buttons
+// * Game Controller Buttons
 export const controllerRowObjs = {
   rowOne: [
     {
@@ -459,10 +457,10 @@ export const controllerRowObjs = {
   ],
 };
 
-// Key Control Values For Keydown Event Listeners
+// * Key Control Values For Keydown Event Listeners
 const keyControlPrefix = "key-control-";
 
-// All Settings Input ID's
+// * All Settings Input ID's
 export const settingsInputIds = {
   radioIds: [
     "sound-fx-on",
@@ -697,6 +695,8 @@ export const closeConfirmationModal = () => {
   // close the modal
   confirmationModal.close();
 };
+
+// * UI Form Data
 
 export const updateSettingsFormData = {
   settingsOptions: {
@@ -988,5 +988,7 @@ export const saveGameFormData = {
     buttonText: "Save Game",
   },
 };
+
+// * High Scores Table Data
 
 export const highScoresTableFields = ["No.", "Player", "Score"];

@@ -116,6 +116,11 @@ const mainMenuPageBuilder = (settingsObj) => {
     playGamePageBuilder(settingsObj);
   };
 
+  const handleViewHighScoresbutton = () => {
+    cleanupFunction();
+    highScoresPageBuilder(settingsObj);
+  };
+
   const handleOpenSettingsModal = () => {
     openSettingsModal(settingsObj, settingsModal);
   };
@@ -226,6 +231,10 @@ const mainMenuPageBuilder = (settingsObj) => {
   document
     .getElementById("new-game-button")
     .addEventListener("click", handleNewGamebutton);
+
+  document
+    .getElementById("view-high-scores-button")
+    .addEventListener("click", handleViewHighScoresbutton);
 
   document
     .getElementById("open-settings-modal-button")
