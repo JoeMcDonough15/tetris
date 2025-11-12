@@ -13,7 +13,7 @@ import {
   openConfirmOverwriteGameModal,
   saveCanvas,
   drawPreviousCanvas,
-} from "../../../utils/index.js";
+} from "../utils/index.js";
 import {
   Line,
   Square,
@@ -52,11 +52,6 @@ class Tetris {
     this.currentPiecePlaced = false;
     this.numRotations = 0;
     this.gameMusic = new GameMusic(this.gameSettings.gameMusicSelection);
-
-    // load game if it exists
-    if (this.nameOfGameToLoad) {
-      this.loadGame();
-    }
   }
 
   // Game methods
@@ -232,7 +227,7 @@ class Tetris {
 
   startGame = () => {
     if (this.nameOfGameToLoad) {
-      // load a previous game and continue with gravityDrop
+      // load a previous game and continue with gravityDrop if nameOfGameToLoad is truthy
       this.loadGame();
       this.gravityDrop();
     } else {
@@ -244,10 +239,6 @@ class Tetris {
     if (this.gameSettings.music === "on") {
       this.gameMusic.player.play();
     }
-  };
-
-  quitGame = () => {
-    window.location.replace("/");
   };
 
   endGame = () => {

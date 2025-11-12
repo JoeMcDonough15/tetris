@@ -1,15 +1,10 @@
 class Settings {
   constructor() {
-    this.savedSettings = JSON.parse(
-      window.sessionStorage.getItem("savedSettings")
-    );
-    this.soundFx = this.savedSettings?.soundFx || "off";
-    this.music = this.savedSettings?.music || "off";
-    this.gameMusicSelection =
-      this.savedSettings?.gameMusicSelection || "theme-2"; // ! should be theme-1 this is for testing only
-    this.colorPaletteSelection =
-      this.savedSettings?.colorPaletteSelection || "classic";
-    this.keyControls = this.savedSettings?.keyControls || {
+    this.soundFx = "off";
+    this.music = "off";
+    this.gameMusicSelection = "theme-2"; // ! should be theme-1 this is for testing only
+    this.colorPaletteSelection = "classic";
+    this.keyControls = {
       rotate: "ArrowUp",
       moveLeft: "ArrowLeft",
       moveRight: "ArrowRight",
@@ -50,16 +45,6 @@ class Settings {
     this.selectGameMusic(gameMusicSelection);
     this.selectColorPalette(colorPaletteSelection);
     this.selectKeyControls(keyControls);
-
-    const settingsJson = JSON.stringify({
-      soundFx: this.soundFx,
-      music: this.music,
-      gameMusicSelection: this.gameMusicSelection,
-      colorPaletteSelection: this.colorPaletteSelection,
-      keyControls: this.keyControls,
-    });
-
-    window.sessionStorage.setItem("savedSettings", settingsJson);
   };
 }
 

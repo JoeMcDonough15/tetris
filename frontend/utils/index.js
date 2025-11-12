@@ -3,12 +3,12 @@ import {
   createGameToLoadOption,
 } from "../components/index.js";
 
-// Game Grid Values
+// * Game Grid Values
 export const NUM_ROWS = 18;
 export const NUM_COLS = 10;
 export const GRID_SPACE = 20;
 
-// Available Shapes
+// * Available Shapes
 export const availableShapes = [
   "line",
   "square",
@@ -19,7 +19,7 @@ export const availableShapes = [
   "zShape",
 ];
 
-// Shape Colors
+// * Shape Colors
 export const shapeColors = {
   green: "rgb(0 255 0)",
   blue: "rgb(0 100 255)",
@@ -30,7 +30,7 @@ export const shapeColors = {
   purple: "rgb(127 0 127)",
 };
 
-// Path Objects
+// * Path Objects
 const buttonsImgPathObj = {
   prefix: "/images/buttons/",
   suffix: ".png",
@@ -51,7 +51,7 @@ const gameMusicPathObj = {
   suffix: ".mp3",
 };
 
-// Utility Functions
+// * Utility Functions
 export const returnBody = () => {
   const bodyArrayFromCollection = Array.from(
     document.getElementsByTagName("body")
@@ -71,18 +71,15 @@ export const generateMusicPath = (themeName) => {
   return `${gameMusicPathObj.prefix}${themeName}${gameMusicPathObj.suffix}`;
 };
 
-// In Game Sounds Audio Objects
+// * In Game Sounds Audio Objects
 export const blockSound = new Audio(generateSoundPath("block-landing"));
 export const rotateSound = new Audio(generateSoundPath("rotate"));
 export const clearedRowSound = new Audio(generateSoundPath("cleared-row"));
 
-// Modals with Respective Close Buttons
+// * Modals with Respective Close Buttons
 export const allModals = {
   settingsModal: {
     closeButtonObj: {
-      createButtonText: function (buttonText) {
-        return buttonText;
-      },
       classes: [],
       id: "close-settings-modal-button",
     },
@@ -282,55 +279,23 @@ export const allModals = {
   },
 };
 
-export const openConfirmOverwriteGameModal = (tetrisClass) => {
-  const confirmationModal = document.getElementById("confirmation-modal");
-  const modalContent = createConfirmationModalContent(
-    allModals.confirmationModalData.confirmOverwriteSavedGame
-  );
-  confirmationModal.appendChild(modalContent);
-  const overwriteGameModalText = document.getElementById(
-    "confirm-overwrite-game-modal-text"
-  );
-  overwriteGameModalText.innerText = `Clicking save will overwrite game: ${tetrisClass.nameOfGameToSave}. Are you sure you want to continue?`;
-
-  // * now we need to add event listeners since this is the only place these elements are being added to the DOM
-  document
-    .getElementById("confirm-overwrite-button")
-    .addEventListener("click", () => {
-      tetrisClass.saveGame();
-      tetrisClass.nameOfGameToSave = null;
-      tetrisClass.indexOfGameToOverwrite = -1;
-      closeConfirmationModal();
-    });
-
-  // * CANCEL AND CLOSE CONFIRMATION MODAL
-  document
-    .getElementById("close-confirmation-modal-button")
-    .addEventListener("click", () => {
-      closeConfirmationModal();
-    });
-
-  // now we are ready to open the modal
-  confirmationModal.showModal();
-};
-
 const {
-  closeButtonObj: { createButtonText, ...remainingButtonProps },
+  closeButtonObj: { ...buttonClassesAndIds },
   ...remainingModalProps
 } = allModals.settingsModal;
 
-export const settingsModalInMainMenu = {
+export const settingsModalInMainMenuObj = {
   closeButtonObj: {
-    buttonText: createButtonText("Close Settings"),
-    ...remainingButtonProps,
+    buttonText: "Close Settings",
+    ...buttonClassesAndIds,
   },
   ...remainingModalProps,
 };
 
-export const settingsModalInGame = {
+export const settingsModalInGameObj = {
   closeButtonObj: {
-    buttonText: createButtonText("Return to Pause Menu"),
-    ...remainingButtonProps,
+    buttonText: "Return to Pause Menu",
+    ...buttonClassesAndIds,
   },
   ...remainingModalProps,
 };
@@ -345,14 +310,40 @@ export const confirmOverwriteGameModalObj = allModals.confirmOverwriteGameModal;
 
 export const confirmQuitGameModalObj = allModals.confirmQuitGameModal;
 
-// Button Navigation Routes
-const buttonNavRoutes = {
-  mainMenu: "/",
-  playGame: "/play-game",
-  highScores: "/high-scores",
+export const openConfirmOverwriteGameModal = (tetrisClass) => {
+  const confirmationModal = document.getElementById("confirmation-modal");
+  const modalContent = createConfirmationModalContent(
+    allModals.confirmationModalData.confirmOverwriteSavedGame
+  );
+  confirmationModal.appendChild(modalContent);
+  const overwriteGameModalText = document.getElementById(
+    "confirm-overwrite-game-modal-text"
+  );
+  overwriteGameModalText.innerText = `Clicking save will overwrite game: ${tetrisClass.nameOfGameToSave}. Are you sure you want to continue?`;
+
+  document.getElementById("confirm-overwrite-button").addEventListener(
+    "click",
+    () => {
+      tetrisClass.saveGame();
+      tetrisClass.nameOfGameToSave = null;
+      tetrisClass.indexOfGameToOverwrite = -1;
+      closeConfirmationModal();
+    },
+    { once: true }
+  );
+
+  document.getElementById("close-confirmation-modal-button").addEventListener(
+    "click",
+    () => {
+      closeConfirmationModal();
+    },
+    { once: true }
+  );
+
+  confirmationModal.showModal();
 };
 
-// Menu Button Containers
+// * Menu Button Containers
 export const mainMenuButtonsContainerObj = {
   elementName: "div",
   classes: ["menu-buttons"],
@@ -366,29 +357,37 @@ export const postGameMenuButtonsContainerObj = {
 
 export const pauseMenuButtonsContainerObj = mainMenuButtonsContainerObj;
 
-// Menu Buttons
+// * Menu Buttons
 const allMenuButtonObjs = {
-  startGame: { buttonText: "Start Game", navLink: buttonNavRoutes.playGame },
+  newGame: { navButton: true, buttonText: "New Game", id: "new-game-button" },
   viewHighScores: {
     buttonText: "View High Scores",
-    navLink: buttonNavRoutes.highScores,
+    navButton: true,
+    id: "view-high-scores-button",
   },
   openSettings: {
     buttonText: "Settings",
     id: "open-settings-modal-button",
+    navButton: false,
   },
-  newGame: { navLink: buttonNavRoutes.playGame, buttonText: "New Game" },
-  saveGame: { buttonText: "Save Game", id: "open-save-game-modal-button" },
-  loadGame: { buttonText: "Load a Game", id: "open-load-game-modal-button" },
+  saveGame: {
+    buttonText: "Save Game",
+    navButton: false,
+    id: "open-save-game-modal-button",
+  },
+  loadGame: {
+    buttonText: "Load a Game",
+    navButton: false,
+    id: "open-load-game-modal-button",
+  },
   quitGame: {
+    navButton: false,
     buttonText: "Quit Game",
     id: "open-confirm-quit-game-modal-button",
   },
-  createMainMenuObj: function (buttonText) {
-    return {
-      navLink: buttonNavRoutes.mainMenu,
-      buttonText: buttonText,
-    };
+  mainMenu: {
+    navButton: true,
+    id: "main-menu-button",
   },
 };
 
@@ -401,11 +400,11 @@ export const mainMenuButtonObjs = [
 
 export const highScoresMenuButtonObjs = [
   allMenuButtonObjs.newGame,
-  allMenuButtonObjs.createMainMenuObj("Main Menu"),
+  { ...allMenuButtonObjs.mainMenu, buttonText: "Main Menu" },
 ];
 
 export const postGameMenuButtonObjs = [
-  allMenuButtonObjs.createMainMenuObj("Return to Main Menu"),
+  { ...allMenuButtonObjs.mainMenu, buttonText: "Return to Main Menu" },
   allMenuButtonObjs.viewHighScores,
 ];
 
@@ -416,14 +415,14 @@ export const pauseMenuButtonObjs = [
   allMenuButtonObjs.quitGame,
 ];
 
-// Game State Sub Headers
+// * Game State Sub Headers
 export const playGameSubHeaders = [
   { headerText: "Level: 0", id: "level-heading" },
   { headerText: "Score: 0", id: "total-score-heading" },
   { headerText: "Rows: 0", id: "rows-cleared-heading" },
 ];
 
-// Game Controller Buttons
+// * Game Controller Buttons
 export const controllerRowObjs = {
   rowOne: [
     {
@@ -458,10 +457,10 @@ export const controllerRowObjs = {
   ],
 };
 
-// Key Control Values For Keydown Event Listeners
+// * Key Control Values For Keydown Event Listeners
 const keyControlPrefix = "key-control-";
 
-// All Settings Input ID's
+// * All Settings Input ID's
 export const settingsInputIds = {
   radioIds: [
     "sound-fx-on",
@@ -696,6 +695,8 @@ export const closeConfirmationModal = () => {
   // close the modal
   confirmationModal.close();
 };
+
+// * UI Form Data
 
 export const updateSettingsFormData = {
   settingsOptions: {
@@ -987,5 +988,7 @@ export const saveGameFormData = {
     buttonText: "Save Game",
   },
 };
+
+// * High Scores Table Data
 
 export const highScoresTableFields = ["No.", "Player", "Score"];

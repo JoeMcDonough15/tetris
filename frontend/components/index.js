@@ -1,8 +1,11 @@
 import {
+  GRID_SPACE,
   highScoresFormData,
   highScoresTableFields,
   loadGameFormData,
   loadGameModalObj,
+  NUM_COLS,
+  NUM_ROWS,
   pauseMenuButtonObjs,
   pauseMenuButtonsContainerObj,
   pauseModalObj,
@@ -27,11 +30,8 @@ const createMenuButton = (buttonObj) => {
   if (buttonObj.autofocus) {
     button.setAttribute("autofocus", true);
   }
-  const buttonContent = quickElement(buttonObj.navLink ? "a" : "span", []);
+  const buttonContent = quickElement("span", []);
   buttonContent.innerText = buttonObj.buttonText;
-  if (buttonObj.navLink) {
-    buttonContent.setAttribute("href", buttonObj.navLink);
-  }
   button.appendChild(buttonContent);
   return button;
 };
@@ -301,13 +301,13 @@ export const createMenuButtons = (containerObj, arrayOfButtonObjs) => {
   // create nav buttons and place in their own separate nav tag
   const navButtonsContainer = quickElement("nav", ["nav-buttons"]);
   const navButtons = arrayOfButtonObjs
-    .filter((buttonObj) => buttonObj.navLink)
+    .filter((buttonObj) => buttonObj.navButton)
     .map((buttonObj) => createMenuButton(buttonObj));
   navButtonsContainer.append(...navButtons);
 
   // create all non-nav buttons
   const menuButtons = arrayOfButtonObjs
-    .filter((buttonObj) => !buttonObj.navLink)
+    .filter((buttonObj) => !buttonObj.navButton)
     .map((buttonObj) => createMenuButton(buttonObj));
 
   menuButtonsContainer.append(navButtonsContainer, ...menuButtons);
@@ -318,6 +318,9 @@ export const createMenuButtons = (containerObj, arrayOfButtonObjs) => {
 // render a canvas element for the game
 export const createCanvas = () => {
   const canvas = quickElement("canvas", [], "canvas");
+  canvas.width = NUM_COLS * GRID_SPACE;
+  canvas.height = NUM_ROWS * GRID_SPACE;
+
   return canvas;
 };
 
@@ -425,37 +428,37 @@ export const createPauseModal = () => {
   return pauseModal;
 };
 
+// ! should not need this now
+// export const createConfirmationModal = ({
+//   classes,
+//   id,
+//   confirmationTextObj,
+//   confirmationButtonsObj,
+// }) => {
+//   const confirmationModal = quickElement("dialog", classes, id);
+//   confirmationModal.setAttribute("closedby", "none");
+//   const confirmationTextElement = quickElement(
+//     "p",
+//     confirmationTextObj.classes,
+//     confirmationTextObj.id
+//   );
+//   // if the confirmationText object includes
+//   if (confirmationTextObj.text) {
+//     confirmationTextElement.innerText = confirmationTextObj.text;
+//   }
+
+//   const confirmationButtonsContainer = createButtons(confirmationButtonsObj);
+
+//   confirmationModal.append(
+//     confirmationTextElement,
+//     confirmationButtonsContainer
+//   );
+
+//   return confirmationModal;
+// };
+
 // render a modal to confirm an action like overwriting a game in memory, or quitting a game from the pause menu
-export const createConfirmationModal = ({
-  classes,
-  id,
-  confirmationTextObj,
-  confirmationButtonsObj,
-}) => {
-  const confirmationModal = quickElement("dialog", classes, id);
-  confirmationModal.setAttribute("closedby", "none");
-  const confirmationTextElement = quickElement(
-    "p",
-    confirmationTextObj.classes,
-    confirmationTextObj.id
-  );
-  // if the confirmationText object includes
-  if (confirmationTextObj.text) {
-    confirmationTextElement.innerText = confirmationTextObj.text;
-  }
-
-  const confirmationButtonsContainer = createButtons(confirmationButtonsObj);
-
-  confirmationModal.append(
-    confirmationTextElement,
-    confirmationButtonsContainer
-  );
-
-  return confirmationModal;
-};
-
-// ! rename createConfirmationModal
-export const createReusableConfirmationModal = () => {
+export const createConfirmationModal = () => {
   const confirmationModal = quickElement(
     "dialog",
     ["modal-container"],
