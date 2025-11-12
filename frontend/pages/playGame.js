@@ -443,7 +443,6 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
       "confirmation-modal",
     ];
     idsOfElementsToRemove.forEach((id) => {
-      console.log(id);
       document.getElementById(id).remove();
     });
   };
