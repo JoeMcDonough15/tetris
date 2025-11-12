@@ -288,6 +288,8 @@ const mainMenuPageBuilder = (settingsObj) => {
   window.addEventListener("keyup", handleKeyUp);
   window.addEventListener("keydown", handleKeyDown);
 
+  // * Cleanup Function
+
   const cleanupFunction = () => {
     // aggregates all elements that have event listeners on them in the form of: [ {"id-of-element", "type-of-event", eventHandlerFunction} ];
     const objsWithEventListeners = [
