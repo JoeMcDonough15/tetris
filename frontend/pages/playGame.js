@@ -98,7 +98,7 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
   mainContainer.append(gameGridContainer, gameDetailsContainer);
 
   // modals
-  const pauseModal = createPauseModal(); // * ----------> confirmQuitModal
+  const pauseModal = createPauseModal(); // * ----------> confirmQuitModal or settingsModal
   const settingsModal = createSettingsModal(settingsModalInGameObj);
   const saveGameModal = createSaveGameModal(); // * ----------> confirmOverwriteGameModal
   const confirmationModal = createConfirmationModal();
@@ -127,7 +127,8 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
   const game = new Tetris(settingsObj, highScoresObj, gameToLoad);
 
   // * Target Elements for Event Listeners
-
+  const updateSettingsForm = document.getElementById("update-settings-form");
+  const saveGameForm = document.getElementById("save-game-form");
   const rotateButton = document.getElementById("btn-up");
   const softDropButton = document.getElementById("btn-down");
   const moveLeftButton = document.getElementById("btn-left");
@@ -148,7 +149,6 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
   const closeSaveGameModalButton = document.getElementById(
     "close-save-game-modal-button"
   );
-
   const quitGameButton = document.getElementById(
     "open-confirm-quit-game-modal-button"
   );
@@ -157,8 +157,7 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
 
   // Event Callbacks
 
-  // Form Submit Events
-  playerNameForm.addEventListener("submit", async (e) => {
+  const handlePlayerNameFormSubmit = async (e) => {
     e.preventDefault();
     const playerName = playerNameForm.elements.playerName.value;
     const playerScore = playerNameForm.elements.playerScore.value;
@@ -170,17 +169,13 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     if (game.idOfScoreToRemove) {
       await highScoresObj.removeHighScore(game.idOfScoreToRemove);
     }
-
     await highScoresObj.addScoreToHighScores(playerDetails);
-
     // ! navigate to high scores page
-
     toggleDisplayById("player-name-form");
     toggleDisplayById("post-game-menu-buttons");
-  });
+  };
 
-  const updateSettingsForm = document.getElementById("update-settings-form");
-  updateSettingsForm.addEventListener("submit", (e) => {
+  const handleUpdateSettingsFormSubmit = (e) => {
     e.preventDefault();
     const inputsObj = grabInputValuesFromForm(updateSettingsForm);
     const keyControlInputVals = Object.values(inputsObj.keyControls);
@@ -193,83 +188,87 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
 
     settingsObj.updateSettings({ ...inputsObj });
     settingsModal.close();
-  });
+  };
 
-  const saveGameForm = document.getElementById("save-game-form");
-  saveGameForm.addEventListener("submit", (e) => {
+  const handleSaveGameFormSubmit = (e) => {
     e.preventDefault();
     const nameOfGameToSave = saveGameForm.elements.gameToSave.value;
     game.checkForSavedGame(nameOfGameToSave);
-  });
+  };
 
-  // Mouse Events
-  pauseButton.addEventListener("click", () => {
+  const handlePauseGame = () => {
     pauseModal.showModal();
     game.togglePause();
-  });
+  };
 
-  closePauseModalButton.addEventListener("click", () => {
+  const handleUnpauseGame = () => {
     pauseModal.close();
     game.togglePause();
-  });
+  };
 
-  openSettingsModalButton.addEventListener("click", () => {
+  const handleOpenSettingsModal = () => {
     openSettingsModal(settingsObj, settingsModal);
-  });
+  };
 
-  closeSettingsModalButton.addEventListener("click", () => {
+  const handleCloseSettingsModal = () => {
     settingsModal.close();
-  });
+  };
 
-  openSaveGameModalButton.addEventListener("click", () => {
+  const handleOpenSaveGameModal = () => {
     // TODO write a function that opens the modal after clearing any previous value inside the nameOfGame text input
     saveGameModal.showModal();
-  });
+  };
 
-  closeSaveGameModalButton.addEventListener("click", () => {
+  const handleCloseSavedGameModal = () => {
     saveGameModal.close();
-  });
+  };
 
-  quitGameButton.addEventListener("click", () => {
+  const handleQuitGameButton = () => {
     const modalContent = createConfirmationModalContent(
       allModals.confirmationModalData.confirmQuitGame
     );
 
     confirmationModal.appendChild(modalContent);
 
-    document
-      .getElementById("confirm-quit-game-button")
-      .addEventListener("click", () => {
+    document.getElementById("confirm-quit-game-button").addEventListener(
+      "click",
+      () => {
+        // ! Remove quitGame from the Tetris class, and instead call the cleanup function
+        // ! and mainMenuPageBuilder(settingsObj)
         game.quitGame();
-      });
+        // closeConfirmationModal(confirmationModal);
+      },
+      { once: true }
+    );
 
-    document
-      .getElementById("close-confirmation-modal-button")
-      .addEventListener("click", () => {
+    document.getElementById("close-confirmation-modal-button").addEventListener(
+      "click",
+      () => {
         closeConfirmationModal(confirmationModal);
-      });
+      },
+      { once: true }
+    );
 
     confirmationModal.showModal();
-  });
+  };
 
-  rotateButton.addEventListener("click", () => {
+  const handleRotateButton = () => {
     game.rotatePiece();
-  });
+  };
 
-  moveLeftButton.addEventListener("click", () => {
+  const handleMoveLeftButton = () => {
     game.moveShape("left");
-  });
+  };
 
-  moveRightButton.addEventListener("click", () => {
+  const handleMoveRightButton = () => {
     game.moveShape("right");
-  });
+  };
 
-  softDropButton.addEventListener("click", () => {
+  const handleSoftDropButton = () => {
     game.softDrop();
-  });
+  };
 
-  // Key Events
-  window.addEventListener("keyup", (e) => {
+  const handleKeyUp = (e) => {
     if (game.gameOver) return;
     const keyName = e.key;
     // Event Listeners For Updating keyControls Inside Settings Modal
@@ -283,6 +282,9 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
 
     // Event Listener for Pause Button During Gameplay
     if (keyName === settingsObj.keyControls.togglePause) {
+      if (settingsModal.open || saveGameModal.open || confirmationModal.open)
+        return;
+
       if (pauseModal.open) {
         pauseModal.close();
       } else {
@@ -290,7 +292,28 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
       }
       game.togglePause();
     }
-  });
+  };
+
+  // Form Submit Events
+  playerNameForm.addEventListener("submit", handlePlayerNameFormSubmit);
+  updateSettingsForm.addEventListener("submit", handleUpdateSettingsFormSubmit);
+  saveGameForm.addEventListener("submit", handleSaveGameFormSubmit);
+
+  // Mouse Events
+  pauseButton.addEventListener("click", handlePauseGame);
+  closePauseModalButton.addEventListener("click", handleUnpauseGame);
+  openSettingsModalButton.addEventListener("click", handleOpenSettingsModal);
+  closeSettingsModalButton.addEventListener("click", handleCloseSettingsModal);
+  openSaveGameModalButton.addEventListener("click", handleOpenSaveGameModal);
+  closeSaveGameModalButton.addEventListener("click", handleCloseSavedGameModal);
+  quitGameButton.addEventListener("click", handleQuitGameButton);
+  rotateButton.addEventListener("click", handleRotateButton);
+  moveLeftButton.addEventListener("click", handleMoveLeftButton);
+  moveRightButton.addEventListener("click", handleMoveRightButton);
+  softDropButton.addEventListener("click", handleSoftDropButton);
+
+  // Key Events
+  window.addEventListener("keyup", handleKeyUp);
 
   window.addEventListener("keydown", (e) => {
     if (game.gameOver) return;
