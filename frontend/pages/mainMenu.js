@@ -98,9 +98,9 @@ const mainMenuPageBuilder = (settingsObj) => {
       return;
     }
 
+    closeLoadGameModal();
     cleanupFunction();
     playGamePageBuilder(settingsObj, selectedOption);
-    closeLoadGameModal(loadGameModal);
   };
 
   // Form Submit Events
@@ -130,11 +130,11 @@ const mainMenuPageBuilder = (settingsObj) => {
   };
 
   const handleOpenLoadGameModal = () => {
-    openLoadGameModal(loadGameModal);
+    openLoadGameModal();
   };
 
   const handleCloseLoadGameModal = () => {
-    closeLoadGameModal(loadGameModal);
+    closeLoadGameModal();
   };
 
   const handleCloseConfirmationModalButton = () => {
@@ -279,7 +279,7 @@ const mainMenuPageBuilder = (settingsObj) => {
       } else if (settingsModal.open) {
         settingsModal.close();
       } else {
-        closeLoadGameModal(loadGameModal);
+        closeLoadGameModal();
       }
     }
   };

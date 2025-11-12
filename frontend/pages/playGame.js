@@ -218,11 +218,11 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
   };
 
   const handleOpenSaveGameModal = () => {
-    openSaveGameModal(saveGameModal);
+    openSaveGameModal();
   };
 
   const handleCloseSaveGameModal = () => {
-    closeSaveGameModal(saveGameModal);
+    closeSaveGameModal();
   };
 
   const handleQuitGameButton = () => {
@@ -318,7 +318,7 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
       } else if (settingsModal.open) {
         settingsModal.close();
       } else if (saveGameModal.open) {
-        closeSaveGameModal(saveGameModal);
+        closeSaveGameModal();
       } else if (game.gamePaused) {
         pauseModal.close();
         game.togglePause();

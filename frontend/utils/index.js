@@ -615,19 +615,22 @@ export const handleUpdateSavedGameTextInput = () => {
   );
 };
 
-export const openSaveGameModal = (saveGameModal) => {
+export const openSaveGameModal = () => {
+  const saveGameModal = document.getElementById("save-game-modal");
   injectValueToInputById("name-of-game-to-save", "");
   const namesOfAllSavedGames = getNamesOfAllSavedGames();
   if (!namesOfAllSavedGames) {
     hideElementById("saved-games-dropdown-container");
   } else {
     addSavedGamesToDropdown(namesOfAllSavedGames);
+    showElementById("saved-games-dropdown-container");
   }
 
   saveGameModal.showModal();
 };
 
-export const openLoadGameModal = (loadGameModal) => {
+export const openLoadGameModal = () => {
+  const loadGameModal = document.getElementById("load-game-modal");
   const namesOfAllSavedGames = getNamesOfAllSavedGames();
   if (!namesOfAllSavedGames) {
     showElementById("no-saved-games-heading");
@@ -664,12 +667,14 @@ export const removeSingleLoadGameOption = (nameOfGame) => {
   });
 };
 
-export const closeLoadGameModal = (loadGameModal) => {
+export const closeLoadGameModal = () => {
+  const loadGameModal = document.getElementById("load-game-modal");
   removeLoadGameOptions(); // so no options are ever appended more than once
   loadGameModal.close();
 };
 
-export const closeSaveGameModal = (saveGameModal) => {
+export const closeSaveGameModal = () => {
+  const saveGameModal = document.getElementById("save-game-modal");
   removeLoadGameOptions(); // so no options are ever appended more than once
   saveGameModal.close();
 };
