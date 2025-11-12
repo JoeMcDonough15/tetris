@@ -22,7 +22,6 @@ import {
   controllerRowObjs,
   settingsInputIds,
   postGameMenuButtonsContainerObj,
-  toggleDisplayById,
   verifyUniqueStrings,
   grabInputValuesFromForm,
   showErrorById,
@@ -31,6 +30,8 @@ import {
   allModals,
   settingsModalInGameObj,
   openSaveGameModal,
+  handleUpdateSavedGameTextInput,
+  closeSaveGameModal,
 } from "../utils/index.js";
 import Tetris from "../game/tetris.js";
 
@@ -153,6 +154,7 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
   const quitGameButton = document.getElementById(
     "open-confirm-quit-game-modal-button"
   );
+  const savedGamesDropdownMenu = document.getElementById("load-game-select");
 
   // * Event Listeners
 
@@ -216,12 +218,16 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
   };
 
   const handleOpenSaveGameModal = () => {
-    // add an event listener to the select input, if it is there, that listens for change and populates the text input's value with whatever's selected
+    savedGamesDropdownMenu.addEventListener(
+      "change",
+      handleUpdateSavedGameTextInput
+    );
+
     openSaveGameModal(saveGameModal);
   };
 
   const handleCloseSaveGameModal = () => {
-    saveGameModal.close();
+    closeSaveGameModal(saveGameModal);
   };
 
   const handleQuitGameButton = () => {

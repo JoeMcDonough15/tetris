@@ -608,18 +608,20 @@ const addSavedGamesToDropdown = (namesOfAllSavedGames) => {
   });
 };
 
+export const handleUpdateSavedGameTextInput = () => {
+  const savedGamesDropdownMenu = document.getElementById("load-game-select");
+  const selectedValue = grabSelectedOption(savedGamesDropdownMenu);
+  if (selectedValue) {
+    injectValueToInputById("name-of-game-to-save", selectedValue);
+  }
+};
+
 export const openSaveGameModal = (saveGameModal) => {
-  // TODO write a function that opens the modal after clearing any previous value inside the nameOfGame text input and include dropdown of previously saved games.
-  // TODO whenever a previously saved game is selected drom the dropdown, that game name should be populated onto the text input field
-  // clear any value in the text input
   injectValueToInputById("name-of-game-to-save", "");
-  // get the names of the saved games
   const namesOfAllSavedGames = getNamesOfAllSavedGames();
-  // if there are no saved games, hide the display of the dropdown
   if (!namesOfAllSavedGames) {
     hideElementById("saved-games-dropdown-container");
   } else {
-    // if there are saved games, populate the dropdown with those names
     addSavedGamesToDropdown(namesOfAllSavedGames);
   }
 
@@ -666,6 +668,11 @@ export const removeSingleLoadGameOption = (nameOfGame) => {
 export const closeLoadGameModal = (loadGameModal) => {
   removeLoadGameOptions(); // so no options are ever appended more than once
   loadGameModal.close();
+};
+
+export const closeSaveGameModal = (saveGameModal) => {
+  removeLoadGameOptions(); // so no options are ever appended more than once
+  saveGameModal.close();
 };
 
 export const grabSelectedOption = (selectElement) => {
