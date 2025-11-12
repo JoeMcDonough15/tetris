@@ -318,7 +318,7 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
       } else if (settingsModal.open) {
         settingsModal.close();
       } else if (saveGameModal.open) {
-        saveGameModal.close();
+        closeSaveGameModal(saveGameModal);
       } else if (game.gamePaused) {
         pauseModal.close();
         game.togglePause();
