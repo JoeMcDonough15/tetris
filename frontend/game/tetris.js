@@ -52,11 +52,6 @@ class Tetris {
     this.currentPiecePlaced = false;
     this.numRotations = 0;
     this.gameMusic = new GameMusic(this.gameSettings.gameMusicSelection);
-
-    // load game if it exists
-    if (this.nameOfGameToLoad) {
-      this.loadGame();
-    }
   }
 
   // Game methods
@@ -232,7 +227,7 @@ class Tetris {
 
   startGame = () => {
     if (this.nameOfGameToLoad) {
-      // load a previous game and continue with gravityDrop
+      // load a previous game and continue with gravityDrop if nameOfGameToLoad is truthy
       this.loadGame();
       this.gravityDrop();
     } else {

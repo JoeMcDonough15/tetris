@@ -36,7 +36,7 @@ import Tetris from "../game/tetris.js";
 import mainMenuPageBuilder from "./mainMenu.js";
 import highScoresPageBuilder from "./highScores.js";
 
-const playGamePageBuilder = (settingsObj, nameOfGameToLoad = null) => {
+const playGamePageBuilder = (settingsObj, gameToLoad) => {
   // * Build out the UI
 
   const mainHeading = createCustomHeading(
@@ -121,12 +121,6 @@ const playGamePageBuilder = (settingsObj, nameOfGameToLoad = null) => {
     saveGameModal,
     confirmationModal
   );
-
-  // * Load a Saved Game if Needed
-  const gameToLoad = window.sessionStorage.getItem("gameToLoad");
-  if (gameToLoad) {
-    window.sessionStorage.removeItem("gameToLoad");
-  }
 
   // * Instantiate Necessary Classes
   const highScoresObj = new HighScores();
