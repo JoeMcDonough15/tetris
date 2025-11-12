@@ -325,8 +325,6 @@ export const openConfirmOverwriteGameModal = (tetrisClass) => {
     "click",
     () => {
       tetrisClass.saveGame();
-      tetrisClass.nameOfGameToSave = null;
-      tetrisClass.indexOfGameToOverwrite = -1;
       closeConfirmationModal();
     },
     { once: true }

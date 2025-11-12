@@ -115,6 +115,8 @@ class Tetris {
 
     this.nameOfGameToSave = null;
     this.indexOfGameToOverwrite = -1;
+    const saveGameModal = document.getElementById("save-game-modal");
+    saveGameModal.close();
   };
 
   convertAllPreviouslyPlacedPiecesToBlocks = (loadedGrid) => {
