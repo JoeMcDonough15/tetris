@@ -1,8 +1,11 @@
 import {
+  GRID_SPACE,
   highScoresFormData,
   highScoresTableFields,
   loadGameFormData,
   loadGameModalObj,
+  NUM_COLS,
+  NUM_ROWS,
   pauseMenuButtonObjs,
   pauseMenuButtonsContainerObj,
   pauseModalObj,
@@ -315,6 +318,9 @@ export const createMenuButtons = (containerObj, arrayOfButtonObjs) => {
 // render a canvas element for the game
 export const createCanvas = () => {
   const canvas = quickElement("canvas", [], "canvas");
+  canvas.width = NUM_COLS * GRID_SPACE;
+  canvas.height = NUM_ROWS * GRID_SPACE;
+
   return canvas;
 };
 

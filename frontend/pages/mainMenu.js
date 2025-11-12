@@ -36,7 +36,6 @@ import highScoresPageBuilder from "./highScores.js";
 const mainMenuPageBuilder = (settingsObj) => {
   // * Build the UI
 
-  const body = returnBody();
   const mainPageHeading = createCustomHeading(
     "h1",
     "Main Menu",
@@ -52,6 +51,13 @@ const mainMenuPageBuilder = (settingsObj) => {
   const loadGameModal = createLoadGameModal("Cancel");
   const confirmationModal = createConfirmationModal();
 
+  const mainMenuButtons = createMenuButtons(
+    mainMenuButtonsContainerObj,
+    mainMenuButtonObjs
+  );
+  mainMenuContainer.appendChild(mainMenuButtons);
+
+  const body = returnBody();
   body.prepend(
     mainPageHeading,
     mainMenuContainer,
@@ -59,12 +65,6 @@ const mainMenuPageBuilder = (settingsObj) => {
     loadGameModal,
     confirmationModal
   );
-
-  const mainMenuButtons = createMenuButtons(
-    mainMenuButtonsContainerObj,
-    mainMenuButtonObjs
-  );
-  mainMenuContainer.appendChild(mainMenuButtons);
 
   // * Add Event Listeners
 

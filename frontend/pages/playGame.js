@@ -12,6 +12,7 @@ import {
   createSaveGameModal,
   createConfirmationModal,
   createConfirmationModalContent,
+  createCanvas,
 } from "../components/index.js";
 import HighScores from "../high-scores/js/api/highScoresApi.js";
 import Settings from "../settings.js";
@@ -38,28 +39,39 @@ import Tetris from "../game/tetris.js";
 import mainMenuPageBuilder from "./mainMenu.js";
 
 const playGamePageBuilder = () => {
-  // Build out the UI
+  // * Build out the UI
 
-  const body = returnBody();
-  body.prepend(
-    createCustomHeading("h1", "Tetris", ["main-heading"], "main-heading")
+  const mainHeading = createCustomHeading(
+    "h1",
+    "Tetris",
+    ["main-heading"],
+    "main-heading"
   );
 
-  const gameGridContainer = document.getElementById("game-grid-container");
+  const mainContainer = createContainer(
+    "main",
+    ["play-game-container"],
+    "play-game-container"
+  );
+
+  const gameGridContainer = createContainer(
+    "section",
+    ["game-grid-container"],
+    "game-grid-container"
+  );
+  const canvas = createCanvas();
+  gameGridContainer.append(canvas);
+
   const gameDetailsContainer = createContainer(
     "section",
     ["game-details-container"],
     "game-details-container"
   );
-
   const subHeadersContainer = createSubHeaders("h3", playGameSubHeaders);
-
   const previewImgContainer = createPreviewImgContainer(
     "preview-img-container"
   );
-
   const controllerContainer = createControllerContainer();
-
   const controllerRowOne = createControllerRow(
     "controller-row-one",
     controllerRowObjs.rowOne
@@ -85,52 +97,45 @@ const playGamePageBuilder = () => {
     controllerContainer
   );
 
+  mainContainer.append(gameGridContainer, gameDetailsContainer);
+
+  // modals
   const pauseModal = createPauseModal(); // * ----------> confirmQuitModal
   const settingsModal = createSettingsModal(settingsModalInGameObj);
   const saveGameModal = createSaveGameModal(); // * ----------> confirmOverwriteGameModal
   const confirmationModal = createConfirmationModal();
 
-  // const confirmOverwriteGameModal = createConfirmationModal(
-  //   confirmOverwriteGameModalObj
-  // );
-  // const confirmQuitGameModal = createConfirmationModal(confirmQuitGameModalObj);
-
+  // post game options
   const playerNameForm = createPlayerNameForm();
   const postGameMenuButtons = createMenuButtons(
     postGameMenuButtonsContainerObj,
     postGameMenuButtonObjs
   );
 
-  gameGridContainer.after(
-    gameDetailsContainer,
+  const body = returnBody();
+  body.prepend(
+    mainHeading,
+    mainContainer,
     playerNameForm,
     postGameMenuButtons,
-    // * top level modal - pauseModal --> either settingsModal or saveGameModal
     pauseModal,
-    // * second level modal - either settingsModal or saveGameModal --> confirmationModal
     settingsModal,
     saveGameModal,
-    // * third level confirmation modal - either confirmOverwriteGameModal or confirmQuitGameModal
-    // TODO - one confirmation modal that gets different content injected into it whenever it opens
-    // confirmOverwriteGameModal,
-    // confirmQuitGameModal
     confirmationModal
   );
 
-  // Instantiate Necessary Classes
-  const settingsObj = new Settings();
-  const highScoresObj = new HighScores();
-
-  // Load a Saved Game if Needed
+  // * Load a Saved Game if Needed
   const gameToLoad = window.sessionStorage.getItem("gameToLoad");
   if (gameToLoad) {
     window.sessionStorage.removeItem("gameToLoad");
   }
 
-  // Instantiate the Tetris Game
+  // * Instantiate Necessary Classes
+  const settingsObj = new Settings();
+  const highScoresObj = new HighScores();
   const game = new Tetris(settingsObj, highScoresObj, gameToLoad);
 
-  // Target Elements for Event Listeners
+  // * Target Elements for Event Listeners
 
   const rotateButton = document.getElementById("btn-up");
   const softDropButton = document.getElementById("btn-down");
