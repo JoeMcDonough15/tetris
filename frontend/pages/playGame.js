@@ -15,7 +15,6 @@ import {
   createCanvas,
 } from "../components/index.js";
 import HighScores from "../high-scores/js/api/highScoresApi.js";
-import Settings from "../settings.js";
 import {
   playGameSubHeaders,
   postGameMenuButtonObjs,
@@ -28,8 +27,6 @@ import {
   grabInputValuesFromForm,
   showErrorById,
   openSettingsModal,
-  // confirmOverwriteGameModalObj,
-  // confirmQuitGameModalObj,
   closeConfirmationModal,
   allModals,
   settingsModalInGameObj,
@@ -37,8 +34,9 @@ import {
 import Tetris from "../game/tetris.js";
 
 import mainMenuPageBuilder from "./mainMenu.js";
+import highScoresPageBuilder from "./highScores.js";
 
-const playGamePageBuilder = () => {
+const playGamePageBuilder = (settingsObj, nameOfGameToLoad = null) => {
   // * Build out the UI
 
   const mainHeading = createCustomHeading(
@@ -131,7 +129,6 @@ const playGamePageBuilder = () => {
   }
 
   // * Instantiate Necessary Classes
-  const settingsObj = new Settings();
   const highScoresObj = new HighScores();
   const game = new Tetris(settingsObj, highScoresObj, gameToLoad);
 
