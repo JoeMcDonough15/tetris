@@ -49,6 +49,7 @@ class Tetris {
     this.game = new GameGrid(NUM_ROWS, NUM_COLS);
     this.pieceQueue = [];
     this.currentPiece = null;
+    this.currentPieceInPlay = false;
     this.currentPiecePlaced = false;
     this.numRotations = 0;
     this.gameMusic = new GameMusic(this.gameSettings.gameMusicSelection);
@@ -290,6 +291,8 @@ class Tetris {
   addBlocksToGrid = () => {
     for (const block of this.currentPiece.blocks) {
       const [currentRow, currentCol] = this.game.determineRowAndColumn(block);
+      if (currentRow === 0) {
+      }
       if (this.game.reachedTopOfGrid(currentRow)) {
         this.endGame();
         return;
@@ -454,6 +457,13 @@ class Tetris {
     }, this.gameSpeed);
   };
 
+  currentPieceEnteredGrid = () => {
+    for (const block of this.currentPiece.blocks) {
+      if (block.yCoordinate < 0) return false;
+    }
+    return true;
+  };
+
   moveShape = (direction) => {
     if (this.currentPiecePlaced || this.gameOver || this.gamePaused) return;
     if (this.willCollide(direction === "down" ? "bottom" : direction)) {
@@ -477,6 +487,11 @@ class Tetris {
 
     // redraw the shape in its new position
     this.currentPiece.drawShape();
+
+    // check to see if the piece is now in view so event listeners can fire
+    if (!this.currentPieceInPlay) {
+      this.currentPieceInPlay = this.currentPieceEnteredGrid();
+    }
   };
 
   softDrop = () => {
@@ -528,6 +543,7 @@ class Tetris {
       newPiece = new ZShape();
     }
 
+    this.currentPieceInPlay = false;
     return newPiece;
   };
 

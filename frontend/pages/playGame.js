@@ -252,14 +252,17 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
   };
 
   const handleRotateButton = () => {
+    if (!game.currentPieceInPlay) return;
     game.rotatePiece();
   };
 
   const handleMoveLeftButton = () => {
+    if (!game.currentPieceInPlay) return;
     game.moveShape("left");
   };
 
   const handleMoveRightButton = () => {
+    if (!game.currentPieceInPlay) return;
     game.moveShape("right");
   };
 
@@ -297,10 +300,13 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     if (game.gameOver) return;
     const keyName = e.key;
     if (keyName === settingsObj.keyControls.rotate) {
+      if (!game.currentPieceInPlay) return;
       game.rotatePiece();
     } else if (keyName === settingsObj.keyControls.moveLeft) {
+      if (!game.currentPieceInPlay) return;
       game.moveShape("left");
     } else if (keyName === settingsObj.keyControls.moveRight) {
+      if (!game.currentPieceInPlay) return;
       game.moveShape("right");
     } else if (keyName === settingsObj.keyControls.softDrop) {
       game.softDrop();

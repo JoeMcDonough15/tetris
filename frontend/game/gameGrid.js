@@ -20,7 +20,7 @@ class GameGrid {
     return [currentRow, currentCol];
   };
 
-  reachedTopOfGrid = (rowNum) => rowNum <= 0;
+  reachedTopOfGrid = (rowNum) => rowNum === 0;
 
   reachedBottomOfGrid = (rowNum) => rowNum >= this.numRows - 1;
 
