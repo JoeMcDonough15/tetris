@@ -218,11 +218,6 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
   };
 
   const handleOpenSaveGameModal = () => {
-    savedGamesDropdownMenu.addEventListener(
-      "change",
-      handleUpdateSavedGameTextInput
-    );
-
     openSaveGameModal(saveGameModal);
   };
 
@@ -342,6 +337,10 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
   openSettingsModalButton.addEventListener("click", handleOpenSettingsModal);
   closeSettingsModalButton.addEventListener("click", handleCloseSettingsModal);
   openSaveGameModalButton.addEventListener("click", handleOpenSaveGameModal);
+  savedGamesDropdownMenu.addEventListener(
+    "change",
+    handleUpdateSavedGameTextInput
+  );
   closeSaveGameModalButton.addEventListener("click", handleCloseSaveGameModal);
   quitGameButton.addEventListener("click", handleQuitGameButton);
   rotateButton.addEventListener("click", handleRotateButton);
@@ -396,6 +395,11 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
         idOfElement: "open-save-game-modal-button",
         typeOfEvent: "click",
         callBack: handleOpenSaveGameModal,
+      },
+      {
+        idOfElement: "load-game-select",
+        typeOfEvent: "change",
+        callBack: handleUpdateSavedGameTextInput,
       },
       {
         idOfElement: "close-save-game-modal-button",

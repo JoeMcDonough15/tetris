@@ -611,9 +611,10 @@ const addSavedGamesToDropdown = (namesOfAllSavedGames) => {
 export const handleUpdateSavedGameTextInput = () => {
   const savedGamesDropdownMenu = document.getElementById("load-game-select");
   const selectedValue = grabSelectedOption(savedGamesDropdownMenu);
-  if (selectedValue) {
-    injectValueToInputById("name-of-game-to-save", selectedValue);
-  }
+  injectValueToInputById(
+    "name-of-game-to-save",
+    selectedValue ? selectedValue : ""
+  );
 };
 
 export const openSaveGameModal = (saveGameModal) => {
