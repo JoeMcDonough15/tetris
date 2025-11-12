@@ -91,7 +91,7 @@ img {
 }
 
 .main-menu-image-container {
-  margin: 0 0 60px;
+  margin-bottom: 20px;
 }
 
 /* menu buttons that exist on any page, not just on the main menu. */
@@ -130,6 +130,7 @@ img {
 
 .high-scores-table {
   border-collapse: collapse;
+  margin-bottom: 20px;
   width: 100%;
 }
 

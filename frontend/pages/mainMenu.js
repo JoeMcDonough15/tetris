@@ -59,7 +59,7 @@ const mainMenuPageBuilder = (settingsObj) => {
     mainMenuButtonsContainerObj,
     mainMenuButtonObjs
   );
-  mainMenuContainer.append(tetrisImage, mainMenuButtons);
+  mainMenuContainer.append(mainMenuButtons, tetrisImage);
 
   const body = returnBody();
   body.prepend(
