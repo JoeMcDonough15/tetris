@@ -288,7 +288,7 @@ class Tetris {
   };
 
   addBlocksToGrid = () => {
-    this.currentPiece.blocks.forEach((block) => {
+    for (const block of this.currentPiece.blocks) {
       const [currentRow, currentCol] = this.game.determineRowAndColumn(block);
       if (this.game.reachedTopOfGrid(currentRow)) {
         this.endGame();
@@ -297,7 +297,7 @@ class Tetris {
       this.game.grid[currentRow][currentCol] = block;
       const rowOfGrid = this.game.grid[currentRow];
       rowOfGrid[rowOfGrid.length - 1] += 1;
-    });
+    }
   };
 
   destroyBlocksOfRow = (rowNum) => {
@@ -443,7 +443,7 @@ class Tetris {
 
   gravityDrop = () => {
     const fallInterval = setInterval(() => {
-      if (this.currentPiecePlaced || this.gamePaused) {
+      if (this.currentPiecePlaced || this.gamePaused || this.gameOver) {
         clearInterval(fallInterval);
         if (!this.gameOver && !this.gamePaused) {
           this.dequeuePiece();
@@ -455,7 +455,7 @@ class Tetris {
   };
 
   moveShape = (direction) => {
-    if (this.currentPiecePlaced) return; // never allow movement of a piece if it is placed on the grid
+    if (this.currentPiecePlaced || this.gameOver || this.gamePaused) return;
     if (this.willCollide(direction === "down" ? "bottom" : direction)) {
       if (direction === "down") {
         this.placePiece();
