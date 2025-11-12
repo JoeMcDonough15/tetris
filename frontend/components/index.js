@@ -38,7 +38,11 @@ const createMenuButton = (buttonObj) => {
 
 // create a div element with a label and input
 const createInputContainer = (data, isSelect = null) => {
-  const inputContainer = quickElement("div", data.containerClasses);
+  const inputContainer = quickElement(
+    "div",
+    data.containerClasses,
+    data.containerId
+  );
   const label = quickElement("label", []);
   label.innerText = data.labelText;
   label.setAttribute("for", data.input.id);
@@ -106,12 +110,21 @@ const createSaveGameForm = () => {
     saveGameFormData.formContainerClasses,
     saveGameFormData.formContainerId
   );
+  const selectInputContainer = createInputContainer(
+    loadGameFormData.inputs[0],
+    "isSelect"
+  );
+
   const nameOfGameInputContainer = createInputContainer(
     saveGameFormData.inputs[0]
   );
   const submitButton = createSubmitButton(saveGameFormData.submitButton);
 
-  saveGameForm.append(nameOfGameInputContainer, submitButton);
+  saveGameForm.append(
+    selectInputContainer,
+    nameOfGameInputContainer,
+    submitButton
+  );
   return saveGameForm;
 };
 

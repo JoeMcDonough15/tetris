@@ -30,6 +30,7 @@ import {
   closeConfirmationModal,
   allModals,
   settingsModalInGameObj,
+  openSaveGameModal,
 } from "../utils/index.js";
 import Tetris from "../game/tetris.js";
 
@@ -215,8 +216,8 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
   };
 
   const handleOpenSaveGameModal = () => {
-    // TODO write a function that opens the modal after clearing any previous value inside the nameOfGame text input
-    saveGameModal.showModal();
+    // add an event listener to the select input, if it is there, that listens for change and populates the text input's value with whatever's selected
+    openSaveGameModal(saveGameModal);
   };
 
   const handleCloseSaveGameModal = () => {
