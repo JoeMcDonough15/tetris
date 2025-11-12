@@ -241,10 +241,6 @@ class Tetris {
     }
   };
 
-  quitGame = () => {
-    window.location.replace("/");
-  };
-
   endGame = () => {
     this.gameOver = true;
     toggleDisplayById("game-grid-container", "game-details-container");

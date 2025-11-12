@@ -219,7 +219,7 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     saveGameModal.showModal();
   };
 
-  const handleCloseSavedGameModal = () => {
+  const handleCloseSaveGameModal = () => {
     saveGameModal.close();
   };
 
@@ -233,10 +233,9 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     document.getElementById("confirm-quit-game-button").addEventListener(
       "click",
       () => {
-        // ! Remove quitGame from the Tetris class, and instead call the cleanup function
-        // ! and mainMenuPageBuilder(settingsObj)
-        game.quitGame();
-        // closeConfirmationModal(confirmationModal);
+        cleanupFunction();
+        mainMenuPageBuilder(settingsObj);
+        closeConfirmationModal(confirmationModal);
       },
       { once: true }
     );
@@ -294,28 +293,7 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     }
   };
 
-  // Form Submit Events
-  playerNameForm.addEventListener("submit", handlePlayerNameFormSubmit);
-  updateSettingsForm.addEventListener("submit", handleUpdateSettingsFormSubmit);
-  saveGameForm.addEventListener("submit", handleSaveGameFormSubmit);
-
-  // Mouse Events
-  pauseButton.addEventListener("click", handlePauseGame);
-  closePauseModalButton.addEventListener("click", handleUnpauseGame);
-  openSettingsModalButton.addEventListener("click", handleOpenSettingsModal);
-  closeSettingsModalButton.addEventListener("click", handleCloseSettingsModal);
-  openSaveGameModalButton.addEventListener("click", handleOpenSaveGameModal);
-  closeSaveGameModalButton.addEventListener("click", handleCloseSavedGameModal);
-  quitGameButton.addEventListener("click", handleQuitGameButton);
-  rotateButton.addEventListener("click", handleRotateButton);
-  moveLeftButton.addEventListener("click", handleMoveLeftButton);
-  moveRightButton.addEventListener("click", handleMoveRightButton);
-  softDropButton.addEventListener("click", handleSoftDropButton);
-
-  // Key Events
-  window.addEventListener("keyup", handleKeyUp);
-
-  window.addEventListener("keydown", (e) => {
+  const handleKeyDown = (e) => {
     if (game.gameOver) return;
     const keyName = e.key;
     if (keyName === settingsObj.keyControls.rotate) {
@@ -338,9 +316,137 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
         game.togglePause();
       }
     }
-  });
+  };
+
+  // Form Submit Events
+  playerNameForm.addEventListener("submit", handlePlayerNameFormSubmit);
+  updateSettingsForm.addEventListener("submit", handleUpdateSettingsFormSubmit);
+  saveGameForm.addEventListener("submit", handleSaveGameFormSubmit);
+
+  // Mouse Events
+  pauseButton.addEventListener("click", handlePauseGame);
+  closePauseModalButton.addEventListener("click", handleUnpauseGame);
+  openSettingsModalButton.addEventListener("click", handleOpenSettingsModal);
+  closeSettingsModalButton.addEventListener("click", handleCloseSettingsModal);
+  openSaveGameModalButton.addEventListener("click", handleOpenSaveGameModal);
+  closeSaveGameModalButton.addEventListener("click", handleCloseSaveGameModal);
+  quitGameButton.addEventListener("click", handleQuitGameButton);
+  rotateButton.addEventListener("click", handleRotateButton);
+  moveLeftButton.addEventListener("click", handleMoveLeftButton);
+  moveRightButton.addEventListener("click", handleMoveRightButton);
+  softDropButton.addEventListener("click", handleSoftDropButton);
+
+  // Key Events
+  window.addEventListener("keyup", handleKeyUp);
+  window.addEventListener("keydown", handleKeyDown);
 
   game.startGame();
+
+  const cleanupFunction = () => {
+    const objsWithEventListeners = [
+      {
+        idOfElement: "player-name-form",
+        typeOfEvent: "submit",
+        callBack: handlePlayerNameFormSubmit,
+      },
+      {
+        idOfElement: "update-settings-form",
+        typeOfEvent: "submit",
+        callBack: handleUpdateSettingsFormSubmit,
+      },
+      {
+        idOfElement: "save-game-form",
+        typeOfEvent: "submit",
+        callBack: handleSaveGameFormSubmit,
+      },
+      {
+        idOfElement: "btn-pause",
+        typeOfEvent: "click",
+        callBack: handlePauseGame,
+      },
+      {
+        idOfElement: "close-pause-modal-button",
+        typeOfEvent: "click",
+        callBack: handleUnpauseGame,
+      },
+      {
+        idOfElement: "open-settings-modal-button",
+        typeOfEvent: "click",
+        callBack: handleOpenSettingsModal,
+      },
+      {
+        idOfElement: "close-settings-modal-button",
+        typeOfEvent: "click",
+        callBack: handleCloseSettingsModal,
+      },
+      {
+        idOfElement: "open-save-game-modal-button",
+        typeOfEvent: "click",
+        callBack: handleOpenSaveGameModal,
+      },
+      {
+        idOfElement: "close-save-game-modal-button",
+        typeOfEvent: "click",
+        callBack: handleCloseSaveGameModal,
+      },
+      {
+        idOfElement: "open-confirm-quit-game-modal-button",
+        typeOfEvent: "click",
+        callBack: handleQuitGameButton,
+      },
+      {
+        idOfElement: "btn-up",
+        typeOfEvent: "click",
+        callBack: handleRotateButton,
+      },
+      {
+        idOfElement: "btn-left",
+        typeOfEvent: "click",
+        callBack: handleMoveLeftButton,
+      },
+      {
+        idOfElement: "btn-right",
+        typeOfEvent: "click",
+        callBack: handleMoveRightButton,
+      },
+      {
+        idOfElement: "btn-down",
+        typeOfEvent: "click",
+        callBack: handleSoftDropButton,
+      },
+      { objOfListener: window, typeOfEvent: "keyup", callBack: handleKeyUp },
+      {
+        objOfListener: window,
+        typeOfEvent: "keydown",
+        callBack: handleKeyDown,
+      },
+    ];
+
+    objsWithEventListeners.forEach((obj) => {
+      if (obj.idOfElement) {
+        document
+          .getElementById(obj.idOfElement)
+          .removeEventListener(obj.typeOfEvent, obj.callBack);
+      } else {
+        obj.objOfListener.removeEventListener(obj.typeOfEvent, obj.callBack);
+      }
+    });
+
+    const idsOfElementsToRemove = [
+      "main-heading",
+      "play-game-container",
+      "player-name-form",
+      "post-game-menu-buttons",
+      "pause-modal",
+      "settings-modal",
+      "save-game-modal",
+      "confirmation-modal",
+    ];
+    idsOfElementsToRemove.forEach((id) => {
+      console.log(id);
+      document.getElementById(id).remove();
+    });
+  };
 };
 
 export default playGamePageBuilder;
