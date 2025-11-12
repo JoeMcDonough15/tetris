@@ -9,7 +9,7 @@ class Block {
     this.xCoordinate = xCoordinate
       ? xCoordinate
       : Math.floor(this.canvas.width / 2 - GRID_SPACE); // default x-coord is center of the canvas
-    this.yCoordinate = yCoordinate ? yCoordinate : 0; // default y-coord is top of the canvas
+    this.yCoordinate = yCoordinate ? yCoordinate : -20; // default y-coord is top of the canvas
     this.isBottomLedge = false;
     this.isLeftLedge = false;
     this.isRightLedge = false;
