@@ -417,8 +417,6 @@ export const pauseMenuButtonObjs = [
   allMenuButtonObjs.quitGame,
 ];
 
-console.log(allMenuButtonObjs.mainMenu); // we do not expect to see buttonText
-
 // Game State Sub Headers
 export const playGameSubHeaders = [
   { headerText: "Level: 0", id: "level-heading" },

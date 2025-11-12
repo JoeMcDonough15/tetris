@@ -37,6 +37,12 @@ const mainMenuPageBuilder = (settingsObj) => {
   // * Build the UI
 
   const body = returnBody();
+  const mainPageHeading = createCustomHeading(
+    "h1",
+    "Main Menu",
+    ["main-heading"],
+    "main-heading"
+  );
   const mainMenuContainer = createContainer(
     "main",
     ["main-container", "main-menu-container"],
@@ -47,7 +53,7 @@ const mainMenuPageBuilder = (settingsObj) => {
   const confirmationModal = createConfirmationModal();
 
   body.prepend(
-    createCustomHeading("h1", "Main Menu", ["main-heading"], "main-heading"),
+    mainPageHeading,
     mainMenuContainer,
     settingsModal,
     loadGameModal,
@@ -92,16 +98,9 @@ const mainMenuPageBuilder = (settingsObj) => {
       return;
     }
 
-    // * clean up any event listeners on this page
-    // * remove the main container from the DOM
-    // * call playGamePageBuilder and pass in the settings object as well as the name of the game to load
-    // * close load game modal
-
-    // ! REMOVE ALL OF THIS
-    window.sessionStorage.setItem("gameToLoad", selectedOption);
+    cleanupFunction();
+    playGamePageBuilder(settingsObj, selectedOption);
     closeLoadGameModal(loadGameModal);
-    window.location.assign("/play-game");
-    // !
   };
 
   // Form Submit Events
@@ -113,10 +112,8 @@ const mainMenuPageBuilder = (settingsObj) => {
 
   // Click Event Callbacks
   const handleNewGamebutton = () => {
-    // * clean up any event listeners on this page
-    // * remove the main container from the DOM
     cleanupFunction();
-    // * call playGamePageBuilder and pass in the settings object
+    playGamePageBuilder(settingsObj);
   };
 
   const handleOpenSettingsModal = () => {
@@ -283,7 +280,7 @@ const mainMenuPageBuilder = (settingsObj) => {
   window.addEventListener("keydown", handleKeyDown);
 
   const cleanupFunction = () => {
-    // aggregates all elements that have event listeners on them in the form of: [ {"id-of-element", "type-of-event"} ];
+    // aggregates all elements that have event listeners on them in the form of: [ {"id-of-element", "type-of-event", eventHandlerFunction} ];
     const objsWithEventListeners = [
       {
         idOfElement: "update-settings-form",
@@ -349,7 +346,17 @@ const mainMenuPageBuilder = (settingsObj) => {
       }
     });
 
-    // remove the main-menu-container
+    // remove the main header and the main element of MainMenu
+    const idsOfElementsToRemove = [
+      "main-heading",
+      "main-menu-container",
+      "settings-modal",
+      "load-game-modal",
+      "confirmation-modal",
+    ];
+    idsOfElementsToRemove.forEach((id) => {
+      document.getElementById(id).remove();
+    });
   };
 };
 
