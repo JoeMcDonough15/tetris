@@ -340,7 +340,7 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
   window.addEventListener("keyup", handleKeyUp);
   window.addEventListener("keydown", handleKeyDown);
 
-  game.startGame();
+  // * Cleanup Function
 
   const cleanupFunction = () => {
     const objsWithEventListeners = [
@@ -447,6 +447,8 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
       document.getElementById(id).remove();
     });
   };
+
+  game.startGame();
 };
 
 export default playGamePageBuilder;
