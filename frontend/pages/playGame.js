@@ -170,9 +170,9 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
       await highScoresObj.removeHighScore(game.idOfScoreToRemove);
     }
     await highScoresObj.addScoreToHighScores(playerDetails);
-    // ! navigate to high scores page
-    toggleDisplayById("player-name-form");
-    toggleDisplayById("post-game-menu-buttons");
+
+    cleanupFunction();
+    highScoresPageBuilder(settingsObj);
   };
 
   const handleUpdateSettingsFormSubmit = (e) => {
