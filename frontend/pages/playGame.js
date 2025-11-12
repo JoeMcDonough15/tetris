@@ -149,25 +149,13 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     "close-save-game-modal-button"
   );
 
-  // const confirmOverwriteGameButton = document.getElementById(
-  //   "confirm-overwrite-button"
-  // );
-
-  // const closeConfirmOverwriteModalButton = document.getElementById(
-  //   "close-overwrite-game-modal-button"
-  // );
-
   const quitGameButton = document.getElementById(
     "open-confirm-quit-game-modal-button"
   );
 
-  // const confirmQuitGameButton = document.getElementById(
-  //   "confirm-quit-game-button"
-  // );
+  // * Event Listeners
 
-  // const closeQuitGameModalButton = document.getElementById(
-  //   "close-quit-game-modal-button"
-  // );
+  // Event Callbacks
 
   // Form Submit Events
   playerNameForm.addEventListener("submit", async (e) => {
@@ -242,16 +230,6 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     saveGameModal.close();
   });
 
-  // confirmOverwriteGameButton.addEventListener("click", () => {
-  //   game.saveGame();
-  // });
-
-  // closeConfirmOverwriteModalButton.addEventListener("click", () => {
-  //   game.nameOfGameToSave = null;
-  //   game.indexOfGameToOverwrite = -1;
-  //   confirmOverwriteGameModal.close();
-  // });
-
   quitGameButton.addEventListener("click", () => {
     const modalContent = createConfirmationModalContent(
       allModals.confirmationModalData.confirmQuitGame
@@ -259,34 +237,20 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
 
     confirmationModal.appendChild(modalContent);
 
-    //!
-
-    //* ADD THE CONFIRM QUIT GAME GAME EVENT LISTENER, since this element now exists on the DOM
     document
       .getElementById("confirm-quit-game-button")
       .addEventListener("click", () => {
         game.quitGame();
       });
 
-    //* CANCEL AND CLOSE CONFIRMATION MODAL EVENT LISTENER
     document
       .getElementById("close-confirmation-modal-button")
       .addEventListener("click", () => {
         closeConfirmationModal(confirmationModal);
       });
 
-    //!
-
     confirmationModal.showModal();
   });
-
-  // confirmQuitGameButton.addEventListener("click", () => {
-  //   game.quitGame();
-  // });
-
-  // closeQuitGameModalButton.addEventListener("click", () => {
-  //   confirmQuitGameModal.close();
-  // });
 
   rotateButton.addEventListener("click", () => {
     game.rotatePiece();
@@ -339,18 +303,7 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
       game.moveShape("right");
     } else if (keyName === settingsObj.keyControls.softDrop) {
       game.softDrop();
-    }
-    // else if (
-    //   keyName === "Escape" &&
-    //   game.gamePaused &&
-    //   // TODO && !secondLevelModal.open && !confirmationModal.open (because secondLevelModal will inject with content for all 3 of these modals)
-    //   !settingsModal.open &&
-    //   !saveGameModal.open &&
-    //   !confirmQuitGameModal.open
-    // ) {
-    //   game.togglePause();
-    // }
-    else if (keyName === "Escape") {
+    } else if (keyName === "Escape") {
       if (confirmationModal.open) {
         closeConfirmationModal();
       } else if (settingsModal.open) {
