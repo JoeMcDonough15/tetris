@@ -41,7 +41,7 @@ const mainMenuPageBuilder = (settingsObj) => {
   const mainPageHeading = createCustomHeading(
     "h1",
     "Main Menu",
-    ["main-heading"],
+    ["main-heading", "main-menu-heading"],
     "main-heading"
   );
   const mainMenuContainer = createContainer(

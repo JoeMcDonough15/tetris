@@ -401,7 +401,7 @@ export const createControllerRow = (containerClassName, controllerObjs) => {
   return controllerRow;
 };
 
-// render a settings modal that can be used as a dialog element for whenever user opens settings in main menu or from the pause menu during game play
+// render a settings that can be used as a dialog element for whenever user opens settings in main menu or from the pause menu during game play
 export const createSettingsModal = (settingsDataObj) => {
   const settingsModal = createModalWithButton(settingsDataObj);
   settingsModal.setAttribute("closedby", "none");

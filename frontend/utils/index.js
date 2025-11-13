@@ -83,7 +83,7 @@ export const allModals = {
       classes: [],
       id: "close-settings-modal-button",
     },
-    classes: ["settings-modal-container"],
+    classes: ["modal-container", "settings-modal-container"],
     id: "settings-modal",
   },
   pauseModal: {
@@ -93,7 +93,7 @@ export const allModals = {
       id: "close-pause-modal-button",
       autofocus: true,
     },
-    classes: ["modal-container"],
+    classes: ["modal-container", "modal-container"],
     id: "pause-modal",
   },
   loadGameModal: {
@@ -102,7 +102,7 @@ export const allModals = {
       classes: [],
       id: "close-load-game-modal-button",
     },
-    classes: ["modal-container"],
+    classes: ["modal-container", "load-game-modal-container"],
     id: "load-game-modal",
   },
   saveGameModal: {
@@ -114,59 +114,7 @@ export const allModals = {
     classes: ["modal-container"],
     id: "save-game-modal",
   },
-  confirmOverwriteGameModal: {
-    classes: ["modal-container"],
-    id: "confirm-overwrite-game-modal",
-    confirmationTextObj: {
-      classes: [],
-      id: "confirm-overwrite-game-modal-text",
-      // innerText set dynamically so it can include name of game to overwrite
-    },
-    confirmationButtonsObj: {
-      containerClasses: [],
-      buttonObjs: [
-        {
-          buttonName: "confirm",
-          buttonText: "Yes, Overwrite This Game",
-          classes: [],
-          id: "confirm-overwrite-button",
-        },
-        ,
-        {
-          buttonName: "deny",
-          buttonText: "No, Rename This Game",
-          classes: [],
-          id: "close-overwrite-game-modal-button",
-        },
-      ],
-    },
-  },
-  confirmQuitGameModal: {
-    classes: ["modal-container"],
-    id: "confirm-quit-game-modal",
-    confirmationTextObj: {
-      text: "Are you sure you want to quit the current game?",
-      classes: [],
-      id: "confirm-quit-game-modal-text",
-    },
-    confirmationButtonsObj: {
-      containerClasses: [],
-      buttonObjs: [
-        {
-          buttonName: "confirm",
-          buttonText: "Yes, Return to Main Menu",
-          classes: [],
-          id: "confirm-quit-game-button",
-        },
-        {
-          buttonName: "deny",
-          buttonText: "No, Return to Pause Screen",
-          classes: [],
-          id: "close-quit-game-modal-button",
-        },
-      ],
-    },
-  },
+
   // TODO render only one confirmation modal with different content injected into it.
   // TODO on close of confirmation modal, clear the div container so that there is never more than one #close-confirmation-modal-button on the DOM.
 
