@@ -669,6 +669,24 @@ export const closeConfirmationModal = () => {
   confirmationModal.close();
 };
 
+export const displayScore = (scoreNum) => {
+  let returnString = "";
+  const scoreAsString = scoreNum.toString();
+  if (scoreAsString.length <= 3) return scoreAsString;
+  let counter = 0;
+  for (let i = scoreAsString.length - 1; i >= 0; i--) {
+    const currentChar = scoreAsString[i];
+    if (counter > 0 && counter % 3 === 0) {
+      returnString = `${currentChar},` + returnString;
+    } else {
+      returnString = currentChar + returnString;
+    }
+    counter++;
+  }
+
+  return returnString;
+};
+
 // * UI Form Data
 
 export const updateSettingsFormData = {

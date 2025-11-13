@@ -1,4 +1,5 @@
 import {
+  displayScore,
   GRID_SPACE,
   highScoresFormData,
   highScoresTableFields,
@@ -281,7 +282,7 @@ export const createHighScoresTable = (highScores) => {
       } else if (i === 1) {
         fieldDataCell.innerText = scoreObj.name;
       } else {
-        fieldDataCell.innerText = scoreObj.score;
+        fieldDataCell.innerText = displayScore(scoreObj.score);
         fieldDataCell.classList.add("high-scores-number-field");
       }
       highScoreBodyRow.appendChild(fieldDataCell);
