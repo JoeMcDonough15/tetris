@@ -163,7 +163,11 @@ const createPreviewImg = (id) => {
 
 // render a form to put inside the settingsModal in order to update settings
 const createUpdateSettingsForm = () => {
-  const updateSettingsForm = quickElement("form", [], "update-settings-form");
+  const updateSettingsForm = quickElement(
+    "form",
+    ["update-settings-form"],
+    "update-settings-form"
+  );
   const soundFxOnOffOptions = createRadioOptions(
     updateSettingsFormData.settingsOptions.soundFxOnOff
   );
@@ -176,6 +180,13 @@ const createUpdateSettingsForm = () => {
   const colorPaletteSelectOptions = createRadioOptions(
     updateSettingsFormData.settingsOptions.colorPaletteSelect
   );
+
+  const keyControlOptionsHeading = createCustomHeading(
+    "h3",
+    "Customize Key Controls",
+    ["key-control-options-heading"]
+  );
+
   const keyControlSelectOptionsContainer = quickElement("div", []);
 
   const keyControlSelectOptions = Object.values(
@@ -202,6 +213,7 @@ const createUpdateSettingsForm = () => {
     musicOnOffOptions,
     musicSelectOptions,
     colorPaletteSelectOptions,
+    keyControlOptionsHeading,
     keyControlSelectOptionsContainer,
     submitButton,
     error

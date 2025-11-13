@@ -1,3 +1,7 @@
+:root {
+  --accent-color: pink;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -6,7 +10,7 @@
 
 body {
   background: black;
-  color: pink;
+  color: var(--accent-color);
   font-family: "Pixelify Sans", sans-serif;
 }
 
@@ -29,8 +33,16 @@ button {
   border: 0;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 img {
   max-width: 100%;
+}
+
+fieldset {
+  border: 0;
 }
 
 .no-display.no-display.no-display.no-display {
@@ -80,8 +92,39 @@ img {
   margin-top: 20px;
 }
 
-.radio-options-container {
+.update-settings-form {
+  margin-top: 10px;
+}
+
+.update-settings-form > fieldset {
+  margin-bottom: 10px;
+}
+
+.update-settings-form > fieldset > legend {
+  border-bottom: 1px solid black;
+  margin-bottom: 5px;
+}
+
+.radio-options-container,
+.radio-option {
+  align-items: center;
   display: flex;
+}
+
+.radio-options-container {
+  gap: 2vw;
+}
+
+.radio-option {
+  gap: 1vw;
+}
+
+.radio-option > input[type="radio"]:checked {
+  /* accent-color: var(--accent-color); */
+}
+
+.radio-option > input:hover {
+  cursor: pointer;
 }
 
 .main-heading {
@@ -134,7 +177,7 @@ img {
 }
 
 .menu-button {
-  background: pink;
+  background: var(--accent-color);
 }
 
 .menu-button:hover {
@@ -151,7 +194,7 @@ img {
 .high-scores-table,
 .high-scores-table-heading,
 .high-scores-table-field {
-  border: 1px solid pink;
+  border: 1px solid var(--accent-color);
 }
 
 .high-scores-table {
@@ -245,7 +288,7 @@ img {
 
 .controller-button {
   align-items: center;
-  background: pink;
+  background: var(--accent-color);
   border-radius: 100%;
   display: flex;
   font-size: inherit;

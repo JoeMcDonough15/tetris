@@ -726,7 +726,7 @@ export const updateSettingsFormData = {
       radioOptions: [
         {
           containerClasses: ["radio-option"],
-          labelText: "Theme One",
+          labelText: "A",
           input: {
             id: "music-theme-one",
             type: "radio",
@@ -736,7 +736,7 @@ export const updateSettingsFormData = {
         },
         {
           containerClasses: ["radio-option"],
-          labelText: "Theme Two",
+          labelText: "B",
           input: {
             id: "music-theme-two",
             type: "radio",
@@ -746,7 +746,7 @@ export const updateSettingsFormData = {
         },
         {
           containerClasses: ["radio-option"],
-          labelText: "Theme Three",
+          labelText: "C",
           input: {
             id: "music-theme-three",
             type: "radio",
