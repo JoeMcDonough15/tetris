@@ -114,10 +114,6 @@ export const allModals = {
     classes: ["modal-container"],
     id: "save-game-modal",
   },
-
-  // TODO render only one confirmation modal with different content injected into it.
-  // TODO on close of confirmation modal, clear the div container so that there is never more than one #close-confirmation-modal-button on the DOM.
-
   confirmationModalData: {
     confirmDeleteSavedGame: {
       containerClasses: [],
