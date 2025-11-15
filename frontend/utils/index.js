@@ -230,7 +230,7 @@ const {
 
 export const settingsModalInMainMenuObj = {
   closeButtonObj: {
-    buttonText: "Close Settings",
+    buttonText: "Close",
     ...buttonClassesAndIds,
   },
   ...remainingModalProps,
@@ -412,7 +412,7 @@ export const settingsInputIds = {
     "music-theme-one",
     "music-theme-two",
     "music-theme-three",
-    "color-palette-classic",
+    "color-palette-one",
     "color-palette-two",
     "color-palette-three",
   ],
@@ -766,12 +766,12 @@ export const updateSettingsFormData = {
       radioOptions: [
         {
           containerClasses: ["radio-option"],
-          labelText: "Classic",
+          labelText: "One",
           input: {
-            id: "color-palette-classic",
+            id: "color-palette-one",
             type: "radio",
             name: "colorPaletteSelection",
-            value: "classic",
+            value: "one",
           },
         },
         {
@@ -798,7 +798,7 @@ export const updateSettingsFormData = {
     },
     keyControls: {
       rotate: {
-        containerClasses: [],
+        containerClasses: ["key-control-container"],
         labelText: "Rotate Shape",
         input: {
           id: "key-control-rotate",
@@ -808,7 +808,7 @@ export const updateSettingsFormData = {
         },
       },
       moveLeft: {
-        containerClasses: [],
+        containerClasses: ["key-control-container"],
         labelText: "Move Left",
         input: {
           id: "key-control-move-left",
@@ -818,7 +818,7 @@ export const updateSettingsFormData = {
         },
       },
       moveRight: {
-        containerClasses: [],
+        containerClasses: ["key-control-container"],
         labelText: "Move Right",
         input: {
           id: "key-control-move-right",
@@ -828,7 +828,7 @@ export const updateSettingsFormData = {
         },
       },
       softDrop: {
-        containerClasses: [],
+        containerClasses: ["key-control-container"],
         labelText: "Soft Drop Shape",
         input: {
           id: "key-control-soft-drop",
@@ -838,8 +838,8 @@ export const updateSettingsFormData = {
         },
       },
       togglePause: {
-        containerClasses: [],
-        labelText: "Pause/Unpause Game",
+        containerClasses: ["key-control-container"],
+        labelText: "Toggle Pause",
         input: {
           id: "key-control-toggle-pause",
           type: "text",

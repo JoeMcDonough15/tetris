@@ -168,6 +168,9 @@ const createUpdateSettingsForm = () => {
     ["update-settings-form"],
     "update-settings-form"
   );
+  const formHeading = createCustomHeading("h2", "Settings", [
+    "update-settings-main-heading",
+  ]);
   const soundFxOnOffOptions = createRadioOptions(
     updateSettingsFormData.settingsOptions.soundFxOnOff
   );
@@ -187,7 +190,9 @@ const createUpdateSettingsForm = () => {
     ["key-control-options-heading"]
   );
 
-  const keyControlSelectOptionsContainer = quickElement("div", []);
+  const keyControlSelectOptionsContainer = quickElement("div", [
+    "key-controls-container",
+  ]);
 
   const keyControlSelectOptions = Object.values(
     updateSettingsFormData.settingsOptions.keyControls
@@ -197,7 +202,7 @@ const createUpdateSettingsForm = () => {
 
   const submitButton = createSubmitButton({
     id: "update-settings-submit-button",
-    classes: [],
+    classes: ["update-settings-submit-button"],
     buttonText: updateSettingsFormData.submitButtonText,
   });
 
@@ -209,6 +214,7 @@ const createUpdateSettingsForm = () => {
   error.innerText = "key controls must be unique!";
 
   updateSettingsForm.append(
+    formHeading,
     soundFxOnOffOptions,
     musicOnOffOptions,
     musicSelectOptions,

@@ -3,7 +3,7 @@ class Settings {
     this.soundFx = "off";
     this.music = "off";
     this.gameMusicSelection = "theme-2"; // ! should be theme-1 this is for testing only
-    this.colorPaletteSelection = "classic";
+    this.colorPaletteSelection = "one";
     this.keyControls = {
       rotate: "ArrowUp",
       moveLeft: "ArrowLeft",
