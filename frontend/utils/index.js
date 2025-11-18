@@ -516,12 +516,12 @@ export const toggleDisplayById = (...ids) => {
 
 export const showErrorById = (errorId) => {
   const errorMessage = document.getElementById(errorId);
-  errorMessage.classList.remove("no-display");
+  errorMessage.classList.remove("hidden");
 };
 
 export const removeErrorById = (errorId) => {
   const errorMessage = document.getElementById(errorId);
-  errorMessage.classList.add("no-display");
+  errorMessage.classList.add("hidden");
 };
 
 export const changeTextOfErrorById = (errorId, message) => {
@@ -909,15 +909,15 @@ export const highScoresFormData = {
 };
 
 export const loadGameFormData = {
-  formContainerClasses: [],
+  formContainerClasses: ["load-game-form"],
   formContainerId: "load-game-form",
   inputs: [
     {
       inputName: "loadGameSelect",
       labelText: "Select a Saved Game",
-      containerClasses: [],
+      containerClasses: ["saved-games-dropdown-container"],
       containerId: "saved-games-dropdown-container",
-      labelClasses: [],
+      labelClasses: ["saved-games-dropdown-label"],
       inputClasses: [],
       input: {
         id: "load-game-select",
@@ -926,25 +926,25 @@ export const loadGameFormData = {
     },
   ],
   deleteButtons: {
-    containerClasses: [],
+    containerClasses: ["delete-buttons"],
     buttonObjs: [
       {
-        buttonText: "Delete Selected Game",
+        buttonText: "Delete",
         type: "button",
         id: "delete-saved-game-button",
-        classes: [],
+        classes: ["delete-saved-game-button"],
       },
       {
-        buttonText: "Delete All Saved Games",
+        buttonText: "Delete All",
         type: "button",
         id: "delete-all-saved-games-button",
-        classes: [],
+        classes: ["delete-all-saved-games-button"],
       },
     ],
   },
   submitButton: {
     id: "",
-    classes: [],
+    classes: ["load-game-submit-button"],
     buttonText: "Load Selected Game",
   },
   errors: [

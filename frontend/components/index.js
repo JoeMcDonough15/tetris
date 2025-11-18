@@ -44,7 +44,10 @@ const createInputContainer = (data, isSelect = null) => {
     data.containerClasses,
     data.containerId
   );
-  const label = quickElement("label", []);
+  const label = quickElement(
+    "label",
+    data.labelClasses ? data.labelClasses : []
+  );
   label.innerText = data.labelText;
   label.setAttribute("for", data.input.id);
   const input = quickElement(isSelect ? "select" : "input", [], data.input.id);
@@ -206,12 +209,10 @@ const createUpdateSettingsForm = () => {
     buttonText: updateSettingsFormData.submitButtonText,
   });
 
-  const error = quickElement(
-    "p",
-    ["error-message", "no-display"],
+  const error = createErrorMessage(
+    "Key controls must be unique!",
     "settings-error-message"
   );
-  error.innerText = "key controls must be unique!";
 
   updateSettingsForm.append(
     formHeading,
@@ -246,7 +247,7 @@ const createCloseModalButton = ({ buttonText, classes, id }) => {
 
 // render a custom error message for any of the components here or on the fly throughout the app
 export const createErrorMessage = (errorText, id) => {
-  const error = quickElement("p", ["error-message", "no-display"], id);
+  const error = quickElement("p", ["error-message", "hidden"], id);
   error.innerText = errorText;
 
   return error;
