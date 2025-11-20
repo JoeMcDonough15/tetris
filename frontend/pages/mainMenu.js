@@ -30,6 +30,7 @@ import {
   removeErrorById,
   settingsModalInMainMenuObj,
   mainMenuImageData,
+  injectTextIntoElementById,
 } from "../utils/index.js";
 
 import playGamePageBuilder from "./playGame.js";
@@ -184,6 +185,11 @@ const mainMenuPageBuilder = (settingsObj) => {
       // TODO make a notification saying the game was successfully deleted that disappears after a setTimeout expires
       closeConfirmationModal(confirmationModal);
     };
+
+    injectTextIntoElementById(
+      "confirm-delete-game-modal-text",
+      `Are you sure you want to delete game: ${selectedOption}?`
+    );
 
     document
       .getElementById("confirm-delete-saved-game-button")

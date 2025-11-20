@@ -116,7 +116,7 @@ export const allModals = {
   },
   confirmationModalData: {
     confirmDeleteSavedGame: {
-      containerClasses: [],
+      containerClasses: ["confirm-delete-saved-game-modal-content-container"],
       containerId: "confirm-delete-saved-game-modal-content",
       confirmationTextObj: {
         // innerText set dynamically so we can include the name of the game to delete
@@ -124,18 +124,18 @@ export const allModals = {
         id: "confirm-delete-game-modal-text",
       },
       confirmationButtonsObj: {
-        containerClasses: [],
+        containerClasses: ["confirm-delete-buttons"],
         buttonObjs: [
           {
             buttonName: "confirm",
             buttonText: "Yes, Delete This Game",
-            classes: [],
+            classes: ["confirm-delete-saved-game-button"],
             id: "confirm-delete-saved-game-button",
           },
           {
             buttonName: "deny",
             buttonText: "Cancel",
-            classes: [],
+            classes: ["close-confirmation-modal-button"],
             id: "close-confirmation-modal-button",
           },
         ],
@@ -260,10 +260,10 @@ export const openConfirmOverwriteGameModal = (tetrisClass) => {
     allModals.confirmationModalData.confirmOverwriteSavedGame
   );
   confirmationModal.appendChild(modalContent);
-  const overwriteGameModalText = document.getElementById(
-    "confirm-overwrite-game-modal-text"
+  injectTextIntoElementById(
+    "confirm-overwrite-game-modal-text",
+    `Clicking save will overwrite game: ${tetrisClass.nameOfGameToSave}. Are you sure you want to continue?`
   );
-  overwriteGameModalText.innerText = `Clicking save will overwrite game: ${tetrisClass.nameOfGameToSave}. Are you sure you want to continue?`;
 
   document.getElementById("confirm-overwrite-button").addEventListener(
     "click",
@@ -685,6 +685,11 @@ export const displayScore = (scoreNum) => {
   }
 
   return returnString;
+};
+
+export const injectTextIntoElementById = (id, textToInject) => {
+  const element = document.getElementById(id);
+  element.innerText = textToInject;
 };
 
 // * UI Form Data

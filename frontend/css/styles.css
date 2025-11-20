@@ -14,9 +14,18 @@ body {
   font-family: "Pixelify Sans", sans-serif;
 }
 
+h2 {
+  font-size: clamp(25px, 8vw, 60px);
+}
+
 body,
 h3 {
   font-size: clamp(16px, 4.5vw, 32px);
+}
+
+select {
+  cursor: pointer;
+  font-size: inherit;
 }
 
 a,
@@ -45,6 +54,11 @@ fieldset {
   border: 0;
 }
 
+input {
+  font-size: inherit;
+  padding: 2px 5px;
+}
+
 input[type="radio"] {
   accent-color: var(--accent-color-one);
   cursor: pointer;
@@ -67,12 +81,17 @@ input[type="radio"] {
 }
 
 .modal-container {
-  height: 50vh;
+  height: 75vh;
   max-width: 600px;
   position: fixed;
   margin: auto;
   top: 10%;
   width: 90vw;
+}
+
+.modal-container.load-game-modal-container,
+.modal-container.confirmation-modal-container {
+  height: 50vh;
 }
 
 ::backdrop {
@@ -107,7 +126,6 @@ input[type="radio"] {
 }
 
 .update-settings-main-heading {
-  font-size: 2.5rem;
   margin-bottom: 10px;
   text-align: center;
 }
@@ -158,9 +176,15 @@ input[type="radio"] {
 .update-settings-submit-button,
 .load-game-submit-button,
 .delete-saved-game-button,
-.delete-all-saved-games-button {
+.delete-all-saved-games-button,
+.confirm-delete-saved-game-button,
+.close-confirmation-modal-button {
   margin: 20px 0;
   padding: 10px 20px;
+}
+
+.update-settings-submit-button {
+  width: 100%;
 }
 
 .load-game-modal-container {
@@ -179,7 +203,7 @@ input[type="radio"] {
 }
 
 .saved-games-dropdown-label {
-  font-size: 1.5rem;
+  font-size: 1.5em;
   margin-bottom: 5px;
 }
 
@@ -192,6 +216,22 @@ input[type="radio"] {
 
 .load-game-submit-button {
   width: 100%;
+}
+
+.confirm-delete-saved-game-modal-content-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  height: 100%;
+  justify-content: center;
+  margin: auto;
+  text-align: center;
+  width: 75%;
+}
+
+.confirm-delete-buttons {
+  display: flex;
+  flex-direction: column;
 }
 
 .main-heading {

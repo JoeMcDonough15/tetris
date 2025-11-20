@@ -479,40 +479,11 @@ export const createPauseModal = () => {
   return pauseModal;
 };
 
-// ! should not need this now
-// export const createConfirmationModal = ({
-//   classes,
-//   id,
-//   confirmationTextObj,
-//   confirmationButtonsObj,
-// }) => {
-//   const confirmationModal = quickElement("dialog", classes, id);
-//   confirmationModal.setAttribute("closedby", "none");
-//   const confirmationTextElement = quickElement(
-//     "p",
-//     confirmationTextObj.classes,
-//     confirmationTextObj.id
-//   );
-//   // if the confirmationText object includes
-//   if (confirmationTextObj.text) {
-//     confirmationTextElement.innerText = confirmationTextObj.text;
-//   }
-
-//   const confirmationButtonsContainer = createButtons(confirmationButtonsObj);
-
-//   confirmationModal.append(
-//     confirmationTextElement,
-//     confirmationButtonsContainer
-//   );
-
-//   return confirmationModal;
-// };
-
 // render a modal to confirm an action like overwriting a game in memory, or quitting a game from the pause menu
 export const createConfirmationModal = () => {
   const confirmationModal = quickElement(
     "dialog",
-    ["modal-container"],
+    ["modal-container", "confirmation-modal-container"],
     "confirmation-modal"
   );
   confirmationModal.setAttribute("closedby", "none");
