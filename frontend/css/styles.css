@@ -54,14 +54,27 @@ fieldset {
   border: 0;
 }
 
-input {
+input[type="text"] {
   font-size: inherit;
   padding: 2px 5px;
 }
 
 input[type="radio"] {
-  accent-color: var(--accent-color-one);
+  appearance: none;
+  border: 1px solid black;
+  border-radius: 50%;
   cursor: pointer;
+  height: clamp(13px, 3vw, 20px);
+  transition: all 150ms ease-in-out;
+  width: clamp(13px, 3vw, 20px);
+}
+
+input[type="radio"]:checked {
+  background: var(--accent-color-one);
+}
+
+input[type="radio"]:hover {
+  opacity: 0.5;
 }
 
 .no-display.no-display.no-display.no-display {
