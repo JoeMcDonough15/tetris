@@ -116,7 +116,7 @@ export const allModals = {
   },
   confirmationModalData: {
     confirmDeleteSavedGame: {
-      containerClasses: ["confirm-delete-saved-game-modal-content-container"],
+      containerClasses: ["confirmation-modal-content-container"],
       containerId: "confirm-delete-saved-game-modal-content",
       confirmationTextObj: {
         // innerText set dynamically so we can include the name of the game to delete
@@ -124,12 +124,12 @@ export const allModals = {
         id: "confirm-delete-game-modal-text",
       },
       confirmationButtonsObj: {
-        containerClasses: ["confirm-delete-buttons"],
+        containerClasses: ["confirmation-buttons"],
         buttonObjs: [
           {
             buttonName: "confirm",
             buttonText: "Yes, Delete This Game",
-            classes: ["confirm-delete-saved-game-button"],
+            classes: ["confirm-button"],
             id: "confirm-delete-saved-game-button",
           },
           {
@@ -142,7 +142,7 @@ export const allModals = {
       },
     },
     confirmDeleteAllSavedGames: {
-      containerClasses: [],
+      containerClasses: ["confirmation-modal-content-container"],
       containerId: "confirm-delete-all-saved-games-modal-content",
       confirmationTextObj: {
         text: "Are you sure you want to delete all saved games?",
@@ -150,25 +150,25 @@ export const allModals = {
         id: "confirm-delete-game-modal-text",
       },
       confirmationButtonsObj: {
-        containerClasses: [],
+        containerClasses: ["confirmation-buttons"],
         buttonObjs: [
           {
             buttonName: "confirm",
             buttonText: "Yes, Delete All My Saved Games",
-            classes: [],
+            classes: ["confirm-button"],
             id: "confirm-delete-all-saved-games-button",
           },
           {
             buttonName: "deny",
             buttonText: "Cancel",
-            classes: [],
+            classes: ["close-confirmation-modal-button"],
             id: "close-confirmation-modal-button",
           },
         ],
       },
     },
     confirmOverwriteSavedGame: {
-      containerClasses: [],
+      containerClasses: ["confirmation-modal-content-container"],
       containerId: "confirm-overwrite-saved-game-modal-content",
       confirmationTextObj: {
         classes: [],
@@ -176,26 +176,26 @@ export const allModals = {
         // innerText set dynamically so it can include name of game to overwrite
       },
       confirmationButtonsObj: {
-        containerClasses: [],
+        containerClasses: ["confirmation-buttons"],
         buttonObjs: [
           {
             buttonName: "confirm",
             buttonText: "Yes, Overwrite This Game",
-            classes: [],
+            classes: ["confirm-button"],
             id: "confirm-overwrite-button",
           },
           ,
           {
             buttonName: "deny",
             buttonText: "No, Rename This Game",
-            classes: [],
+            classes: ["close-confirmation-modal-button"],
             id: "close-confirmation-modal-button",
           },
         ],
       },
     },
     confirmQuitGame: {
-      containerClasses: [],
+      containerClasses: ["confirmation-modal-content-container"],
       containerId: "confirm-quit-game-modal-content",
       confirmationTextObj: {
         text: "Are you sure you want to quit the current game?",
@@ -203,18 +203,18 @@ export const allModals = {
         id: "confirm-quit-game-modal-text",
       },
       confirmationButtonsObj: {
-        containerClasses: [],
+        containerClasses: ["confirmation-buttons"],
         buttonObjs: [
           {
             buttonName: "confirm",
             buttonText: "Yes, Return to Main Menu",
-            classes: [],
+            classes: ["confirm-button"],
             id: "confirm-quit-game-button",
           },
           {
             buttonName: "deny",
             buttonText: "No, Return to Pause Screen",
-            classes: [],
+            classes: ["close-confirmation-modal-button"],
             id: "close-confirmation-modal-button",
           },
         ],
