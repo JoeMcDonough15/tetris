@@ -1,4 +1,5 @@
 import {
+  displayScore,
   GRID_SPACE,
   highScoresFormData,
   highScoresTableFields,
@@ -43,10 +44,17 @@ const createInputContainer = (data, isSelect = null) => {
     data.containerClasses,
     data.containerId
   );
-  const label = quickElement("label", []);
+  const label = quickElement(
+    "label",
+    data.labelClasses ? data.labelClasses : []
+  );
   label.innerText = data.labelText;
   label.setAttribute("for", data.input.id);
-  const input = quickElement(isSelect ? "select" : "input", [], data.input.id);
+  const input = quickElement(
+    isSelect ? "select" : "input",
+    data.inputClasses ? [...data.inputClasses] : [],
+    data.input.id
+  );
   if (isSelect) {
     const dropDownInstructions = createGameToLoadOption("Saved Games");
     dropDownInstructions.classList.remove("game-to-load-select-option");
@@ -162,7 +170,14 @@ const createPreviewImg = (id) => {
 
 // render a form to put inside the settingsModal in order to update settings
 const createUpdateSettingsForm = () => {
-  const updateSettingsForm = quickElement("form", [], "update-settings-form");
+  const updateSettingsForm = quickElement(
+    "form",
+    ["update-settings-form"],
+    "update-settings-form"
+  );
+  const formHeading = createCustomHeading("h2", "Settings", [
+    "update-settings-main-heading",
+  ]);
   const soundFxOnOffOptions = createRadioOptions(
     updateSettingsFormData.settingsOptions.soundFxOnOff
   );
@@ -175,7 +190,16 @@ const createUpdateSettingsForm = () => {
   const colorPaletteSelectOptions = createRadioOptions(
     updateSettingsFormData.settingsOptions.colorPaletteSelect
   );
-  const keyControlSelectOptionsContainer = quickElement("div", []);
+
+  const keyControlOptionsHeading = createCustomHeading(
+    "h3",
+    "Customize Key Controls",
+    ["key-control-options-heading"]
+  );
+
+  const keyControlSelectOptionsContainer = quickElement("div", [
+    "key-controls-container",
+  ]);
 
   const keyControlSelectOptions = Object.values(
     updateSettingsFormData.settingsOptions.keyControls
@@ -185,22 +209,22 @@ const createUpdateSettingsForm = () => {
 
   const submitButton = createSubmitButton({
     id: "update-settings-submit-button",
-    classes: [],
+    classes: ["update-settings-submit-button"],
     buttonText: updateSettingsFormData.submitButtonText,
   });
 
-  const error = quickElement(
-    "p",
-    ["error-message", "no-display"],
+  const error = createErrorMessage(
+    "Key controls must be unique!",
     "settings-error-message"
   );
-  error.innerText = "key controls must be unique!";
 
   updateSettingsForm.append(
+    formHeading,
     soundFxOnOffOptions,
     musicOnOffOptions,
     musicSelectOptions,
     colorPaletteSelectOptions,
+    keyControlOptionsHeading,
     keyControlSelectOptionsContainer,
     submitButton,
     error
@@ -227,7 +251,7 @@ const createCloseModalButton = ({ buttonText, classes, id }) => {
 
 // render a custom error message for any of the components here or on the fly throughout the app
 export const createErrorMessage = (errorText, id) => {
-  const error = quickElement("p", ["error-message", "no-display"], id);
+  const error = quickElement("p", ["error-message", "hidden"], id);
   error.innerText = errorText;
 
   return error;
@@ -260,12 +284,12 @@ export const createPlayerNameForm = () => {
 
 // render a table of existing high scores
 export const createHighScoresTable = (highScores) => {
-  const highScoresTable = quickElement("table", []);
+  const highScoresTable = quickElement("table", ["high-scores-table"]);
   const highScoresTableHeader = quickElement("thead", []);
   const highScoresTableHeaderRow = quickElement("tr", []);
 
   highScoresTableFields.forEach((fieldName) => {
-    const fieldDataCell = quickElement("td", []);
+    const fieldDataCell = quickElement("td", ["high-scores-table-heading"]);
     fieldDataCell.innerText = fieldName;
     highScoresTableHeaderRow.appendChild(fieldDataCell);
   });
@@ -274,13 +298,15 @@ export const createHighScoresTable = (highScores) => {
   highScores.forEach((scoreObj, indexOfObj) => {
     const highScoreBodyRow = quickElement("tr", []);
     for (let i = 0; i < highScoresTableFields.length; i++) {
-      const fieldDataCell = quickElement("td", []);
+      const fieldDataCell = quickElement("td", ["high-scores-table-field"]);
       if (i === 0) {
         fieldDataCell.innerText = (indexOfObj + 1).toString();
+        fieldDataCell.classList.add("high-scores-number-field");
       } else if (i === 1) {
         fieldDataCell.innerText = scoreObj.name;
       } else {
-        fieldDataCell.innerText = scoreObj.score;
+        fieldDataCell.innerText = displayScore(scoreObj.score);
+        fieldDataCell.classList.add("high-scores-number-field");
       }
       highScoreBodyRow.appendChild(fieldDataCell);
     }
@@ -298,6 +324,22 @@ export const createCustomHeading = (headingLevel, headingText, classes, id) => {
   return headingElement;
 };
 
+export const createImage = ({
+  containerClasses,
+  containerId,
+  imageClasses,
+  imageId,
+  imageSrc,
+  imageAltText,
+}) => {
+  const container = createContainer("div", containerClasses, containerId);
+  const image = quickElement("img", imageClasses, imageId);
+  image.src = imageSrc;
+  image.alt = imageAltText;
+  container.appendChild(image);
+  return container;
+};
+
 // render a custom container element with any number of classes and an optional id
 export const createContainer = (elementName, classes, id = null) => {
   const container = quickElement(elementName, classes, id);
@@ -313,17 +355,23 @@ export const createMenuButtons = (containerObj, arrayOfButtonObjs) => {
   );
   // create nav buttons and place in their own separate nav tag
   const navButtonsContainer = quickElement("nav", ["nav-buttons"]);
-  const navButtons = arrayOfButtonObjs
-    .filter((buttonObj) => buttonObj.navButton)
-    .map((buttonObj) => createMenuButton(buttonObj));
-  navButtonsContainer.append(...navButtons);
+  const navButtonsPassedIn = arrayOfButtonObjs.filter(
+    (buttonObj) => buttonObj.navButton
+  );
+  if (navButtonsPassedIn.length) {
+    const navButtons = navButtonsPassedIn.map((buttonObj) =>
+      createMenuButton(buttonObj)
+    );
+    navButtonsContainer.append(...navButtons);
+    menuButtonsContainer.appendChild(navButtonsContainer);
+  }
 
   // create all non-nav buttons
   const menuButtons = arrayOfButtonObjs
     .filter((buttonObj) => !buttonObj.navButton)
     .map((buttonObj) => createMenuButton(buttonObj));
 
-  menuButtonsContainer.append(navButtonsContainer, ...menuButtons);
+  menuButtonsContainer.append(...menuButtons);
 
   return menuButtonsContainer;
 };
@@ -383,7 +431,7 @@ export const createControllerRow = (containerClassName, controllerObjs) => {
   return controllerRow;
 };
 
-// render a settings modal that can be used as a dialog element for whenever user opens settings in main menu or from the pause menu during game play
+// render a settings that can be used as a dialog element for whenever user opens settings in main menu or from the pause menu during game play
 export const createSettingsModal = (settingsDataObj) => {
   const settingsModal = createModalWithButton(settingsDataObj);
   settingsModal.setAttribute("closedby", "none");
@@ -441,40 +489,11 @@ export const createPauseModal = () => {
   return pauseModal;
 };
 
-// ! should not need this now
-// export const createConfirmationModal = ({
-//   classes,
-//   id,
-//   confirmationTextObj,
-//   confirmationButtonsObj,
-// }) => {
-//   const confirmationModal = quickElement("dialog", classes, id);
-//   confirmationModal.setAttribute("closedby", "none");
-//   const confirmationTextElement = quickElement(
-//     "p",
-//     confirmationTextObj.classes,
-//     confirmationTextObj.id
-//   );
-//   // if the confirmationText object includes
-//   if (confirmationTextObj.text) {
-//     confirmationTextElement.innerText = confirmationTextObj.text;
-//   }
-
-//   const confirmationButtonsContainer = createButtons(confirmationButtonsObj);
-
-//   confirmationModal.append(
-//     confirmationTextElement,
-//     confirmationButtonsContainer
-//   );
-
-//   return confirmationModal;
-// };
-
 // render a modal to confirm an action like overwriting a game in memory, or quitting a game from the pause menu
 export const createConfirmationModal = () => {
   const confirmationModal = quickElement(
     "dialog",
-    ["modal-container"],
+    ["modal-container", "confirmation-modal-container"],
     "confirmation-modal"
   );
   confirmationModal.setAttribute("closedby", "none");
@@ -499,7 +518,7 @@ export const createConfirmationModalContent = ({
     confirmationTextObj.classes,
     confirmationTextObj.id
   );
-  // if the confirmationText object includes hard coded text to put on it, do so; otherwise, the text is generated dynamically using its confirmationTextElement.id inside an event listener.
+
   if (confirmationTextObj.text) {
     confirmationTextElement.innerText = confirmationTextObj.text;
   }
@@ -511,6 +530,5 @@ export const createConfirmationModalContent = ({
     confirmationButtonsContainer
   );
 
-  return modalContentContainer; // in the event listner to open this, confirmationModal.appendChild(modalContentContainer);
-  // in the event listener to close this modal, it would confirmationModal.close() and then modalContentContainer.remove();
+  return modalContentContainer;
 };

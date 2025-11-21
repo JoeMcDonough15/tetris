@@ -1,3 +1,7 @@
+:root {
+  --accent-color-one: pink;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -6,13 +10,22 @@
 
 body {
   background: black;
-  color: pink;
+  color: var(--accent-color-one);
   font-family: "Pixelify Sans", sans-serif;
+}
+
+h2 {
+  font-size: clamp(25px, 8vw, 60px);
 }
 
 body,
 h3 {
-  font-size: min(4.5vw, 32px);
+  font-size: clamp(16px, 4.5vw, 32px);
+}
+
+select {
+  cursor: pointer;
+  font-size: inherit;
 }
 
 a,
@@ -27,25 +40,92 @@ a {
 
 button {
   border: 0;
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+}
+
+fieldset {
+  border: 0;
+}
+
+input[type="text"],
+select {
+  font-size: inherit;
+  padding: 2px 5px;
+}
+
+input[type="radio"] {
+  appearance: none;
+  border: 1px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+  height: clamp(13px, 3vw, 20px);
+  transition: all 150ms ease-in-out;
+  width: clamp(13px, 3vw, 20px);
+}
+
+input[type="radio"]:checked {
+  background: var(--accent-color-one);
+}
+
+input[type="radio"]:not(:checked):hover {
+  background: var(--accent-color-one);
+  opacity: 0.5;
+}
+
+select {
+  appearance: base-select;
+}
+
+select::picker(select) {
+  appearance: base-select;
+}
+
+select:hover {
+  background: var(--accent-color-one);
+}
+
+.saved-games-dropdown-label:hover + select {
+  background: initial;
+}
+
+select option::checkmark {
+  color: var(--accent-color-one);
+}
+
+select option:hover::checkmark {
+  color: black;
+}
+
+select option:hover {
+  background: var(--accent-color-one);
+}
+
+.error-message.hidden {
+  visibility: hidden;
+}
+
+.error-message {
+  color: red;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+  visibility: visible;
 }
 
 .no-display.no-display.no-display.no-display {
   display: none;
 }
 
-.error-message {
-  color: red;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 0.5rem;
-  text-transform: capitalize;
-}
-
 .modal-container {
-  height: 50vh;
+  max-width: 600px;
   position: fixed;
   margin: auto;
   top: 10%;
-  width: 100vw;
+  width: 90vw;
 }
 
 ::backdrop {
@@ -53,8 +133,172 @@ button {
   opacity: 0.7;
 }
 
-.radio-options-container {
+.modal-container.load-game-modal-container,
+.modal-container.settings-modal-container,
+.modal-container.save-game-modal-container,
+.modal-container.pause-modal-container {
+  padding: 10px;
+}
+
+.modal-container.load-game-modal-container[open],
+.modal-container.settings-modal-container[open],
+.modal-container.save-game-modal-container[open] {
   display: flex;
+}
+
+.modal-container.load-game-modal-container,
+.modal-container.settings-modal-container,
+.modal-container.save-game-modal-container {
+  align-items: center;
+  flex-direction: column;
+}
+
+.modal-container.save-game-modal-container {
+  justify-content: space-between;
+}
+
+.close-modal-button {
+  align-self: flex-start;
+  background: none;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 5px 8px;
+}
+
+.no-games-to-display-heading {
+  font-size: 2rem;
+  margin-top: 20px;
+}
+
+.update-settings-form {
+  margin-top: 10px;
+}
+
+.update-settings-main-heading {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.update-settings-form > fieldset {
+  margin-bottom: 10px;
+}
+
+.update-settings-form > fieldset > legend {
+  border-bottom: 1px solid black;
+  margin-bottom: 5px;
+}
+
+.radio-options-container,
+.radio-option {
+  align-items: center;
+  display: flex;
+}
+
+.radio-options-container {
+  gap: 2vw;
+}
+
+.radio-option {
+  gap: 1vw;
+}
+
+.key-control-options-heading {
+  margin: 20px 0 10px;
+  text-align: center;
+}
+
+.key-controls-container,
+.key-control-container {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+}
+
+.key-controls-container {
+  gap: 10px;
+}
+
+.key-control-container {
+  gap: 5px;
+}
+
+.update-settings-submit-button,
+.load-game-submit-button,
+.delete-saved-game-button,
+.delete-all-saved-games-button,
+.confirm-button,
+.close-confirmation-modal-button,
+.save-game-submit-button {
+  margin: 20px 0;
+  padding: 10px 20px;
+}
+
+.update-settings-submit-button {
+  width: 100%;
+}
+
+.load-game-modal-container {
+  justify-content: space-around;
+}
+
+.load-game-form {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.saved-games-dropdown-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.saved-games-dropdown-label {
+  font-size: 1.5em;
+  margin-bottom: 5px;
+}
+
+.delete-buttons {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.load-game-submit-button {
+  width: 100%;
+}
+
+.confirmation-modal-content-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  height: 100%;
+  justify-content: center;
+  margin: auto;
+  text-align: center;
+  width: 75%;
+}
+
+.confirmation-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.save-game-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.save-game-label,
+.save-game-input,
+.save-game-submit-button {
+  width: 100%;
+}
+
+.save-game-label {
+  display: inline-block;
 }
 
 .main-heading {
@@ -69,7 +313,7 @@ button {
 .main-container {
   margin: auto;
   max-width: 600px;
-  width: 95%;
+  width: 90%;
 }
 
 .main-menu-container,
@@ -85,11 +329,10 @@ button {
   flex-direction: column;
 }
 
-.main-menu-container {
-  height: 100vh;
+.main-menu-image-container {
+  margin: 20px 0;
 }
 
-/* menu buttons that exist on any page, not just on the main menu. */
 .menu-buttons,
 .nav-buttons {
   display: flex;
@@ -97,8 +340,20 @@ button {
   gap: 20px;
 }
 
+.menu-buttons {
+  width: 100%;
+}
+
+.high-scores-container > .menu-buttons {
+  margin: 40px 0;
+}
+
 .menu-button {
-  background: pink;
+  background: var(--accent-color-one);
+}
+
+.menu-button:hover {
+  cursor: pointer;
 }
 
 .menu-button > a,
@@ -106,6 +361,32 @@ button {
   display: inline-block;
   padding: 10px;
   width: 100%;
+}
+
+.high-scores-table,
+.high-scores-table-heading,
+.high-scores-table-field {
+  border: 1px solid var(--accent-color-one);
+}
+
+.high-scores-table {
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.high-scores-table-heading,
+.high-scores-table-field {
+  padding: 10px 0;
+  text-align: center;
+}
+
+.high-scores-table-heading {
+  font-size: clamp(28px, 4.5vw, 40px);
+}
+
+.high-scores-number-field {
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .game-grid-container,
@@ -147,7 +428,9 @@ button {
   align-items: center;
   display: flex;
   flex-direction: column;
+  height: 25vw;
   justify-content: center;
+  max-height: 170px;
   max-width: 170px;
   width: 25vw;
 }
@@ -179,7 +462,7 @@ button {
 
 .controller-button {
   align-items: center;
-  background: pink;
+  background: var(--accent-color-one);
   border-radius: 100%;
   display: flex;
   font-size: inherit;
@@ -207,6 +490,10 @@ button {
     width: 100%;
   }
 
+  .menu-buttons {
+    width: 90%;
+  }
+
   .game-details-container {
     padding: 0;
   }
@@ -215,5 +502,20 @@ button {
 @media screen and (min-width: 400px) {
   .game-details-container {
     padding: 0 7%;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .main-heading.main-menu-heading {
+    margin-bottom: 20vh;
+  }
+
+  .main-menu-container {
+    flex-direction: row;
+    gap: 5vw;
+  }
+
+  .main-menu-image-container {
+    margin: 0;
   }
 }

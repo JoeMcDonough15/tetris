@@ -3,6 +3,7 @@ import {
   createConfirmationModalContent,
   createContainer,
   createCustomHeading,
+  createImage,
   createLoadGameModal,
   createMenuButtons,
   createSettingsModal,
@@ -28,6 +29,8 @@ import {
   changeTextOfErrorById,
   removeErrorById,
   settingsModalInMainMenuObj,
+  mainMenuImageData,
+  injectTextIntoElementById,
 } from "../utils/index.js";
 
 import playGamePageBuilder from "./playGame.js";
@@ -39,7 +42,7 @@ const mainMenuPageBuilder = (settingsObj) => {
   const mainPageHeading = createCustomHeading(
     "h1",
     "Main Menu",
-    ["main-heading"],
+    ["main-heading", "main-menu-heading"],
     "main-heading"
   );
   const mainMenuContainer = createContainer(
@@ -51,11 +54,13 @@ const mainMenuPageBuilder = (settingsObj) => {
   const loadGameModal = createLoadGameModal("Cancel");
   const confirmationModal = createConfirmationModal();
 
+  const tetrisImage = createImage(mainMenuImageData);
+
   const mainMenuButtons = createMenuButtons(
     mainMenuButtonsContainerObj,
     mainMenuButtonObjs
   );
-  mainMenuContainer.appendChild(mainMenuButtons);
+  mainMenuContainer.append(mainMenuButtons, tetrisImage);
 
   const body = returnBody();
   body.prepend(
@@ -180,6 +185,11 @@ const mainMenuPageBuilder = (settingsObj) => {
       // TODO make a notification saying the game was successfully deleted that disappears after a setTimeout expires
       closeConfirmationModal(confirmationModal);
     };
+
+    injectTextIntoElementById(
+      "confirm-delete-game-modal-text",
+      `Are you sure you want to delete game: ${selectedOption}?`
+    );
 
     document
       .getElementById("confirm-delete-saved-game-button")

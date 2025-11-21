@@ -34,7 +34,6 @@ import {
   closeSaveGameModal,
 } from "../utils/index.js";
 import Tetris from "../game/tetris.js";
-
 import mainMenuPageBuilder from "./mainMenu.js";
 import highScoresPageBuilder from "./highScores.js";
 
@@ -50,7 +49,7 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
 
   const mainContainer = createContainer(
     "main",
-    ["play-game-container"],
+    ["play-game-container", "main-container"],
     "play-game-container"
   );
 
@@ -97,8 +96,6 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     controllerContainer
   );
 
-  mainContainer.append(gameGridContainer, gameDetailsContainer);
-
   // modals
   const pauseModal = createPauseModal(); // * ----------> confirmQuitModal or settingsModal
   const settingsModal = createSettingsModal(settingsModalInGameObj);
@@ -112,12 +109,17 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     postGameMenuButtonObjs
   );
 
+  mainContainer.append(
+    gameGridContainer,
+    gameDetailsContainer,
+    playerNameForm,
+    postGameMenuButtons
+  );
+
   const body = returnBody();
   body.prepend(
     mainHeading,
     mainContainer,
-    playerNameForm,
-    postGameMenuButtons,
     pauseModal,
     settingsModal,
     saveGameModal,
@@ -155,6 +157,8 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     "open-confirm-quit-game-modal-button"
   );
   const savedGamesDropdownMenu = document.getElementById("load-game-select");
+  const mainMenuButton = document.getElementById("main-menu-button");
+  const highScoresButton = document.getElementById("view-high-scores-button");
 
   // * Event Listeners
 
@@ -272,6 +276,16 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     game.softDrop();
   };
 
+  const handleMainMenuButton = () => {
+    cleanupFunction();
+    mainMenuPageBuilder(settingsObj);
+  };
+
+  const handleViewHighScoresButton = () => {
+    cleanupFunction();
+    highScoresPageBuilder(settingsObj);
+  };
+
   const handleKeyUp = (e) => {
     if (game.gameOver) return;
     const keyName = e.key;
@@ -347,6 +361,8 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
   moveLeftButton.addEventListener("click", handleMoveLeftButton);
   moveRightButton.addEventListener("click", handleMoveRightButton);
   softDropButton.addEventListener("click", handleSoftDropButton);
+  mainMenuButton.addEventListener("click", handleMainMenuButton);
+  highScoresButton.addEventListener("click", handleViewHighScoresButton);
 
   // Key Events
   window.addEventListener("keyup", handleKeyUp);
@@ -431,6 +447,16 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
         typeOfEvent: "click",
         callBack: handleSoftDropButton,
       },
+      {
+        idOfElement: "main-menu-button",
+        typeOfEvent: "click",
+        callBack: handleMainMenuButton,
+      },
+      {
+        idOfElement: "view-high-scores-button",
+        typeOfEvent: "click",
+        callBack: handleViewHighScoresButton,
+      },
       { objOfListener: window, typeOfEvent: "keyup", callBack: handleKeyUp },
       {
         objOfListener: window,
@@ -452,8 +478,6 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     const idsOfElementsToRemove = [
       "main-heading",
       "play-game-container",
-      "player-name-form",
-      "post-game-menu-buttons",
       "pause-modal",
       "settings-modal",
       "save-game-modal",

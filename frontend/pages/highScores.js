@@ -25,7 +25,7 @@ const highScoresPageBuilder = async (settingsObj) => {
   );
   const highScoresContainer = createContainer(
     "main",
-    ["high-scores-container"],
+    ["high-scores-container", "main-container"],
     "high-scores-container"
   );
 
@@ -37,9 +37,9 @@ const highScoresPageBuilder = async (settingsObj) => {
   const highScores = await highScoresObj.getHighScores();
 
   if (highScores.length) {
-    highScoresContainer.appendChild(createHighScoresTable(highScores));
+    highScoresContainer.prepend(createHighScoresTable(highScores));
   } else {
-    highScoresContainer.appendChild(
+    highScoresContainer.prepend(
       createCustomHeading("h2", "No High Scores Yet", ["no-high-scores-header"])
     );
   }

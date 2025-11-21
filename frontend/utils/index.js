@@ -80,10 +80,10 @@ export const clearedRowSound = new Audio(generateSoundPath("cleared-row"));
 export const allModals = {
   settingsModal: {
     closeButtonObj: {
-      classes: [],
+      classes: ["close-modal-button"],
       id: "close-settings-modal-button",
     },
-    classes: ["settings-modal-container"],
+    classes: ["modal-container", "settings-modal-container"],
     id: "settings-modal",
   },
   pauseModal: {
@@ -93,86 +93,30 @@ export const allModals = {
       id: "close-pause-modal-button",
       autofocus: true,
     },
-    classes: ["modal-container"],
+    classes: ["modal-container", "pause-modal-container"],
     id: "pause-modal",
   },
   loadGameModal: {
     closeButtonObj: {
       buttonText: "Cancel",
-      classes: [],
+      classes: ["close-modal-button"],
       id: "close-load-game-modal-button",
     },
-    classes: ["modal-container"],
+    classes: ["modal-container", "load-game-modal-container"],
     id: "load-game-modal",
   },
   saveGameModal: {
     closeButtonObj: {
       buttonText: "Cancel",
-      classes: [],
+      classes: ["close-modal-button"],
       id: "close-save-game-modal-button",
     },
-    classes: ["modal-container"],
+    classes: ["modal-container", "save-game-modal-container"],
     id: "save-game-modal",
   },
-  confirmOverwriteGameModal: {
-    classes: ["modal-container"],
-    id: "confirm-overwrite-game-modal",
-    confirmationTextObj: {
-      classes: [],
-      id: "confirm-overwrite-game-modal-text",
-      // innerText set dynamically so it can include name of game to overwrite
-    },
-    confirmationButtonsObj: {
-      containerClasses: [],
-      buttonObjs: [
-        {
-          buttonName: "confirm",
-          buttonText: "Yes, Overwrite This Game",
-          classes: [],
-          id: "confirm-overwrite-button",
-        },
-        ,
-        {
-          buttonName: "deny",
-          buttonText: "No, Rename This Game",
-          classes: [],
-          id: "close-overwrite-game-modal-button",
-        },
-      ],
-    },
-  },
-  confirmQuitGameModal: {
-    classes: ["modal-container"],
-    id: "confirm-quit-game-modal",
-    confirmationTextObj: {
-      text: "Are you sure you want to quit the current game?",
-      classes: [],
-      id: "confirm-quit-game-modal-text",
-    },
-    confirmationButtonsObj: {
-      containerClasses: [],
-      buttonObjs: [
-        {
-          buttonName: "confirm",
-          buttonText: "Yes, Return to Main Menu",
-          classes: [],
-          id: "confirm-quit-game-button",
-        },
-        {
-          buttonName: "deny",
-          buttonText: "No, Return to Pause Screen",
-          classes: [],
-          id: "close-quit-game-modal-button",
-        },
-      ],
-    },
-  },
-  // TODO render only one confirmation modal with different content injected into it.
-  // TODO on close of confirmation modal, clear the div container so that there is never more than one #close-confirmation-modal-button on the DOM.
-
   confirmationModalData: {
     confirmDeleteSavedGame: {
-      containerClasses: [],
+      containerClasses: ["confirmation-modal-content-container"],
       containerId: "confirm-delete-saved-game-modal-content",
       confirmationTextObj: {
         // innerText set dynamically so we can include the name of the game to delete
@@ -180,25 +124,25 @@ export const allModals = {
         id: "confirm-delete-game-modal-text",
       },
       confirmationButtonsObj: {
-        containerClasses: [],
+        containerClasses: ["confirmation-buttons"],
         buttonObjs: [
           {
             buttonName: "confirm",
             buttonText: "Yes, Delete This Game",
-            classes: [],
+            classes: ["confirm-button"],
             id: "confirm-delete-saved-game-button",
           },
           {
             buttonName: "deny",
             buttonText: "Cancel",
-            classes: [],
+            classes: ["close-confirmation-modal-button"],
             id: "close-confirmation-modal-button",
           },
         ],
       },
     },
     confirmDeleteAllSavedGames: {
-      containerClasses: [],
+      containerClasses: ["confirmation-modal-content-container"],
       containerId: "confirm-delete-all-saved-games-modal-content",
       confirmationTextObj: {
         text: "Are you sure you want to delete all saved games?",
@@ -206,25 +150,25 @@ export const allModals = {
         id: "confirm-delete-game-modal-text",
       },
       confirmationButtonsObj: {
-        containerClasses: [],
+        containerClasses: ["confirmation-buttons"],
         buttonObjs: [
           {
             buttonName: "confirm",
             buttonText: "Yes, Delete All My Saved Games",
-            classes: [],
+            classes: ["confirm-button"],
             id: "confirm-delete-all-saved-games-button",
           },
           {
             buttonName: "deny",
             buttonText: "Cancel",
-            classes: [],
+            classes: ["close-confirmation-modal-button"],
             id: "close-confirmation-modal-button",
           },
         ],
       },
     },
     confirmOverwriteSavedGame: {
-      containerClasses: [],
+      containerClasses: ["confirmation-modal-content-container"],
       containerId: "confirm-overwrite-saved-game-modal-content",
       confirmationTextObj: {
         classes: [],
@@ -232,26 +176,26 @@ export const allModals = {
         // innerText set dynamically so it can include name of game to overwrite
       },
       confirmationButtonsObj: {
-        containerClasses: [],
+        containerClasses: ["confirmation-buttons"],
         buttonObjs: [
           {
             buttonName: "confirm",
             buttonText: "Yes, Overwrite This Game",
-            classes: [],
+            classes: ["confirm-button"],
             id: "confirm-overwrite-button",
           },
           ,
           {
             buttonName: "deny",
             buttonText: "No, Rename This Game",
-            classes: [],
+            classes: ["close-confirmation-modal-button"],
             id: "close-confirmation-modal-button",
           },
         ],
       },
     },
     confirmQuitGame: {
-      containerClasses: [],
+      containerClasses: ["confirmation-modal-content-container"],
       containerId: "confirm-quit-game-modal-content",
       confirmationTextObj: {
         text: "Are you sure you want to quit the current game?",
@@ -259,18 +203,18 @@ export const allModals = {
         id: "confirm-quit-game-modal-text",
       },
       confirmationButtonsObj: {
-        containerClasses: [],
+        containerClasses: ["confirmation-buttons"],
         buttonObjs: [
           {
             buttonName: "confirm",
             buttonText: "Yes, Return to Main Menu",
-            classes: [],
+            classes: ["confirm-button"],
             id: "confirm-quit-game-button",
           },
           {
             buttonName: "deny",
             buttonText: "No, Return to Pause Screen",
-            classes: [],
+            classes: ["close-confirmation-modal-button"],
             id: "close-confirmation-modal-button",
           },
         ],
@@ -286,7 +230,7 @@ const {
 
 export const settingsModalInMainMenuObj = {
   closeButtonObj: {
-    buttonText: "Close Settings",
+    buttonText: "Close",
     ...buttonClassesAndIds,
   },
   ...remainingModalProps,
@@ -316,10 +260,10 @@ export const openConfirmOverwriteGameModal = (tetrisClass) => {
     allModals.confirmationModalData.confirmOverwriteSavedGame
   );
   confirmationModal.appendChild(modalContent);
-  const overwriteGameModalText = document.getElementById(
-    "confirm-overwrite-game-modal-text"
+  injectTextIntoElementById(
+    "confirm-overwrite-game-modal-text",
+    `Clicking save will overwrite game: ${tetrisClass.nameOfGameToSave}. Are you sure you want to continue?`
   );
-  overwriteGameModalText.innerText = `Clicking save will overwrite game: ${tetrisClass.nameOfGameToSave}. Are you sure you want to continue?`;
 
   document.getElementById("confirm-overwrite-button").addEventListener(
     "click",
@@ -468,7 +412,7 @@ export const settingsInputIds = {
     "music-theme-one",
     "music-theme-two",
     "music-theme-three",
-    "color-palette-classic",
+    "color-palette-one",
     "color-palette-two",
     "color-palette-three",
   ],
@@ -572,12 +516,12 @@ export const toggleDisplayById = (...ids) => {
 
 export const showErrorById = (errorId) => {
   const errorMessage = document.getElementById(errorId);
-  errorMessage.classList.remove("no-display");
+  errorMessage.classList.remove("hidden");
 };
 
 export const removeErrorById = (errorId) => {
   const errorMessage = document.getElementById(errorId);
-  errorMessage.classList.add("no-display");
+  errorMessage.classList.add("hidden");
 };
 
 export const changeTextOfErrorById = (errorId, message) => {
@@ -725,6 +669,29 @@ export const closeConfirmationModal = () => {
   confirmationModal.close();
 };
 
+export const displayScore = (scoreNum) => {
+  let returnString = "";
+  const scoreAsString = scoreNum.toString();
+  if (scoreAsString.length <= 3) return scoreAsString;
+  let counter = 0;
+  for (let i = scoreAsString.length - 1; i >= 0; i--) {
+    const currentChar = scoreAsString[i];
+    if (counter > 0 && counter % 3 === 0) {
+      returnString = `${currentChar},` + returnString;
+    } else {
+      returnString = currentChar + returnString;
+    }
+    counter++;
+  }
+
+  return returnString;
+};
+
+export const injectTextIntoElementById = (id, textToInject) => {
+  const element = document.getElementById(id);
+  element.innerText = textToInject;
+};
+
 // * UI Form Data
 
 export const updateSettingsFormData = {
@@ -764,7 +731,7 @@ export const updateSettingsFormData = {
       radioOptions: [
         {
           containerClasses: ["radio-option"],
-          labelText: "Theme One",
+          labelText: "A",
           input: {
             id: "music-theme-one",
             type: "radio",
@@ -774,7 +741,7 @@ export const updateSettingsFormData = {
         },
         {
           containerClasses: ["radio-option"],
-          labelText: "Theme Two",
+          labelText: "B",
           input: {
             id: "music-theme-two",
             type: "radio",
@@ -784,7 +751,7 @@ export const updateSettingsFormData = {
         },
         {
           containerClasses: ["radio-option"],
-          labelText: "Theme Three",
+          labelText: "C",
           input: {
             id: "music-theme-three",
             type: "radio",
@@ -804,12 +771,12 @@ export const updateSettingsFormData = {
       radioOptions: [
         {
           containerClasses: ["radio-option"],
-          labelText: "Classic",
+          labelText: "One",
           input: {
-            id: "color-palette-classic",
+            id: "color-palette-one",
             type: "radio",
             name: "colorPaletteSelection",
-            value: "classic",
+            value: "one",
           },
         },
         {
@@ -836,7 +803,7 @@ export const updateSettingsFormData = {
     },
     keyControls: {
       rotate: {
-        containerClasses: [],
+        containerClasses: ["key-control-container"],
         labelText: "Rotate Shape",
         input: {
           id: "key-control-rotate",
@@ -846,7 +813,7 @@ export const updateSettingsFormData = {
         },
       },
       moveLeft: {
-        containerClasses: [],
+        containerClasses: ["key-control-container"],
         labelText: "Move Left",
         input: {
           id: "key-control-move-left",
@@ -856,7 +823,7 @@ export const updateSettingsFormData = {
         },
       },
       moveRight: {
-        containerClasses: [],
+        containerClasses: ["key-control-container"],
         labelText: "Move Right",
         input: {
           id: "key-control-move-right",
@@ -866,7 +833,7 @@ export const updateSettingsFormData = {
         },
       },
       softDrop: {
-        containerClasses: [],
+        containerClasses: ["key-control-container"],
         labelText: "Soft Drop Shape",
         input: {
           id: "key-control-soft-drop",
@@ -876,8 +843,8 @@ export const updateSettingsFormData = {
         },
       },
       togglePause: {
-        containerClasses: [],
-        labelText: "Pause/Unpause Game",
+        containerClasses: ["key-control-container"],
+        labelText: "Toggle Pause",
         input: {
           id: "key-control-toggle-pause",
           type: "text",
@@ -947,15 +914,15 @@ export const highScoresFormData = {
 };
 
 export const loadGameFormData = {
-  formContainerClasses: [],
+  formContainerClasses: ["load-game-form"],
   formContainerId: "load-game-form",
   inputs: [
     {
       inputName: "loadGameSelect",
       labelText: "Select a Saved Game",
-      containerClasses: [],
+      containerClasses: ["saved-games-dropdown-container"],
       containerId: "saved-games-dropdown-container",
-      labelClasses: [],
+      labelClasses: ["saved-games-dropdown-label"],
       inputClasses: [],
       input: {
         id: "load-game-select",
@@ -964,25 +931,25 @@ export const loadGameFormData = {
     },
   ],
   deleteButtons: {
-    containerClasses: [],
+    containerClasses: ["delete-buttons"],
     buttonObjs: [
       {
-        buttonText: "Delete Selected Game",
+        buttonText: "Delete",
         type: "button",
         id: "delete-saved-game-button",
-        classes: [],
+        classes: ["delete-saved-game-button"],
       },
       {
-        buttonText: "Delete All Saved Games",
+        buttonText: "Delete All",
         type: "button",
         id: "delete-all-saved-games-button",
-        classes: [],
+        classes: ["delete-all-saved-games-button"],
       },
     ],
   },
   submitButton: {
     id: "",
-    classes: [],
+    classes: ["load-game-submit-button"],
     buttonText: "Load Selected Game",
   },
   errors: [
@@ -994,15 +961,15 @@ export const loadGameFormData = {
 };
 
 export const saveGameFormData = {
-  formContainerClasses: [],
+  formContainerClasses: ["save-game-form"],
   formContainerId: "save-game-form",
   inputs: [
     {
       inputName: "saveGameText",
       labelText: "Enter a Name For This Game",
       containerClasses: [],
-      labelClasses: [],
-      inputClasses: [],
+      labelClasses: ["save-game-label"],
+      inputClasses: ["save-game-input"],
       input: {
         id: "name-of-game-to-save",
         type: "text",
@@ -1014,9 +981,20 @@ export const saveGameFormData = {
   ],
   submitButton: {
     id: "",
-    classes: [],
+    classes: ["save-game-submit-button"],
     buttonText: "Save Game",
   },
+};
+
+// * Image Data
+
+export const mainMenuImageData = {
+  containerClasses: ["main-menu-image-container"],
+  containerId: "main-menu-image-container",
+  imageClasses: [],
+  imageId: "main-menu-image",
+  imageSrc: "/images/tetris.png",
+  imageAltText: "Stock image of Tetris blocks",
 };
 
 // * High Scores Table Data
