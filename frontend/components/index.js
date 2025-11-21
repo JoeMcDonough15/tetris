@@ -518,7 +518,7 @@ export const createConfirmationModalContent = ({
     confirmationTextObj.classes,
     confirmationTextObj.id
   );
-  // if the confirmationText object includes hard coded text to put on it, do so; otherwise, the text is generated dynamically using its confirmationTextElement.id inside an event listener.
+
   if (confirmationTextObj.text) {
     confirmationTextElement.innerText = confirmationTextObj.text;
   }
@@ -530,6 +530,5 @@ export const createConfirmationModalContent = ({
     confirmationButtonsContainer
   );
 
-  return modalContentContainer; // in the event listner to open this, confirmationModal.appendChild(modalContentContainer);
-  // in the event listener to close this modal, it would confirmationModal.close() and then modalContentContainer.remove();
+  return modalContentContainer;
 };
