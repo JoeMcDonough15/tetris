@@ -80,7 +80,7 @@ export const clearedRowSound = new Audio(generateSoundPath("cleared-row"));
 export const allModals = {
   settingsModal: {
     closeButtonObj: {
-      classes: [],
+      classes: ["close-modal-button"],
       id: "close-settings-modal-button",
     },
     classes: ["modal-container", "settings-modal-container"],
@@ -99,7 +99,7 @@ export const allModals = {
   loadGameModal: {
     closeButtonObj: {
       buttonText: "Cancel",
-      classes: [],
+      classes: ["close-modal-button"],
       id: "close-load-game-modal-button",
     },
     classes: ["modal-container", "load-game-modal-container"],
@@ -108,10 +108,10 @@ export const allModals = {
   saveGameModal: {
     closeButtonObj: {
       buttonText: "Cancel",
-      classes: [],
+      classes: ["close-modal-button"],
       id: "close-save-game-modal-button",
     },
-    classes: ["modal-container"],
+    classes: ["modal-container", "save-game-modal-container"],
     id: "save-game-modal",
   },
   confirmationModalData: {
@@ -961,15 +961,15 @@ export const loadGameFormData = {
 };
 
 export const saveGameFormData = {
-  formContainerClasses: [],
+  formContainerClasses: ["save-game-form"],
   formContainerId: "save-game-form",
   inputs: [
     {
       inputName: "saveGameText",
       labelText: "Enter a Name For This Game",
       containerClasses: [],
-      labelClasses: [],
-      inputClasses: [],
+      labelClasses: ["save-game-label"],
+      inputClasses: ["save-game-input"],
       input: {
         id: "name-of-game-to-save",
         type: "text",
@@ -981,7 +981,7 @@ export const saveGameFormData = {
   ],
   submitButton: {
     id: "",
-    classes: [],
+    classes: ["save-game-submit-button"],
     buttonText: "Save Game",
   },
 };

@@ -133,6 +133,11 @@ select option:hover {
   height: 75vh;
 }
 
+.modal-container.save-game-modal-container {
+  height: 45vh;
+  justify-content: space-between;
+}
+
 ::backdrop {
   background-color: black;
   opacity: 0.7;
@@ -140,7 +145,8 @@ select option:hover {
 
 .modal-container.load-game-modal-container[open],
 .modal-container.settings-modal-container[open],
-.modal-container.pause-modal-container[open] {
+.modal-container.pause-modal-container[open],
+.modal-container.save-game-modal-container[open] {
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -151,8 +157,7 @@ select option:hover {
   justify-content: center;
 }
 
-.modal-container.load-game-modal-container[open] > button,
-.modal-container.settings-modal-container[open] > button {
+.close-modal-button {
   align-self: flex-start;
   background: none;
   border: 1px solid black;
@@ -222,7 +227,8 @@ select option:hover {
 .delete-saved-game-button,
 .delete-all-saved-games-button,
 .confirm-button,
-.close-confirmation-modal-button {
+.close-confirmation-modal-button,
+.save-game-submit-button {
   margin: 20px 0;
   padding: 10px 20px;
 }
@@ -276,6 +282,23 @@ select option:hover {
 .confirmation-buttons {
   display: flex;
   flex-direction: column;
+}
+
+.save-game-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.save-game-label,
+.save-game-input,
+.save-game-submit-button {
+  width: 100%;
+}
+
+.save-game-label {
+  display: inline-block;
 }
 
 .main-heading {
@@ -492,5 +515,15 @@ select option:hover {
   .main-menu-container {
     flex-direction: row;
     gap: 5vw;
+  }
+
+  .modal-container.save-game-modal-container {
+    height: 65vh;
+  }
+}
+
+@media screen and (min-width: 1040px) {
+  .modal-container.save-game-modal-container {
+    height: 55vh;
   }
 }
