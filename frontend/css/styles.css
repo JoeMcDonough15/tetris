@@ -121,7 +121,7 @@ select option:hover {
 }
 
 .modal-container {
-  height: 75vh;
+  height: 50vh;
   max-width: 600px;
   position: fixed;
   margin: auto;
@@ -129,9 +129,8 @@ select option:hover {
   width: 90vw;
 }
 
-.modal-container.load-game-modal-container,
-.modal-container.confirmation-modal-container {
-  height: 50vh;
+.modal-container.settings-modal-container {
+  height: 75vh;
 }
 
 ::backdrop {
@@ -140,11 +139,16 @@ select option:hover {
 }
 
 .modal-container.load-game-modal-container[open],
-.modal-container.settings-modal-container[open] {
+.modal-container.settings-modal-container[open],
+.modal-container.pause-modal-container[open] {
   align-items: center;
   display: flex;
   flex-direction: column;
   padding: 10px;
+}
+
+.modal-container.pause-modal-container[open] {
+  justify-content: center;
 }
 
 .modal-container.load-game-modal-container[open] > button,

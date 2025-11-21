@@ -93,7 +93,7 @@ export const allModals = {
       id: "close-pause-modal-button",
       autofocus: true,
     },
-    classes: ["modal-container", "modal-container"],
+    classes: ["modal-container", "pause-modal-container"],
     id: "pause-modal",
   },
   loadGameModal: {
