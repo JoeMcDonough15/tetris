@@ -121,7 +121,6 @@ select option:hover {
 }
 
 .modal-container {
-  height: 50vh;
   max-width: 600px;
   position: fixed;
   margin: auto;
@@ -129,17 +128,11 @@ select option:hover {
   width: 90vw;
 }
 
-.modal-container.settings-modal-container {
-  height: 75vh;
-}
-
 .modal-container.save-game-modal-container {
-  height: 45vh;
   justify-content: space-between;
 }
 
 .modal-container.pause-modal-container {
-  height: 40vh;
   justify-content: center;
 }
 
@@ -331,7 +324,7 @@ select option:hover {
 }
 
 .main-menu-image-container {
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
 .menu-buttons,
@@ -342,12 +335,7 @@ select option:hover {
 }
 
 .menu-buttons {
-  margin-bottom: 40px;
   width: 100%;
-}
-
-.modal-container.pause-modal-container > .menu-buttons {
-  margin-bottom: 0;
 }
 
 .high-scores-container > .menu-buttons {
@@ -521,17 +509,7 @@ select option:hover {
     gap: 5vw;
   }
 
-  .modal-container.save-game-modal-container {
-    height: 65vh;
-  }
-
-  .modal-container.pause-modal-container {
-    height: 50vh;
-  }
-}
-
-@media screen and (min-width: 1040px) {
-  .modal-container.save-game-modal-container {
-    height: 55vh;
+  .main-menu-image-container {
+    margin: 0;
   }
 }

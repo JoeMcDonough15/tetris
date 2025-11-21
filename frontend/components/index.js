@@ -50,7 +50,11 @@ const createInputContainer = (data, isSelect = null) => {
   );
   label.innerText = data.labelText;
   label.setAttribute("for", data.input.id);
-  const input = quickElement(isSelect ? "select" : "input", [], data.input.id);
+  const input = quickElement(
+    isSelect ? "select" : "input",
+    data.inputClasses ? [...data.inputClasses] : [],
+    data.input.id
+  );
   if (isSelect) {
     const dropDownInstructions = createGameToLoadOption("Saved Games");
     dropDownInstructions.classList.remove("game-to-load-select-option");
