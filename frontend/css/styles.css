@@ -407,7 +407,9 @@ select option:hover {
   align-items: center;
   display: flex;
   flex-direction: column;
+  height: 25vw;
   justify-content: center;
+  max-height: 170px;
   max-width: 170px;
   width: 25vw;
 }
