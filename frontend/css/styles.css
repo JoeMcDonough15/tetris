@@ -40,9 +40,6 @@ a {
 
 button {
   border: 0;
-}
-
-button:hover {
   cursor: pointer;
 }
 
@@ -54,7 +51,8 @@ fieldset {
   border: 0;
 }
 
-input[type="text"] {
+input[type="text"],
+select {
   font-size: inherit;
   padding: 2px 5px;
 }
@@ -73,12 +71,37 @@ input[type="radio"]:checked {
   background: var(--accent-color-one);
 }
 
-input[type="radio"]:hover {
+input[type="radio"]:not(:checked):hover {
+  background: var(--accent-color-one);
   opacity: 0.5;
 }
 
-.no-display.no-display.no-display.no-display {
-  display: none;
+select {
+  appearance: base-select;
+}
+
+select::picker(select) {
+  appearance: base-select;
+}
+
+select:hover {
+  background: var(--accent-color-one);
+}
+
+.saved-games-dropdown-label:hover + select {
+  background: initial;
+}
+
+select option::checkmark {
+  color: var(--accent-color-one);
+}
+
+select option:hover::checkmark {
+  color: black;
+}
+
+select option:hover {
+  background: var(--accent-color-one);
 }
 
 .error-message.hidden {
@@ -91,6 +114,10 @@ input[type="radio"]:hover {
   font-size: 0.8rem;
   text-transform: capitalize;
   visibility: visible;
+}
+
+.no-display.no-display.no-display.no-display {
+  display: none;
 }
 
 .modal-container {
