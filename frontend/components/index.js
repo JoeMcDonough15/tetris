@@ -351,17 +351,23 @@ export const createMenuButtons = (containerObj, arrayOfButtonObjs) => {
   );
   // create nav buttons and place in their own separate nav tag
   const navButtonsContainer = quickElement("nav", ["nav-buttons"]);
-  const navButtons = arrayOfButtonObjs
-    .filter((buttonObj) => buttonObj.navButton)
-    .map((buttonObj) => createMenuButton(buttonObj));
-  navButtonsContainer.append(...navButtons);
+  const navButtonsPassedIn = arrayOfButtonObjs.filter(
+    (buttonObj) => buttonObj.navButton
+  );
+  if (navButtonsPassedIn.length) {
+    const navButtons = navButtonsPassedIn.map((buttonObj) =>
+      createMenuButton(buttonObj)
+    );
+    navButtonsContainer.append(...navButtons);
+    menuButtonsContainer.appendChild(navButtonsContainer);
+  }
 
   // create all non-nav buttons
   const menuButtons = arrayOfButtonObjs
     .filter((buttonObj) => !buttonObj.navButton)
     .map((buttonObj) => createMenuButton(buttonObj));
 
-  menuButtonsContainer.append(navButtonsContainer, ...menuButtons);
+  menuButtonsContainer.append(...menuButtons);
 
   return menuButtonsContainer;
 };
