@@ -34,7 +34,6 @@ import {
   closeSaveGameModal,
 } from "../utils/index.js";
 import Tetris from "../game/tetris.js";
-
 import mainMenuPageBuilder from "./mainMenu.js";
 import highScoresPageBuilder from "./highScores.js";
 
@@ -50,7 +49,7 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
 
   const mainContainer = createContainer(
     "main",
-    ["play-game-container"],
+    ["play-game-container", "main-container"],
     "play-game-container"
   );
 
@@ -97,8 +96,6 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     controllerContainer
   );
 
-  mainContainer.append(gameGridContainer, gameDetailsContainer);
-
   // modals
   const pauseModal = createPauseModal(); // * ----------> confirmQuitModal or settingsModal
   const settingsModal = createSettingsModal(settingsModalInGameObj);
@@ -112,12 +109,17 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     postGameMenuButtonObjs
   );
 
+  mainContainer.append(
+    gameGridContainer,
+    gameDetailsContainer,
+    playerNameForm,
+    postGameMenuButtons
+  );
+
   const body = returnBody();
   body.prepend(
     mainHeading,
     mainContainer,
-    playerNameForm,
-    postGameMenuButtons,
     pauseModal,
     settingsModal,
     saveGameModal,
@@ -476,8 +478,6 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     const idsOfElementsToRemove = [
       "main-heading",
       "play-game-container",
-      "player-name-form",
-      "post-game-menu-buttons",
       "pause-modal",
       "settings-modal",
       "save-game-modal",
