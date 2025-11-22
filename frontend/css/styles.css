@@ -460,6 +460,11 @@ select option:hover {
   width: 100%;
 }
 
+.sub-heading-span-text {
+  font-family: Arial, Helvetica, sans-serif;
+  margin-left: 0.5vw;
+}
+
 #canvas {
   background: var(--black);
   border: 1px solid var(--accent-color-one);

@@ -391,9 +391,16 @@ export const createSubHeaders = (typeOfHeaders, headerObjs) => {
 
   headerObjs.forEach((headerObj) => {
     // make a header and append it to the subHeadersContainer
-    const header = quickElement(typeOfHeaders, [headerObj.id], headerObj.id); // h3
-    header.innerText = headerObj.headerText;
-    subHeadersContainer.append(header);
+    const heading = quickElement(typeOfHeaders, [headerObj.id]);
+    const spanText = quickElement(
+      "span",
+      ["sub-heading-span-text"],
+      headerObj.id
+    );
+    heading.innerText = headerObj.headerText;
+    spanText.innerText = headerObj.spanText;
+    heading.appendChild(spanText);
+    subHeadersContainer.append(heading);
   });
   return subHeadersContainer;
 };

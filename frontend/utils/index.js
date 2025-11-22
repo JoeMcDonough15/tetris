@@ -359,9 +359,9 @@ export const pauseMenuButtonObjs = [
 
 // * Game State Sub Headers
 export const playGameSubHeaders = [
-  { headerText: "Level: 0", id: "level-heading" },
-  { headerText: "Score: 0", id: "total-score-heading" },
-  { headerText: "Rows: 0", id: "rows-cleared-heading" },
+  { headerText: "Level: ", spanText: "0", id: "level-heading" },
+  { headerText: "Score: ", spanText: "0", id: "total-score-heading" },
+  { headerText: "Rows: ", spanText: "0", id: "rows-cleared-heading" },
 ];
 
 // * Game Controller Buttons

@@ -148,19 +148,13 @@ class Tetris {
     this.gameOver = loadedGame.gameObj.gameOver;
     this.gameSpeed = loadedGame.gameObj.gameSpeed;
     this.level = loadedGame.gameObj.level;
-    updateElementTextById("level-heading", `Level: ${this.level}`);
+    updateElementTextById("level-heading", this.level);
     this.totalRowsCleared = loadedGame.gameObj.totalRowsCleared;
-    updateElementTextById(
-      "rows-cleared-heading",
-      `Rows: ${this.totalRowsCleared}`
-    );
+    updateElementTextById("rows-cleared-heading", this.totalRowsCleared);
     this.softDropPoints = loadedGame.gameObj.softDropPoints;
     this.rowsCleared = loadedGame.gameObj.rowsCleared;
     this.playerTotalScore = loadedGame.gameObj.playerTotalScore;
-    updateElementTextById(
-      "total-score-heading",
-      `Score: ${this.playerTotalScore}`
-    );
+    updateElementTextById("total-score-heading", this.playerTotalScore);
 
     loadedGame.gameObj.pieceQueue.forEach((nameOfShape) => {
       this.pieceQueue.push(nameOfShape);
@@ -239,7 +233,6 @@ class Tetris {
       this.dequeuePiece();
     }
     // play music if user has not turned it off
-    // ! This will be more applicable when the app is a SPA because right now, music is always off when the play game page loads
     if (this.gameSettings.music === "on") {
       this.gameMusic.player.play();
     }
@@ -356,10 +349,7 @@ class Tetris {
     }
     this.playerTotalScore +=
       awardedPoints * (this.level + 1) + this.softDropPoints;
-    updateElementTextById(
-      "total-score-heading",
-      `Score: ${this.playerTotalScore}`
-    );
+    updateElementTextById("total-score-heading", this.playerTotalScore);
   };
 
   updateRowsCleared = () => {
@@ -368,10 +358,7 @@ class Tetris {
       clearedRowSound.play();
     }
     this.totalRowsCleared += this.rowsCleared;
-    updateElementTextById(
-      "rows-cleared-heading",
-      `Rows: ${this.totalRowsCleared}`
-    );
+    updateElementTextById("rows-cleared-heading", this.totalRowsCleared);
     if (this.level < 9 && this.clearedTenRows()) {
       this.levelUp();
     } else if (this.level >= 9 && this.clearedTwentyRows()) {
@@ -381,7 +368,7 @@ class Tetris {
 
   levelUp = () => {
     this.level++;
-    updateElementTextById("level-heading", `Level: ${this.level}`);
+    updateElementTextById("level-heading", this.level);
     this.gameSpeed -= 50;
   };
 
