@@ -1,7 +1,20 @@
 :root {
+  /* Custom Colors */
   --jasmyn-pink: #ff9d8d;
+  --fall-twilight: #ffefa6;
+  --fall-clouds: #4b494a;
+  --fall-clouds-darker: #434446;
+  --fall-sky: #5b6d7f;
+
+  /* Theme One */
   --background-color-one: #000;
+  --modal-background-one: var(--fall-clouds-darker);
   --accent-color-one: var(--jasmyn-pink);
+
+  /* Theme Two */
+  --background-color-two: var(--fall-sky);
+  /* --modal-background-two: var(--fall-clouds-darker); */
+  --accent-color-two: var(--fall-twilight);
 }
 
 * {
@@ -12,7 +25,9 @@
 
 body {
   background: var(--background-color-one);
+  /* background: var(--background-color-two); */
   color: var(--accent-color-one);
+  /* color: var(--accent-color-two); */
   font-family: "Pixelify Sans", sans-serif;
 }
 
@@ -59,9 +74,14 @@ select {
   padding: 2px 5px;
 }
 
+input[type="text"] {
+  background-color: var(--accent-color-one);
+  border: 0;
+}
+
 input[type="radio"] {
   appearance: none;
-  border: 1px solid var(--background-color-one);
+  border: 1px solid var(--accent-color-one);
   border-radius: 50%;
   cursor: pointer;
   height: clamp(13px, 3vw, 20px);
@@ -87,7 +107,7 @@ select::picker(select) {
 }
 
 select:hover {
-  background: var(--accent-color-one);
+  background: var(--background-color-one);
 }
 
 .saved-games-dropdown-label:hover + select {
@@ -98,12 +118,13 @@ select option::checkmark {
   color: var(--accent-color-one);
 }
 
-select option:hover::checkmark {
-  color: var(--background-color-one);
+select option {
+  background: var(--modal-background-one);
+  color: var(--accent-color-one);
 }
 
 select option:hover {
-  background: var(--accent-color-one);
+  background: var(--background-color-one);
 }
 
 .error-message.hidden {
@@ -123,6 +144,9 @@ select option:hover {
 }
 
 .modal-container {
+  background-color: var(--modal-background-one);
+  /* background-color: var(--modal-background-two); */
+  color: inherit;
   max-width: 600px;
   position: fixed;
   margin: auto;
@@ -132,6 +156,7 @@ select option:hover {
 
 ::backdrop {
   background-color: var(--background-color-one);
+  /* background-color: var(--background-color-two); */
   opacity: 0.7;
 }
 
