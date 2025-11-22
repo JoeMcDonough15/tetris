@@ -52,10 +52,14 @@ const gameMusicPathObj = {
 };
 
 // * Utility Functions
-
-export const returnThemeWrapper = () => {
-  return document.getElementById("theme-wrapper");
+export const returnBody = () => {
+  const bodyArrayFromCollection = Array.from(
+    document.getElementsByTagName("body")
+  );
+  const body = bodyArrayFromCollection[0];
+  return body;
 };
+
 const generatePreviewImgPath = (shapeName) => {
   return `${previewImgPathObj.prefix}${shapeName}${previewImgPathObj.suffix}`;
 };

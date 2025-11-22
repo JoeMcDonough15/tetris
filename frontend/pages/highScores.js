@@ -8,7 +8,7 @@ import {
 import {
   mainMenuButtonsContainerObj,
   highScoresMenuButtonObjs,
-  returnThemeWrapper,
+  returnBody,
 } from "../utils/index.js";
 import playGamePageBuilder from "./playGame.js";
 import mainMenuPageBuilder from "./mainMenu.js";
@@ -44,8 +44,8 @@ const highScoresPageBuilder = async (settingsObj) => {
     );
   }
 
-  const themeWrapper = returnThemeWrapper();
-  themeWrapper.append(mainHeading, highScoresContainer);
+  const body = returnBody();
+  body.prepend(mainHeading, highScoresContainer);
 
   // * Event Listeners
 

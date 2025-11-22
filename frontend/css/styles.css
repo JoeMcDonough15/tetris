@@ -26,12 +26,20 @@
 }
 
 body {
-  background: var(--background-color-one);
-  /* background: var(--background-color-two); */
-  color: var(--accent-color-one);
-  /* color: var(--accent-color-two); */
   font-family: "Pixelify Sans", sans-serif;
 }
+
+body.theme-one {
+  background: var(--background-color-one);
+  color: var(--accent-color-one);
+}
+
+body.theme-two {
+  background: var(--background-color-two);
+  color: var(--accent-color-two);
+}
+
+/* TODO theme-three */
 
 h2 {
   font-size: clamp(25px, 8vw, 60px);
@@ -344,7 +352,8 @@ select option:hover {
   font-size: clamp(50px, 18vw, 120px);
   font-style: normal;
   font-weight: 500;
-  margin: 0.25em auto;
+  margin: auto;
+  padding: 0.25em 0;
   width: max-content;
 }
 
