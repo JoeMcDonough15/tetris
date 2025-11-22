@@ -1,22 +1,14 @@
+import { shapeColors } from "../../../utils/index.js";
 import Block from "./block.js";
-import { GRID_SPACE } from "./constants.js";
-
-// Colors
-const GREEN = "rgb(0 255 0)";
-const BLUE = "rgb(0 100 255)";
-const RED = "rgb(255 0 0)";
-const YELLOW = "rgb(255 255 0)";
-const ORANGE = "rgb(255 127 0)";
-const PINK = "rgb(255 0 255)";
-const PURPLE = "rgb(127 0 127)";
+import { GRID_SPACE } from "../../../utils/index.js";
 
 class Shape {
-  constructor(colorString) {
+  constructor(colorString, xCoordinate, yCoordinate) {
     this.numBlocks = 4;
     this.shapeColor = colorString;
     this.blocks = [];
     for (let i = 0; i < this.numBlocks; i++) {
-      const newBlock = new Block(this.shapeColor);
+      const newBlock = new Block(this.shapeColor, xCoordinate, yCoordinate);
       this.blocks.push(newBlock);
     }
     this.anchorBlock = this.blocks[0];
@@ -36,18 +28,23 @@ class Shape {
     this.drawShape();
   };
 
-  previewImgPath = () => {
-    return `/images/previews/${this.shapeName}-preview.png`;
+  determineRotationIndex = (rotationName) => {
+    if (!this.availableRotations) return;
+    return this.availableRotations.findIndex(
+      (rotation) => rotation === rotationName
+    );
   };
 }
 
 export class Line extends Shape {
-  constructor() {
-    super(GREEN);
+  constructor(optionalXCoordinate, optionalYCoordinate, optionalRotationName) {
+    super(shapeColors.green, optionalXCoordinate, optionalYCoordinate);
     this.shapeName = "line";
     this.availableRotations = ["horizontal", "vertical"];
-    this.rotation = this.availableRotations[0];
-    this.preview = this.previewImgPath();
+    this.rotationIndex = optionalRotationName
+      ? this.determineRotationIndex(optionalRotationName)
+      : 0;
+    this.rotation = this.availableRotations[this.rotationIndex];
   }
 
   drawShape = () => {
@@ -134,10 +131,9 @@ export class Line extends Shape {
 }
 
 export class Square extends Shape {
-  constructor() {
-    super(BLUE);
+  constructor(optionalXCoordinate, optionalYCoordinate) {
+    super(shapeColors.blue, optionalXCoordinate, optionalYCoordinate);
     this.shapeName = "square";
-    this.preview = this.previewImgPath();
   }
 
   drawShape = () => {
@@ -169,12 +165,14 @@ export class Square extends Shape {
 }
 
 export class TShape extends Shape {
-  constructor() {
-    super(RED);
+  constructor(optionalXCoordinate, optionalYCoordinate, optionalRotationName) {
+    super(shapeColors.red, optionalXCoordinate, optionalYCoordinate);
     this.shapeName = "tShape";
     this.availableRotations = ["down", "left", "up", "right"];
-    this.rotation = this.availableRotations[0];
-    this.preview = this.previewImgPath();
+    this.rotationIndex = optionalRotationName
+      ? this.determineRotationIndex(optionalRotationName)
+      : 0;
+    this.rotation = this.availableRotations[this.rotationIndex];
   }
 
   drawShape = () => {
@@ -350,12 +348,14 @@ export class TShape extends Shape {
 }
 
 export class LShape extends Shape {
-  constructor() {
-    super(ORANGE);
+  constructor(optionalXCoordinate, optionalYCoordinate, optionalRotationName) {
+    super(shapeColors.orange, optionalXCoordinate, optionalYCoordinate);
     this.shapeName = "lShape";
     this.availableRotations = ["left", "up", "right", "down"];
-    this.rotation = this.availableRotations[0];
-    this.preview = this.previewImgPath();
+    this.rotationIndex = optionalRotationName
+      ? this.determineRotationIndex(optionalRotationName)
+      : 0;
+    this.rotation = this.availableRotations[this.rotationIndex];
   }
 
   drawShape = () => {
@@ -372,7 +372,7 @@ export class LShape extends Shape {
           block.isRightLedge = true;
         }
 
-        // handle coordinates
+        // handle coordinates other than the anchor block, which was reassigned already in game.moveShape(direction)
         if (index === 1) {
           // place it directly to the right of the anchor
           block.xCoordinate = this.anchorBlock.xCoordinate + GRID_SPACE;
@@ -527,12 +527,14 @@ export class LShape extends Shape {
 }
 
 export class JShape extends Shape {
-  constructor() {
-    super(YELLOW);
+  constructor(optionalXCoordinate, optionalYCoordinate, optionalRotationName) {
+    super(shapeColors.yellow, optionalXCoordinate, optionalYCoordinate);
     this.shapeName = "jShape";
     this.availableRotations = ["right", "down", "left", "up"];
-    this.rotation = this.availableRotations[0];
-    this.preview = this.previewImgPath();
+    this.rotationIndex = optionalRotationName
+      ? this.determineRotationIndex(optionalRotationName)
+      : 0;
+    this.rotation = this.availableRotations[this.rotationIndex];
   }
 
   drawShape = () => {
@@ -705,12 +707,14 @@ export class JShape extends Shape {
 }
 
 export class SShape extends Shape {
-  constructor() {
-    super(PINK);
+  constructor(optionalXCoordinate, optionalYCoordinate, optionalRotationName) {
+    super(shapeColors.pink, optionalXCoordinate, optionalYCoordinate);
     this.shapeName = "sShape";
     this.availableRotations = ["horizontal", "vertical"];
-    this.rotation = this.availableRotations[0];
-    this.preview = this.previewImgPath();
+    this.rotationIndex = optionalRotationName
+      ? this.determineRotationIndex(optionalRotationName)
+      : 0;
+    this.rotation = this.availableRotations[this.rotationIndex];
   }
 
   drawShape = () => {
@@ -801,12 +805,14 @@ export class SShape extends Shape {
 }
 
 export class ZShape extends Shape {
-  constructor() {
-    super(PURPLE);
+  constructor(optionalXCoordinate, optionalYCoordinate, optionalRotationName) {
+    super(shapeColors.purple, optionalXCoordinate, optionalYCoordinate);
     this.shapeName = "zShape";
     this.availableRotations = ["horizontal", "vertical"];
-    this.rotation = this.availableRotations[0];
-    this.preview = this.previewImgPath();
+    this.rotationIndex = optionalRotationName
+      ? this.determineRotationIndex(optionalRotationName)
+      : 0;
+    this.rotation = this.availableRotations[this.rotationIndex];
   }
 
   drawShape = () => {
