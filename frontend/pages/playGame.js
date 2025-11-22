@@ -18,7 +18,6 @@ import HighScores from "../high-scores/js/api/highScoresApi.js";
 import {
   playGameSubHeaders,
   postGameMenuButtonObjs,
-  returnBody,
   controllerRowObjs,
   settingsInputIds,
   postGameMenuButtonsContainerObj,
@@ -32,6 +31,7 @@ import {
   openSaveGameModal,
   handleUpdateSavedGameTextInput,
   closeSaveGameModal,
+  returnThemeWrapper,
 } from "../utils/index.js";
 import Tetris from "../game/tetris.js";
 import mainMenuPageBuilder from "./mainMenu.js";
@@ -116,8 +116,8 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     postGameMenuButtons
   );
 
-  const body = returnBody();
-  body.prepend(
+  const themeWrapper = returnThemeWrapper();
+  themeWrapper.append(
     mainHeading,
     mainContainer,
     pauseModal,
@@ -194,6 +194,8 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     }
 
     settingsObj.updateSettings({ ...inputsObj });
+    themeWrapper.className = "";
+    themeWrapper.classList.add(`theme-${settingsObj.colorPaletteSelection}`);
     settingsModal.close();
   };
 

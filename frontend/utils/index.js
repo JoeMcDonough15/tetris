@@ -52,13 +52,6 @@ const gameMusicPathObj = {
 };
 
 // * Utility Functions
-export const returnBody = () => {
-  const bodyArrayFromCollection = Array.from(
-    document.getElementsByTagName("body")
-  );
-  const body = bodyArrayFromCollection[0];
-  return body;
-};
 
 export const returnThemeWrapper = () => {
   return document.getElementById("theme-wrapper");
