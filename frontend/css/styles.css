@@ -451,12 +451,16 @@ select option:hover {
   width: 100%;
 }
 
+.sub-headers-container {
+  align-items: flex-start;
+}
+
 .level-heading,
 .total-score-heading,
 .rows-cleared-heading {
   align-items: center;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
 }
 

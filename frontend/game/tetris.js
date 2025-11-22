@@ -14,6 +14,7 @@ import {
   saveCanvas,
   drawPreviousCanvas,
   closeSaveGameModal,
+  displayScore,
 } from "../utils/index.js";
 import {
   Line,
@@ -45,7 +46,7 @@ class Tetris {
     this.totalRowsCleared = 0;
     this.softDropPoints = 0;
     this.rowsCleared = 0;
-    this.playerTotalScore = 0;
+    this.playerTotalScore = 100000;
     this.idOfScoreToRemove = "";
     this.game = new GameGrid(NUM_ROWS, NUM_COLS);
     this.pieceQueue = [];
@@ -154,7 +155,10 @@ class Tetris {
     this.softDropPoints = loadedGame.gameObj.softDropPoints;
     this.rowsCleared = loadedGame.gameObj.rowsCleared;
     this.playerTotalScore = loadedGame.gameObj.playerTotalScore;
-    updateElementTextById("total-score-heading", this.playerTotalScore);
+    updateElementTextById(
+      "total-score-heading",
+      displayScore(this.playerTotalScore)
+    );
 
     loadedGame.gameObj.pieceQueue.forEach((nameOfShape) => {
       this.pieceQueue.push(nameOfShape);
@@ -255,7 +259,10 @@ class Tetris {
 
     if (highScoreAchieved) {
       toggleDisplayById("player-name-form");
-      injectValueToInputById("player-score", this.playerTotalScore);
+      injectValueToInputById(
+        "player-score",
+        displayScore(this.playerTotalScore)
+      );
 
       if (existingHighScores.length === 10) {
         this.idOfScoreToRemove = lastPlaceScoreObj.id; // never keep more than 10 high scores in the database
@@ -349,7 +356,10 @@ class Tetris {
     }
     this.playerTotalScore +=
       awardedPoints * (this.level + 1) + this.softDropPoints;
-    updateElementTextById("total-score-heading", this.playerTotalScore);
+    updateElementTextById(
+      "total-score-heading",
+      displayScore(this.playerTotalScore)
+    );
   };
 
   updateRowsCleared = () => {
