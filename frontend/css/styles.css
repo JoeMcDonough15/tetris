@@ -456,10 +456,12 @@ select:hover {
 
 .theme-one .menu-button {
   background: var(--accent-color-one);
+  color: var(--background-color-one);
 }
 
 .theme-two .menu-button {
   background: var(--accent-color-two);
+  color: var(--background-color-two);
 }
 
 .menu-button:hover {
