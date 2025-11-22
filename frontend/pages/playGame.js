@@ -194,6 +194,8 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     }
 
     settingsObj.updateSettings({ ...inputsObj });
+    body.className = "";
+    body.classList.add(`theme-${settingsObj.colorPaletteSelection}`);
     settingsModal.close();
   };
 

@@ -63,6 +63,7 @@ const mainMenuPageBuilder = (settingsObj) => {
   mainMenuContainer.append(mainMenuButtons, tetrisImage);
 
   const body = returnBody();
+
   body.prepend(
     mainPageHeading,
     mainMenuContainer,
@@ -86,6 +87,8 @@ const mainMenuPageBuilder = (settingsObj) => {
     }
 
     settingsObj.updateSettings({ ...inputsObj });
+    body.className = "";
+    body.classList.add(`theme-${settingsObj.colorPaletteSelection}`);
     settingsModal.close();
   };
 

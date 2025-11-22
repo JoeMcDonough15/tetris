@@ -26,12 +26,20 @@
 }
 
 body {
-  background: var(--background-color-one);
-  /* background: var(--background-color-two); */
-  color: var(--accent-color-one);
-  /* color: var(--accent-color-two); */
   font-family: "Pixelify Sans", sans-serif;
 }
+
+.theme-one {
+  background: var(--background-color-one);
+  color: var(--accent-color-one);
+}
+
+.theme-two {
+  background: var(--background-color-two);
+  color: var(--accent-color-two);
+}
+
+/* TODO theme-three */
 
 h2 {
   font-size: clamp(25px, 8vw, 60px);
@@ -77,15 +85,20 @@ select {
 }
 
 input[type="text"] {
-  background-color: var(--accent-color-one);
-  /* background-color: var(--accent-color-two); */
   border: 0;
+}
+
+.theme-one input[type="text"] {
+  background-color: var(--accent-color-one);
+}
+
+.theme-two input[type="text"] {
+  background-color: var(--accent-color-two);
 }
 
 input[type="radio"] {
   appearance: none;
-  border: 1px solid var(--accent-color-one);
-  /* border: 1px solid var(--accent-color-two); */
+  border: 1px solid var(--black);
   border-radius: 50%;
   cursor: pointer;
   height: clamp(13px, 3vw, 20px);
@@ -93,15 +106,32 @@ input[type="radio"] {
   width: clamp(13px, 3vw, 20px);
 }
 
-input[type="radio"]:checked {
+.theme-one input[type="radio"] {
+  border-color: var(--accent-color-one);
+}
+
+.theme-two input[type="radio"] {
+  border-color: var(--accent-color-two);
+}
+
+.theme-one input[type="radio"]:checked {
   background: var(--accent-color-one);
-  /* background: var(--accent-color-two); */
+}
+
+.theme-two input[type="radio"]:checked {
+  background: var(--accent-color-two);
 }
 
 input[type="radio"]:not(:checked):hover {
-  background: var(--accent-color-one);
-  /* background: var(--accent-color-two); */
   opacity: 0.5;
+}
+
+.theme-one input[type="radio"]:not(:checked):hover {
+  background: var(--accent-color-one);
+}
+
+.theme-two input[type="radio"]:not(:checked):hover {
+  background: var(--accent-color-two);
 }
 
 select {
@@ -120,21 +150,30 @@ select:hover {
   background: initial;
 }
 
-select option::checkmark {
+.theme-one select option::checkmark {
   color: var(--accent-color-one);
-  /* color: var(--accent-color-two); */
 }
 
-select option {
+.theme-two select option::checkmark {
+  color: var(--accent-color-two);
+}
+
+.theme-one select option {
   background: var(--modal-background-one);
-  /* background: var(--modal-background-two); */
   color: var(--accent-color-one);
-  /* color: var(--accent-color-two); */
 }
 
-select option:hover {
+.theme-two select option {
+  background: var(--modal-background-two);
+  color: var(--accent-color-two);
+}
+
+.theme-one select option:hover {
   background: var(--background-color-one);
-  /* background: var(--background-color-two); */
+}
+
+.theme-two select option:hover {
+  background: var(--background-color-two);
 }
 
 .error-message.hidden {
@@ -144,9 +183,9 @@ select option:hover {
 .error-message {
   color: red;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 0.8rem;
+  font-size: 1rem;
+  font-weight: bold;
   text-transform: capitalize;
-  visibility: visible;
 }
 
 .no-display.no-display.no-display.no-display {
@@ -154,8 +193,6 @@ select option:hover {
 }
 
 .modal-container {
-  background-color: var(--modal-background-one);
-  /* background-color: var(--modal-background-two); */
   color: inherit;
   max-width: 600px;
   position: fixed;
@@ -164,10 +201,24 @@ select option:hover {
   width: 90vw;
 }
 
+.theme-one .modal-container {
+  background-color: var(--modal-background-one);
+}
+
+.theme-two .modal-container {
+  background-color: var(--modal-background-two);
+}
+
 ::backdrop {
-  background-color: var(--background-color-one);
-  /* background-color: var(--background-color-two); */
   opacity: 0.7;
+}
+
+.theme-one ::backdrop {
+  background-color: var(--background-color-one);
+}
+
+.theme-two ::backdrop {
+  background-color: var(--background-color-two);
 }
 
 .modal-container.load-game-modal-container,
@@ -197,9 +248,17 @@ select option:hover {
 .close-modal-button {
   align-self: flex-start;
   background: none;
-  border: 1px solid var(--background-color-one);
+  border: 1px solid var(--black);
   border-radius: 4px;
   padding: 5px 8px;
+}
+
+.theme-one .close-modal-button {
+  border-color: var(--background-color-one);
+}
+
+.theme-two .close-modal-button {
+  border-color: var(--background-color-two);
 }
 
 .no-games-to-display-heading {
@@ -221,9 +280,16 @@ select option:hover {
 }
 
 .update-settings-form > fieldset > legend {
-  border-bottom: 1px solid var(--accent-color-one);
-  /* border-bottom: 1px solid var(--accent-color-two); */
+  border-bottom: 1px solid var(--black);
   margin-bottom: 5px;
+}
+
+.theme-one .update-settings-form > fieldset > legend {
+  border-color: var(--accent-color-one);
+}
+
+.theme-two .update-settings-form > fieldset > legend {
+  border-color: var(--accent-color-two);
 }
 
 .radio-options-container,
@@ -266,7 +332,8 @@ select option:hover {
 .delete-all-saved-games-button,
 .confirm-button,
 .close-confirmation-modal-button,
-.save-game-submit-button {
+.save-game-submit-button,
+.high-score-form-submit-button {
   margin: 20px 0;
   padding: 10px 20px;
 }
@@ -344,7 +411,8 @@ select option:hover {
   font-size: clamp(50px, 18vw, 120px);
   font-style: normal;
   font-weight: 500;
-  margin: 0.25em auto;
+  margin: auto;
+  padding: 0.25em 0;
   width: max-content;
 }
 
@@ -386,9 +454,12 @@ select option:hover {
   margin: 40px 0;
 }
 
-.menu-button {
+.theme-one .menu-button {
   background: var(--accent-color-one);
-  /* background: var(--accent-color-two); */
+}
+
+.theme-two .menu-button {
+  background: var(--accent-color-two);
 }
 
 .menu-button:hover {
@@ -405,8 +476,19 @@ select option:hover {
 .high-scores-table,
 .high-scores-table-heading,
 .high-scores-table-field {
-  border: 1px solid var(--accent-color-one);
-  /* border: 1px solid var(--accent-color-two); */
+  border: 1px solid var(--black);
+}
+
+.theme-one .high-scores-table,
+.theme-one .high-scores-table-heading,
+.theme-one .high-scores-table-field {
+  border-color: var(--accent-color-one);
+}
+
+.theme-two .high-scores-table,
+.theme-two .high-scores-table-heading,
+.theme-two .high-scores-table-field {
+  border-color: var(--accent-color-two);
 }
 
 .high-scores-table {
@@ -425,7 +507,8 @@ select option:hover {
   font-size: clamp(28px, 4.5vw, 40px);
 }
 
-.high-scores-number-field {
+.high-scores-number-field,
+.sub-heading-span-text {
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -451,19 +534,35 @@ select option:hover {
   width: 100%;
 }
 
+.sub-headers-container {
+  align-items: flex-start;
+}
+
 .level-heading,
 .total-score-heading,
 .rows-cleared-heading {
   align-items: center;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
+}
+
+.sub-heading-span-text {
+  font-size: clamp(12px, 4vw, 32px);
+  margin-left: 0.5vw;
 }
 
 #canvas {
   background: var(--black);
-  border: 1px solid var(--accent-color-one);
-  /* border: 1px solid var(--accent-color-two); */
+  border: 1px solid #fff;
+}
+
+.theme-one #canvas {
+  border-color: var(--accent-color-one);
+}
+
+.theme-two #canvas {
+  border-color: var(--accent-color-two);
 }
 
 .preview-img-container {
@@ -504,8 +603,6 @@ select option:hover {
 
 .controller-button {
   align-items: center;
-  background: var(--accent-color-one);
-  /* background: var(--accent-color-two); */
   border-radius: 100%;
   display: flex;
   font-size: inherit;
@@ -514,6 +611,14 @@ select option:hover {
   max-height: 70px;
   max-width: 70px;
   width: 9.375vw;
+}
+
+.theme-one .controller-button {
+  background: var(--accent-color-one);
+}
+
+.theme-two .controller-button {
+  background: var(--accent-color-two);
 }
 
 .controller-button:hover {
@@ -526,6 +631,38 @@ select option:hover {
 
 .player-score-container {
   pointer-events: none;
+}
+
+.player-name-form {
+  border: 1px solid var(--black);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  padding: 10px;
+}
+
+.theme-one .player-name-form {
+  border-color: var(--accent-color-one);
+}
+
+.theme-two .player-name-form {
+  border-color: var(--accent-color-two);
+}
+
+.high-score-heading {
+  text-align: center;
+}
+
+.high-score-name-label,
+.high-score-player-score-label {
+  display: inline-block;
+  width: 100%;
+}
+
+.high-score-name-input,
+.high-score-player-score-input {
+  width: 100%;
 }
 
 @media screen and (max-width: 300px) {
