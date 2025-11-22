@@ -32,6 +32,7 @@ import {
   openSaveGameModal,
   handleUpdateSavedGameTextInput,
   closeSaveGameModal,
+  removeCommasFromScore,
 } from "../utils/index.js";
 import Tetris from "../game/tetris.js";
 import mainMenuPageBuilder from "./mainMenu.js";
@@ -170,7 +171,7 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     const playerScore = playerNameForm.elements.playerScore.value;
     const playerDetails = {
       name: playerName,
-      score: Number(playerScore),
+      score: Number(removeCommasFromScore(playerScore)),
     };
 
     if (game.idOfScoreToRemove) {
