@@ -1,20 +1,22 @@
 :root {
   /* Custom Colors */
+  --black: #000;
+  --dark-gray: #434446;
   --jasmyn-pink: #ff9d8d;
-  --fall-twilight: #ffefa6;
-  --fall-clouds: #4b494a;
-  --fall-clouds-darker: #434446;
+
   --fall-sky: #5b6d7f;
+  --fall-clouds: #5b646f;
+  --fall-twilight-sun: #ffefa6;
 
   /* Theme One */
-  --background-color-one: #000;
-  --modal-background-one: var(--fall-clouds-darker);
+  --background-color-one: var(--black);
+  --modal-background-one: var(--dark-gray);
   --accent-color-one: var(--jasmyn-pink);
 
   /* Theme Two */
   --background-color-two: var(--fall-sky);
-  /* --modal-background-two: var(--fall-clouds-darker); */
-  --accent-color-two: var(--fall-twilight);
+  --modal-background-two: var(--fall-clouds);
+  --accent-color-two: var(--fall-twilight-sun);
 }
 
 * {
@@ -76,12 +78,14 @@ select {
 
 input[type="text"] {
   background-color: var(--accent-color-one);
+  /* background-color: var(--accent-color-two); */
   border: 0;
 }
 
 input[type="radio"] {
   appearance: none;
   border: 1px solid var(--accent-color-one);
+  /* border: 1px solid var(--accent-color-two); */
   border-radius: 50%;
   cursor: pointer;
   height: clamp(13px, 3vw, 20px);
@@ -91,10 +95,12 @@ input[type="radio"] {
 
 input[type="radio"]:checked {
   background: var(--accent-color-one);
+  /* background: var(--accent-color-two); */
 }
 
 input[type="radio"]:not(:checked):hover {
   background: var(--accent-color-one);
+  /* background: var(--accent-color-two); */
   opacity: 0.5;
 }
 
@@ -116,15 +122,19 @@ select:hover {
 
 select option::checkmark {
   color: var(--accent-color-one);
+  /* color: var(--accent-color-two); */
 }
 
 select option {
   background: var(--modal-background-one);
+  /* background: var(--modal-background-two); */
   color: var(--accent-color-one);
+  /* color: var(--accent-color-two); */
 }
 
 select option:hover {
   background: var(--background-color-one);
+  /* background: var(--background-color-two); */
 }
 
 .error-message.hidden {
@@ -211,7 +221,8 @@ select option:hover {
 }
 
 .update-settings-form > fieldset > legend {
-  border-bottom: 1px solid var(--background-color-one);
+  border-bottom: 1px solid var(--accent-color-one);
+  /* border-bottom: 1px solid var(--accent-color-two); */
   margin-bottom: 5px;
 }
 
@@ -377,6 +388,7 @@ select option:hover {
 
 .menu-button {
   background: var(--accent-color-one);
+  /* background: var(--accent-color-two); */
 }
 
 .menu-button:hover {
@@ -394,6 +406,7 @@ select option:hover {
 .high-scores-table-heading,
 .high-scores-table-field {
   border: 1px solid var(--accent-color-one);
+  /* border: 1px solid var(--accent-color-two); */
 }
 
 .high-scores-table {
@@ -448,7 +461,9 @@ select option:hover {
 }
 
 #canvas {
-  border: 1px solid white;
+  background: var(--black);
+  border: 1px solid var(--accent-color-one);
+  /* border: 1px solid var(--accent-color-two); */
 }
 
 .preview-img-container {
@@ -490,6 +505,7 @@ select option:hover {
 .controller-button {
   align-items: center;
   background: var(--accent-color-one);
+  /* background: var(--accent-color-two); */
   border-radius: 100%;
   display: flex;
   font-size: inherit;
