@@ -688,6 +688,18 @@ export const displayScore = (scoreNum) => {
   return returnString;
 };
 
+export const removeCommasFromScore = (scoreString) => {
+  let newScoreString = "";
+  for (let i = 0; i < scoreString.length; i++) {
+    if (scoreString[i] === ",") {
+      continue;
+    } else {
+      newScoreString += scoreString[i];
+    }
+  }
+  return newScoreString;
+};
+
 export const injectTextIntoElementById = (id, textToInject) => {
   const element = document.getElementById(id);
   element.innerText = textToInject;

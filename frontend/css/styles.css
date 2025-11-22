@@ -17,6 +17,11 @@
   --background-color-two: var(--fall-sky);
   --modal-background-two: var(--fall-clouds);
   --accent-color-two: var(--fall-twilight-sun);
+
+  /* Theme Three */
+  --background-color-three: dodgerblue;
+  --modal-background-three: slateblue;
+  --accent-color-three: white;
 }
 
 * {
@@ -37,6 +42,11 @@ body {
 .theme-two {
   background: var(--background-color-two);
   color: var(--accent-color-two);
+}
+
+.theme-three {
+  background: var(--background-color-three);
+  color: var(--accent-color-three);
 }
 
 /* TODO theme-three */
@@ -96,6 +106,10 @@ input[type="text"] {
   background-color: var(--accent-color-two);
 }
 
+.theme-three input[type="text"] {
+  background-color: var(--accent-color-three);
+}
+
 input[type="radio"] {
   appearance: none;
   border: 1px solid var(--black);
@@ -114,12 +128,20 @@ input[type="radio"] {
   border-color: var(--accent-color-two);
 }
 
+.theme-three input[type="radio"] {
+  border-color: var(--accent-color-three);
+}
+
 .theme-one input[type="radio"]:checked {
   background: var(--accent-color-one);
 }
 
 .theme-two input[type="radio"]:checked {
   background: var(--accent-color-two);
+}
+
+.theme-three input[type="radio"]:checked {
+  background: var(--accent-color-three);
 }
 
 input[type="radio"]:not(:checked):hover {
@@ -134,6 +156,10 @@ input[type="radio"]:not(:checked):hover {
   background: var(--accent-color-two);
 }
 
+.theme-three input[type="radio"]:not(:checked):hover {
+  background: var(--accent-color-three);
+}
+
 select {
   appearance: base-select;
 }
@@ -142,8 +168,16 @@ select::picker(select) {
   appearance: base-select;
 }
 
-select:hover {
+.theme-one select:hover {
   background: var(--background-color-one);
+}
+
+.theme-two select:hover {
+  background: var(--background-color-two);
+}
+
+.theme-three select:hover {
+  background: var(--background-color-three);
 }
 
 .saved-games-dropdown-label:hover + select {
@@ -158,6 +192,10 @@ select:hover {
   color: var(--accent-color-two);
 }
 
+.theme-three select option::checkmark {
+  color: var(--accent-color-three);
+}
+
 .theme-one select option {
   background: var(--modal-background-one);
   color: var(--accent-color-one);
@@ -168,12 +206,21 @@ select:hover {
   color: var(--accent-color-two);
 }
 
+.theme-three select option {
+  background: var(--modal-background-three);
+  color: var(--accent-color-three);
+}
+
 .theme-one select option:hover {
   background: var(--background-color-one);
 }
 
 .theme-two select option:hover {
   background: var(--background-color-two);
+}
+
+.theme-three select option:hover {
+  background: var(--background-color-three);
 }
 
 .error-message.hidden {
@@ -209,6 +256,10 @@ select:hover {
   background-color: var(--modal-background-two);
 }
 
+.theme-three .modal-container {
+  background-color: var(--modal-background-three);
+}
+
 ::backdrop {
   opacity: 0.7;
 }
@@ -219,6 +270,10 @@ select:hover {
 
 .theme-two ::backdrop {
   background-color: var(--background-color-two);
+}
+
+.theme-three ::backdrop {
+  background-color: var(--background-color-three);
 }
 
 .modal-container.load-game-modal-container,
@@ -245,6 +300,10 @@ select:hover {
   justify-content: space-between;
 }
 
+.modal-container.settings-modal-container {
+  margin-bottom: min(6.25vw, 42px);
+}
+
 .close-modal-button {
   align-self: flex-start;
   background: none;
@@ -254,11 +313,18 @@ select:hover {
 }
 
 .theme-one .close-modal-button {
-  border-color: var(--background-color-one);
+  border-color: var(--accent-color-one);
+  color: var(--accent-color-one);
 }
 
 .theme-two .close-modal-button {
-  border-color: var(--background-color-two);
+  border-color: var(--accent-color-two);
+  color: var(--accent-color-two);
+}
+
+.theme-three .close-modal-button {
+  border-color: var(--accent-color-three);
+  color: var(--accent-color-three);
 }
 
 .no-games-to-display-heading {
@@ -290,6 +356,10 @@ select:hover {
 
 .theme-two .update-settings-form > fieldset > legend {
   border-color: var(--accent-color-two);
+}
+
+.theme-three .update-settings-form > fieldset > legend {
+  border-color: var(--accent-color-three);
 }
 
 .radio-options-container,
@@ -464,6 +534,11 @@ select:hover {
   color: var(--background-color-two);
 }
 
+.theme-three .menu-button {
+  background: var(--accent-color-three);
+  color: var(--background-color-three);
+}
+
 .menu-button:hover {
   cursor: pointer;
 }
@@ -491,6 +566,12 @@ select:hover {
 .theme-two .high-scores-table-heading,
 .theme-two .high-scores-table-field {
   border-color: var(--accent-color-two);
+}
+
+.theme-three .high-scores-table,
+.theme-three .high-scores-table-heading,
+.theme-three .high-scores-table-field {
+  border-color: var(--accent-color-three);
 }
 
 .high-scores-table {
@@ -567,6 +648,10 @@ select:hover {
   border-color: var(--accent-color-two);
 }
 
+.theme-three #canvas {
+  border-color: var(--accent-color-three);
+}
+
 .preview-img-container {
   align-items: center;
   display: flex;
@@ -623,6 +708,10 @@ select:hover {
   background: var(--accent-color-two);
 }
 
+.theme-three .controller-button {
+  background: var(--accent-color-three);
+}
+
 .controller-button:hover {
   cursor: pointer;
 }
@@ -650,6 +739,10 @@ select:hover {
 
 .theme-two .player-name-form {
   border-color: var(--accent-color-two);
+}
+
+.theme-three .player-name-form {
+  border-color: var(--accent-color-three);
 }
 
 .high-score-heading {
