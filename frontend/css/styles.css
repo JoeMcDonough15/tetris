@@ -1,7 +1,22 @@
 :root {
+  /* Custom Colors */
+  --black: #000;
+  --dark-gray: #434446;
   --jasmyn-pink: #ff9d8d;
-  --background-color-one: #000;
+
+  --fall-sky: #5b6d7f;
+  --fall-clouds: #5b646f;
+  --fall-twilight-sun: #ffefa6;
+
+  /* Theme One */
+  --background-color-one: var(--black);
+  --modal-background-one: var(--dark-gray);
   --accent-color-one: var(--jasmyn-pink);
+
+  /* Theme Two */
+  --background-color-two: var(--fall-sky);
+  --modal-background-two: var(--fall-clouds);
+  --accent-color-two: var(--fall-twilight-sun);
 }
 
 * {
@@ -12,7 +27,9 @@
 
 body {
   background: var(--background-color-one);
+  /* background: var(--background-color-two); */
   color: var(--accent-color-one);
+  /* color: var(--accent-color-two); */
   font-family: "Pixelify Sans", sans-serif;
 }
 
@@ -59,9 +76,16 @@ select {
   padding: 2px 5px;
 }
 
+input[type="text"] {
+  background-color: var(--accent-color-one);
+  /* background-color: var(--accent-color-two); */
+  border: 0;
+}
+
 input[type="radio"] {
   appearance: none;
-  border: 1px solid var(--background-color-one);
+  border: 1px solid var(--accent-color-one);
+  /* border: 1px solid var(--accent-color-two); */
   border-radius: 50%;
   cursor: pointer;
   height: clamp(13px, 3vw, 20px);
@@ -71,10 +95,12 @@ input[type="radio"] {
 
 input[type="radio"]:checked {
   background: var(--accent-color-one);
+  /* background: var(--accent-color-two); */
 }
 
 input[type="radio"]:not(:checked):hover {
   background: var(--accent-color-one);
+  /* background: var(--accent-color-two); */
   opacity: 0.5;
 }
 
@@ -87,7 +113,7 @@ select::picker(select) {
 }
 
 select:hover {
-  background: var(--accent-color-one);
+  background: var(--background-color-one);
 }
 
 .saved-games-dropdown-label:hover + select {
@@ -96,14 +122,19 @@ select:hover {
 
 select option::checkmark {
   color: var(--accent-color-one);
+  /* color: var(--accent-color-two); */
 }
 
-select option:hover::checkmark {
-  color: var(--background-color-one);
+select option {
+  background: var(--modal-background-one);
+  /* background: var(--modal-background-two); */
+  color: var(--accent-color-one);
+  /* color: var(--accent-color-two); */
 }
 
 select option:hover {
-  background: var(--accent-color-one);
+  background: var(--background-color-one);
+  /* background: var(--background-color-two); */
 }
 
 .error-message.hidden {
@@ -123,6 +154,9 @@ select option:hover {
 }
 
 .modal-container {
+  background-color: var(--modal-background-one);
+  /* background-color: var(--modal-background-two); */
+  color: inherit;
   max-width: 600px;
   position: fixed;
   margin: auto;
@@ -132,6 +166,7 @@ select option:hover {
 
 ::backdrop {
   background-color: var(--background-color-one);
+  /* background-color: var(--background-color-two); */
   opacity: 0.7;
 }
 
@@ -186,7 +221,8 @@ select option:hover {
 }
 
 .update-settings-form > fieldset > legend {
-  border-bottom: 1px solid var(--background-color-one);
+  border-bottom: 1px solid var(--accent-color-one);
+  /* border-bottom: 1px solid var(--accent-color-two); */
   margin-bottom: 5px;
 }
 
@@ -352,6 +388,7 @@ select option:hover {
 
 .menu-button {
   background: var(--accent-color-one);
+  /* background: var(--accent-color-two); */
 }
 
 .menu-button:hover {
@@ -369,6 +406,7 @@ select option:hover {
 .high-scores-table-heading,
 .high-scores-table-field {
   border: 1px solid var(--accent-color-one);
+  /* border: 1px solid var(--accent-color-two); */
 }
 
 .high-scores-table {
@@ -423,7 +461,9 @@ select option:hover {
 }
 
 #canvas {
-  border: 1px solid white;
+  background: var(--black);
+  border: 1px solid var(--accent-color-one);
+  /* border: 1px solid var(--accent-color-two); */
 }
 
 .preview-img-container {
@@ -465,6 +505,7 @@ select option:hover {
 .controller-button {
   align-items: center;
   background: var(--accent-color-one);
+  /* background: var(--accent-color-two); */
   border-radius: 100%;
   display: flex;
   font-size: inherit;
