@@ -59,6 +59,10 @@ export const returnBody = () => {
   const body = bodyArrayFromCollection[0];
   return body;
 };
+
+export const returnThemeWrapper = () => {
+  return document.getElementById("theme-wrapper");
+};
 const generatePreviewImgPath = (shapeName) => {
   return `${previewImgPathObj.prefix}${shapeName}${previewImgPathObj.suffix}`;
 };

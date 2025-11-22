@@ -31,6 +31,7 @@ import {
   settingsModalInMainMenuObj,
   mainMenuImageData,
   injectTextIntoElementById,
+  returnThemeWrapper,
 } from "../utils/index.js";
 
 import playGamePageBuilder from "./playGame.js";
@@ -62,14 +63,26 @@ const mainMenuPageBuilder = (settingsObj) => {
   );
   mainMenuContainer.append(mainMenuButtons, tetrisImage);
 
-  const body = returnBody();
-  body.prepend(
+  // const body = returnBody();
+
+  // body.prepend(
+  //   mainPageHeading,
+  //   mainMenuContainer,
+  //   settingsModal,
+  //   loadGameModal,
+  //   confirmationModal
+  // );
+
+  const themeWrapper = returnThemeWrapper();
+  themeWrapper.append(
     mainPageHeading,
     mainMenuContainer,
     settingsModal,
     loadGameModal,
     confirmationModal
   );
+
+  themeWrapper.classList.add(`theme-${settingsObj.colorPaletteSelection}`);
 
   // * Add Event Listeners
 
@@ -86,6 +99,8 @@ const mainMenuPageBuilder = (settingsObj) => {
     }
 
     settingsObj.updateSettings({ ...inputsObj });
+    themeWrapper.className = "";
+    themeWrapper.classList.add(`theme-${settingsObj.colorPaletteSelection}`);
     settingsModal.close();
   };
 
