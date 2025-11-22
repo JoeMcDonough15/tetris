@@ -892,8 +892,10 @@ export const highScoresFormData = {
   formContainerClasses: ["player-name-form", "no-display"],
   formContainerId: "player-name-form",
   playerName: {
-    containerClasses: [],
+    containerClasses: ["high-score-player-name-container"],
     labelText: "Enter your name",
+    labelClasses: ["high-score-name-label"],
+    inputClasses: ["high-score-name-input"],
     input: {
       id: "player-name",
       type: "text",
@@ -903,14 +905,20 @@ export const highScoresFormData = {
     },
   },
   playerScore: {
-    containerClasses: ["player-score-container"],
+    containerClasses: ["high-score-player-score-container"],
     labelText: "Your Score",
+    labelClasses: ["high-score-player-score-label"],
+    inputClasses: ["high-score-player-score-input"],
     input: {
       id: "player-score",
       type: "text",
       name: "playerScore",
       readonly: true,
     },
+  },
+  submitButton: {
+    classes: ["high-score-form-submit-button"],
+    buttonText: "Submit High Score",
   },
 };
 

@@ -332,7 +332,8 @@ select:hover {
 .delete-all-saved-games-button,
 .confirm-button,
 .close-confirmation-modal-button,
-.save-game-submit-button {
+.save-game-submit-button,
+.high-score-form-submit-button {
   margin: 20px 0;
   padding: 10px 20px;
 }
@@ -630,6 +631,38 @@ select:hover {
 
 .player-score-container {
   pointer-events: none;
+}
+
+.player-name-form {
+  border: 1px solid var(--black);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  padding: 10px;
+}
+
+.theme-one .player-name-form {
+  border-color: var(--accent-color-one);
+}
+
+.theme-two .player-name-form {
+  border-color: var(--accent-color-two);
+}
+
+.high-score-heading {
+  text-align: center;
+}
+
+.high-score-name-label,
+.high-score-player-score-label {
+  display: inline-block;
+  width: 100%;
+}
+
+.high-score-name-input,
+.high-score-player-score-input {
+  width: 100%;
 }
 
 @media screen and (max-width: 300px) {

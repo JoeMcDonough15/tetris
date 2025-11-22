@@ -264,17 +264,20 @@ export const createPlayerNameForm = () => {
     highScoresFormData.formContainerClasses,
     highScoresFormData.formContainerId
   );
+  const highScoreHeading = createCustomHeading(
+    "h2",
+    "You've Got A High Score!",
+    ["high-score-heading"]
+  );
   const playerNameContainer = createInputContainer(
     highScoresFormData.playerName
   );
   const playerScoreContainer = createInputContainer(
     highScoresFormData.playerScore
   );
-  const submitButton = createSubmitButton({
-    buttonText: "Submit",
-    classes: [],
-  });
+  const submitButton = createSubmitButton(highScoresFormData.submitButton);
   playerNameForm.append(
+    highScoreHeading,
     playerNameContainer,
     playerScoreContainer,
     submitButton
