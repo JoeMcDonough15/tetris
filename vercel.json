@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "backend/**/*.js": {
+      "runtime": "nodejs20.x",
+      "experimentalEsm": true
+    }
+  },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/backend/$1"
+    }
+  ]
+}
