@@ -6,10 +6,15 @@ class GameMusic {
     this.selectedMusic = selectedTheme;
     this.player.loop = true;
   }
-  // methods
+
   changeMusic = (newTheme) => {
     this.player.src = generateMusicPath(newTheme);
     this.selectedMusic = newTheme;
+  };
+
+  endMusic = () => {
+    this.player.src = "";
+    this.selectedMusic = null;
   };
 }
 
