@@ -3,5 +3,9 @@
     "backend/dist/**/*.js": {
       "runtime": "nodejs20.x"
     }
+  },
+  "build": {
+    "env": {},
+    "ignore": ["frontend/**/*"]
   }
 }
