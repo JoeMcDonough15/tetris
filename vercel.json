@@ -1,8 +1,7 @@
 {
   "functions": {
     "backend/dist/**/*.js": {
-      "runtime": "nodejs20.x",
-      "experimentalEsm": true
+      "runtime": "nodejs20.x"
     }
   }
 }
