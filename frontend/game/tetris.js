@@ -10,6 +10,7 @@ import {
   blockSound,
   rotateSound,
   clearedRowSound,
+  gameOverSound,
   openConfirmOverwriteGameModal,
   saveCanvas,
   drawPreviousCanvas,
@@ -244,6 +245,8 @@ class Tetris {
 
   endGame = () => {
     this.gameOver = true;
+    this.gameMusic.endMusic();
+    gameOverSound.play();
     toggleDisplayById("game-grid-container", "game-details-container");
     updateElementTextById("main-heading", "Game Over");
     this.checkForHighScore();
@@ -276,17 +279,16 @@ class Tetris {
     this.gamePaused = !this.gamePaused;
     if (!this.gamePaused) {
       this.gravityDrop();
-      // if the music was changed while game was paused, we have to reflect that in the music player
       const playerSelectedMusic = this.gameSettings.gameMusicSelection;
       if (this.gameMusic.selectedMusic !== playerSelectedMusic) {
         this.gameMusic.changeMusic(playerSelectedMusic);
       }
-      // play music on unpause only if user wants music on
       if (this.gameSettings.music === "on") {
         this.gameMusic.player.play();
+      } else {
+        this.gameMusic.endMusic();
       }
     } else {
-      // pause music every time game is paused
       this.gameMusic.player.pause();
     }
   };
