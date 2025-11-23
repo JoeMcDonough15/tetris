@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { HighScore } from '../../generated/prisma';
+import { HighScore } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { NewHighScoreDto } from './dto/new-high-score.dto';
 import { UUID } from 'crypto';
