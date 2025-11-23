@@ -13,7 +13,7 @@ import {
 import { HighScoresService } from './high-scores.service';
 import type { UUID } from 'crypto';
 import { NewHighScoreDto } from './dto/new-high-score.dto';
-import type { HighScore } from 'generated/prisma';
+import type { HighScore } from '../../generated/prisma';
 
 @Controller('api/high-scores')
 export class HighScoresController {
