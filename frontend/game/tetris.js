@@ -284,6 +284,8 @@ class Tetris {
       // play music on unpause only if user wants music on
       if (this.gameSettings.music === "on") {
         this.gameMusic.player.play();
+      } else {
+        this.gameMusic.changeMusic("");
       }
     } else {
       // pause music every time game is paused
