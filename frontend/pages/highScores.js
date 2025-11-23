@@ -1,4 +1,4 @@
-import HighScores from "../high-scores/js/api/highScoresApi.js";
+import HighScores from "../utils/highScoresHelpers.js";
 import {
   createContainer,
   createMenuButtons,
