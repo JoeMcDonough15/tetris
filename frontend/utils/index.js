@@ -76,6 +76,7 @@ export const generateMusicPath = (themeName) => {
 export const blockSound = new Audio(generateSoundPath("block-landing"));
 export const rotateSound = new Audio(generateSoundPath("rotate"));
 export const clearedRowSound = new Audio(generateSoundPath("cleared-row"));
+export const gameOverSound = new Audio(generateSoundPath("game-over"));
 
 // * Modals with Respective Close Buttons
 export const allModals = {

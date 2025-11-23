@@ -10,6 +10,7 @@ import {
   blockSound,
   rotateSound,
   clearedRowSound,
+  gameOverSound,
   openConfirmOverwriteGameModal,
   saveCanvas,
   drawPreviousCanvas,
@@ -245,6 +246,7 @@ class Tetris {
   endGame = () => {
     this.gameOver = true;
     this.gameMusic.endMusic();
+    gameOverSound.play();
     toggleDisplayById("game-grid-container", "game-details-container");
     updateElementTextById("main-heading", "Game Over");
     this.checkForHighScore();
