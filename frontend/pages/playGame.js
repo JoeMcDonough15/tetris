@@ -14,7 +14,7 @@ import {
   createConfirmationModalContent,
   createCanvas,
 } from "../components/index.js";
-import HighScores from "../high-scores/js/api/highScoresApi.js";
+import HighScores from "../utils/highScoresHelpers.js";
 import {
   playGameSubHeaders,
   postGameMenuButtonObjs,

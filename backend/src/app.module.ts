@@ -9,7 +9,7 @@ import { ScoresModule } from './high-scores/high-scores.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../public'),
+      rootPath: join(__dirname, '../../frontend'),
       serveStaticOptions: {
         fallthrough: true,
       },
