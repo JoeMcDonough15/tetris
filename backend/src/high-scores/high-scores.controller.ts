@@ -15,7 +15,7 @@ import type { UUID } from 'crypto';
 import { NewHighScoreDto } from './dto/new-high-score.dto';
 import type { HighScore } from '@prisma/client';
 
-@Controller('api/high-scores')
+@Controller('high-scores')
 export class HighScoresController {
   constructor(private readonly highScoresService: HighScoresService) {}
 
