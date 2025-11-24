@@ -4,6 +4,7 @@ import {
   createMenuButtons,
   createHighScoresTable,
   createCustomHeading,
+  createLoadingBar,
 } from "../components/index.js";
 import {
   mainMenuButtonsContainerObj,
@@ -29,12 +30,21 @@ const highScoresPageBuilder = async (settingsObj) => {
     "high-scores-container"
   );
 
-  highScoresContainer.appendChild(
-    createMenuButtons(mainMenuButtonsContainerObj, highScoresMenuButtonObjs)
+  const menuButtons = createMenuButtons(
+    mainMenuButtonsContainerObj,
+    highScoresMenuButtonObjs
   );
+
+  const loadingBar = createLoadingBar("Fetching High Scores...");
+
+  highScoresContainer.append(loadingBar, menuButtons);
+
+  const body = returnBody();
+  body.prepend(mainHeading, highScoresContainer);
 
   const highScoresObj = new HighScores();
   const highScores = await highScoresObj.getHighScores();
+  loadingBar.remove();
 
   if (highScores.length) {
     highScoresContainer.prepend(createHighScoresTable(highScores));
@@ -43,9 +53,6 @@ const highScoresPageBuilder = async (settingsObj) => {
       createCustomHeading("h2", "No High Scores Yet", ["no-high-scores-header"])
     );
   }
-
-  const body = returnBody();
-  body.prepend(mainHeading, highScoresContainer);
 
   // * Event Listeners
 

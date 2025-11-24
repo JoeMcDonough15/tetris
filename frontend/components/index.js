@@ -542,3 +542,9 @@ export const createConfirmationModalContent = ({
 
   return modalContentContainer;
 };
+
+export const createLoadingBar = (loadingText) => {
+  const loadingBar = quickElement("p", ["loading-bar"]);
+  loadingBar.innerText = loadingText;
+  return loadingBar;
+};
