@@ -1,19 +1,32 @@
 # Tetris
 
-An object oriented Tetris game animated with the Canvas API on the frontend combined with Nest.js on the backend and a PostgreSQL database to persist high scores using Prisma ORM.
+An object oriented Tetris game animated with the Canvas API on the frontend combined with Nest.js on the backend and a PostgreSQL database to persist high scores using Prisma ORM. Features include:
+
+Sound FX - optional on/off, off as default
+
+Music - optional on/off, off as default plus optional 3 different music themes
+
+Three Color Palettes - one as default
+
+Custom Key Controls - inside settings menu, highlight the input field you'd like to change and press the key you want to use for that control. Controls must be unique and if they are not, an error message will display when you attempt to submit the form with Apply Settings button.
+
+## How to Play
+
+On mobile and tablet, tap buttons during gameplay to rotate shape, move left, move right, and soft drop. Pause game with middle button.
+
+On desktop, UpArrow rotates shape, LeftArrow moves left, RightArrow moves right, DownArrow soft drops piece. p to pause game.
 
 # Setup
 
 ## Run the app's server in development environment
 
-cd backend
-
+cd backend &&
+npm install &&
 npm run start:dev
 
 ## Run the PostgreSQL server to start the database in development environment (in a new terminal window)
 
-cd backend
-
+cd backend &&
 npx prisma dev
 
 ### If there are any changes to the prisma.schema file or the database table(s)
@@ -24,13 +37,20 @@ This automatically runs npx prisma generate
 
 ## Frontend Routes
 
-All static assets are served using Nest.js ServeStaticModule from @nestjs/serve-static
+In development, all static assets are served using Nest.js ServeStaticModule from @nestjs/serve-static.
 
-main menu: /
+In production, all frontend routes are redirected to the frontend directory through the vercel.json file.
+The app acts like a single page application using cleanup functions to remove any event listeners from the current UI
+before clearing all of those elements and rebuilding the UI for the next page. So the only frontend route is /
 
-game play: /play-game
+The three page builder functions are inside frontend/pages
 
-high scores: /high-scores
+## API Routes
+
+In development, all API routes are served using Nest.js. The only CRUD resource is api/high-scores.
+
+In production, since Vercel is serverless, the backend/src/serverless.ts wrapper and backend/src/vercel-handler.js
+act as wrappers to convert the API endpoints to match the Vercel environment.
 
 # API Endpoints
 
