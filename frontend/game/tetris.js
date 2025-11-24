@@ -246,7 +246,9 @@ class Tetris {
   endGame = () => {
     this.gameOver = true;
     this.gameMusic.endMusic();
-    gameOverSound.play();
+    if (this.gameSettings.soundFx === "on") {
+      gameOverSound.play();
+    }
     toggleDisplayById("game-grid-container", "game-details-container");
     updateElementTextById("main-heading", "Game Over");
     this.checkForHighScore();
