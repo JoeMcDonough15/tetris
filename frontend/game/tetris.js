@@ -5,7 +5,6 @@ import {
   availableShapes,
   updateElementTextById,
   updateImageSrcById,
-  toggleDisplayById,
   injectValueToInputById,
   blockSound,
   rotateSound,
@@ -16,6 +15,9 @@ import {
   drawPreviousCanvas,
   closeSaveGameModal,
   displayScore,
+  hideElementById,
+  showElementById,
+  addClassToElementById,
 } from "../utils/index.js";
 import {
   Line,
@@ -249,12 +251,9 @@ class Tetris {
     if (this.gameSettings.soundFx === "on") {
       gameOverSound.play();
     }
-    toggleDisplayById(
-      "game-grid-container",
-      "game-details-container",
-      "loading-bar"
-    );
     updateElementTextById("main-heading", "Game Over");
+    hideElementById("game-grid-container", "game-details-container");
+    showElementById("loading-bar");
     updateElementTextById(
       "loading-bar",
       "Checking to see if you got a high score..."
@@ -270,9 +269,9 @@ class Tetris {
       (existingHighScores.length < 10 ||
         (lastPlaceScoreObj && this.playerTotalScore > lastPlaceScoreObj.score));
 
-    toggleDisplayById("loading-bar");
+    hideElementById("loading-bar");
     if (highScoreAchieved) {
-      toggleDisplayById("player-name-form");
+      showElementById("player-name-form");
       injectValueToInputById(
         "player-score",
         displayScore(this.playerTotalScore)
@@ -282,8 +281,8 @@ class Tetris {
         this.idOfScoreToRemove = lastPlaceScoreObj.id; // never keep more than 10 high scores in the database
       }
     } else {
-      toggleDisplayById("no-high-score-heading");
-      toggleDisplayById("post-game-menu-buttons");
+      showElementById("no-high-score-heading", "post-game-menu-buttons");
+      addClassToElementById("flex-col", "play-game-container");
     }
   };
 

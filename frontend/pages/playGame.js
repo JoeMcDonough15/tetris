@@ -109,7 +109,7 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
   const noHighScoreHeading = createCustomHeading(
     "h2",
     "No High Score This Time",
-    ["high-score-heading", "no-display"],
+    ["high-score-heading", "no-high-score-heading", "no-display"],
     "no-high-score-heading"
   );
   const postGameMenuButtons = createMenuButtons(

@@ -304,6 +304,11 @@ export const pauseMenuButtonsContainerObj = mainMenuButtonsContainerObj;
 // * Menu Buttons
 const allMenuButtonObjs = {
   newGame: { navButton: true, buttonText: "New Game", id: "new-game-button" },
+  playAgain: {
+    navButton: false,
+    buttonText: "Play Again",
+    id: "play-again-button",
+  },
   viewHighScores: {
     buttonText: "View High Scores",
     navButton: true,
@@ -348,6 +353,7 @@ export const highScoresMenuButtonObjs = [
 ];
 
 export const postGameMenuButtonObjs = [
+  allMenuButtonObjs.playAgain,
   { ...allMenuButtonObjs.mainMenu, buttonText: "Return to Main Menu" },
   allMenuButtonObjs.viewHighScores,
 ];
@@ -493,6 +499,11 @@ export const verifyUniqueStrings = (strArray) => {
     CHAR_MAP[str] = true;
   }
   return true;
+};
+
+export const addClassToElementById = (className, id) => {
+  const element = document.getElementById(id);
+  element.classList.add(className);
 };
 
 export const showElementById = (...ids) => {
