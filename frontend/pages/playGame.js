@@ -13,6 +13,7 @@ import {
   createConfirmationModal,
   createConfirmationModalContent,
   createCanvas,
+  createLoadingBar,
 } from "../components/index.js";
 import HighScores from "../utils/highScoresHelpers.js";
 import {
@@ -105,15 +106,24 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
 
   // post game options
   const playerNameForm = createPlayerNameForm();
+  const noHighScoreHeading = createCustomHeading(
+    "h2",
+    "No High Score This Time",
+    ["high-score-heading", "no-display"],
+    "no-high-score-heading"
+  );
   const postGameMenuButtons = createMenuButtons(
     postGameMenuButtonsContainerObj,
     postGameMenuButtonObjs
   );
+  const loadingBar = createLoadingBar("", ["no-display"]);
 
   mainContainer.append(
+    loadingBar,
     gameGridContainer,
     gameDetailsContainer,
     playerNameForm,
+    noHighScoreHeading,
     postGameMenuButtons
   );
 
@@ -174,6 +184,7 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
       score: Number(removeCommasFromScore(playerScore)),
     };
 
+    // TODO insert loading bar here
     if (game.idOfScoreToRemove) {
       await highScoresObj.removeHighScore(game.idOfScoreToRemove);
     }

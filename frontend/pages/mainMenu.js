@@ -26,7 +26,7 @@ import {
   removeLoadGameOptions,
   toggleDisplayById,
   closeConfirmationModal,
-  changeTextOfErrorById,
+  updateElementTextById,
   removeErrorById,
   settingsModalInMainMenuObj,
   mainMenuImageData,
@@ -98,7 +98,7 @@ const mainMenuPageBuilder = (settingsObj) => {
     const loadGameSelectElement = loadGameForm.elements[0];
     const selectedOption = grabSelectedOption(loadGameSelectElement);
     if (!selectedOption) {
-      changeTextOfErrorById(
+      updateElementTextById(
         "no-game-selected-error-message",
         "Please Select a Game to Load"
       );
@@ -153,7 +153,7 @@ const mainMenuPageBuilder = (settingsObj) => {
     const loadGameSelectElement = loadGameForm.elements[0];
     const selectedOption = grabSelectedOption(loadGameSelectElement);
     if (!selectedOption) {
-      changeTextOfErrorById(
+      updateElementTextById(
         "no-game-selected-error-message",
         "Please Select a Game to Delete"
       );

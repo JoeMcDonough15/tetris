@@ -249,8 +249,16 @@ class Tetris {
     if (this.gameSettings.soundFx === "on") {
       gameOverSound.play();
     }
-    toggleDisplayById("game-grid-container", "game-details-container");
+    toggleDisplayById(
+      "game-grid-container",
+      "game-details-container",
+      "loading-bar"
+    );
     updateElementTextById("main-heading", "Game Over");
+    updateElementTextById(
+      "loading-bar",
+      "Checking to see if you got a high score..."
+    );
     this.checkForHighScore();
   };
 
@@ -262,6 +270,7 @@ class Tetris {
       (existingHighScores.length < 10 ||
         (lastPlaceScoreObj && this.playerTotalScore > lastPlaceScoreObj.score));
 
+    toggleDisplayById("loading-bar");
     if (highScoreAchieved) {
       toggleDisplayById("player-name-form");
       injectValueToInputById(
@@ -273,6 +282,7 @@ class Tetris {
         this.idOfScoreToRemove = lastPlaceScoreObj.id; // never keep more than 10 high scores in the database
       }
     } else {
+      toggleDisplayById("no-high-score-heading");
       toggleDisplayById("post-game-menu-buttons");
     }
   };

@@ -526,11 +526,6 @@ export const removeErrorById = (errorId) => {
   errorMessage.classList.add("hidden");
 };
 
-export const changeTextOfErrorById = (errorId, message) => {
-  const errorMessage = document.getElementById(errorId);
-  errorMessage.innerText = message;
-};
-
 export const openSettingsModal = (settingsObj, settingsModal) => {
   displayCurrentSettingsOnForm(settingsObj);
   removeErrorById("settings-error-message");
