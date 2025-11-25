@@ -18,6 +18,8 @@ import {
   hideElementById,
   showElementById,
   addClassToElementById,
+  removeClassToElementById,
+  clearCanvas,
 } from "../utils/index.js";
 import {
   Line,
@@ -33,13 +35,13 @@ import GameGrid from "./gameGrid.js";
 import GameMusic from "./music.js";
 
 class Tetris {
-  constructor(gameSettingsObj, highScoresObj, nameOfGameToLoad) {
+  constructor(gameSettingsObj, highScoresObj, nameOfGameToLoad = null) {
     // APIs for settings and high scores
     this.gameSettings = gameSettingsObj;
     this.highScoresObj = highScoresObj;
 
     // Game State
-    this.nameOfGameToLoad = nameOfGameToLoad; // possibly undefined
+    this.nameOfGameToLoad = nameOfGameToLoad;
     this.nameOfGameToSave = null;
     this.indexOfGameToOverwrite = -1;
     this.gameOver = false;
@@ -49,7 +51,7 @@ class Tetris {
     this.totalRowsCleared = 0;
     this.softDropPoints = 0;
     this.rowsCleared = 0;
-    this.playerTotalScore = 4000;
+    this.playerTotalScore = 0;
     this.idOfScoreToRemove = "";
     this.game = new GameGrid(NUM_ROWS, NUM_COLS);
     this.pieceQueue = [];
@@ -228,18 +230,16 @@ class Tetris {
     this.numRotations = loadedGame.gameObj.numRotations;
 
     drawPreviousCanvas(loadedGame.gameBoardString);
+    this.nameOfGameToLoad = null;
   };
 
   startGame = () => {
     if (this.nameOfGameToLoad) {
-      // load a previous game and continue with gravityDrop if nameOfGameToLoad is truthy
       this.loadGame();
       this.gravityDrop();
     } else {
-      // or start the new game by dequeueing the first piece
       this.dequeuePiece();
     }
-    // play music if user has not turned it off
     if (this.gameSettings.music === "on") {
       this.gameMusic.player.play();
     }
@@ -259,6 +259,30 @@ class Tetris {
       "Checking to see if you got a high score..."
     );
     this.checkForHighScore();
+  };
+
+  restartGame = () => {
+    this.gameOver = false;
+    this.gamePaused = false;
+    this.gameSpeed = 400;
+    this.level = 0;
+    this.totalRowsCleared = 0;
+    this.softDropPoints = 0;
+    this.rowsCleared = 0;
+    this.playerTotalScore = 0;
+    this.idOfScoreToRemove = "";
+    this.game = new GameGrid(NUM_ROWS, NUM_COLS);
+    this.pieceQueue = [];
+    this.currentPiece = null;
+    this.currentPieceInPlay = false;
+    this.currentPiecePlaced = false;
+    this.numRotations = 0;
+    clearCanvas();
+    showElementById("game-grid-container", "game-details-container");
+    hideElementById("no-high-score-heading", "post-game-menu-buttons");
+    removeClassToElementById("flex-col", "play-game-container");
+    updateElementTextById("main-heading", "Tetris");
+    this.startGame();
   };
 
   checkForHighScore = async () => {

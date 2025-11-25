@@ -49,8 +49,6 @@ body {
   color: var(--accent-color-three);
 }
 
-/* TODO theme-three */
-
 h2 {
   font-size: clamp(25px, 8vw, 60px);
 }
@@ -504,13 +502,14 @@ select::picker(select) {
 }
 
 .main-menu-container,
-.high-scores-container {
-  align-items: center;
+.high-scores-container,
+.main-container.play-game-container.flex-col {
   flex-direction: column;
 }
 
-.main-container.play-game-container.flex-col {
-  flex-direction: column;
+.main-menu-container,
+.high-scores-container {
+  align-items: center;
 }
 
 .main-menu-image-container {

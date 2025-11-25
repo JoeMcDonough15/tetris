@@ -67,35 +67,32 @@ const highScoresPageBuilder = async (settingsObj) => {
     mainMenuPageBuilder(settingsObj);
   };
 
-  // Mouse Events
-  document
-    .getElementById("new-game-button")
-    .addEventListener("click", handleNewGameButton);
+  // Target Elements for Event Listeners
+  const newGameButton = document.getElementById("new-game-button");
+  const mainMenuButton = document.getElementById("main-menu-button");
 
-  document
-    .getElementById("main-menu-button")
-    .addEventListener("click", handleMainMenuButton);
+  // Mouse Events
+  newGameButton.addEventListener("click", handleNewGameButton);
+  mainMenuButton.addEventListener("click", handleMainMenuButton);
 
   // * Cleanup Function
 
   const cleanupFunction = () => {
-    const elementsWithEventListeners = [
+    const objsWithEventListeners = [
       {
-        idOfElement: "new-game-button",
+        referenceToElement: newGameButton,
         typeOfEvent: "click",
         callBack: handleNewGameButton,
       },
       {
-        idOfElement: "main-menu-button",
+        referenceToElement: mainMenuButton,
         typeOfEvent: "click",
         callBack: handleMainMenuButton,
       },
     ];
 
-    elementsWithEventListeners.forEach((element) => {
-      document
-        .getElementById(element.idOfElement)
-        .removeEventListener(element.typeOfEvent, element.callBack);
+    objsWithEventListeners.forEach((obj) => {
+      obj.referenceToElement.removeEventListener(obj.typeOfEvent, obj.callBack);
     });
 
     const elementsToRemove = [mainHeading, highScoresContainer];

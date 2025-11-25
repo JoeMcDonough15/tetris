@@ -74,6 +74,30 @@ const mainMenuPageBuilder = (settingsObj) => {
 
   // * Add Event Listeners
 
+  // Target All Elements for Event Listeners
+  const updateSettingsForm = document.getElementById("update-settings-form");
+  const loadGameForm = document.getElementById("load-game-form");
+  const newGameButton = document.getElementById("new-game-button");
+  const highScoresButton = document.getElementById("view-high-scores-button");
+  const openSettingsModalButton = document.getElementById(
+    "open-settings-modal-button"
+  );
+  const closeSettingsModalButton = document.getElementById(
+    "close-settings-modal-button"
+  );
+  const openLoadGameModalButton = document.getElementById(
+    "open-load-game-modal-button"
+  );
+  const closeLoadGameModalButton = document.getElementById(
+    "close-load-game-modal-button"
+  );
+  const deleteSavedGameButton = document.getElementById(
+    "delete-saved-game-button"
+  );
+  const deleteAllSavedGamesButton = document.getElementById(
+    "delete-all-saved-games-button"
+  );
+
   // Form Submit Event Callbacks
   const handleUpdateSettingsFormSubmit = (e) => {
     e.preventDefault();
@@ -110,13 +134,6 @@ const mainMenuPageBuilder = (settingsObj) => {
     cleanupFunction();
     playGamePageBuilder(settingsObj, selectedOption);
   };
-
-  // Form Submit Events
-  const updateSettingsForm = document.getElementById("update-settings-form");
-  updateSettingsForm.addEventListener("submit", handleUpdateSettingsFormSubmit);
-
-  const loadGameForm = document.getElementById("load-game-form");
-  loadGameForm.addEventListener("submit", handleLoadGameFormSubmit);
 
   // Click Event Callbacks
   const handleNewGamebutton = () => {
@@ -240,38 +257,22 @@ const mainMenuPageBuilder = (settingsObj) => {
     confirmationModal.showModal();
   };
 
+  // Form Submit Events
+  updateSettingsForm.addEventListener("submit", handleUpdateSettingsFormSubmit);
+  loadGameForm.addEventListener("submit", handleLoadGameFormSubmit);
+
   // Mouse Events
-  document
-    .getElementById("new-game-button")
-    .addEventListener("click", handleNewGamebutton);
-
-  document
-    .getElementById("view-high-scores-button")
-    .addEventListener("click", handleViewHighScoresbutton);
-
-  document
-    .getElementById("open-settings-modal-button")
-    .addEventListener("click", handleOpenSettingsModal);
-
-  document
-    .getElementById("close-settings-modal-button")
-    .addEventListener("click", handleCloseSettingsModal);
-
-  document
-    .getElementById("open-load-game-modal-button")
-    .addEventListener("click", handleOpenLoadGameModal);
-
-  document
-    .getElementById("close-load-game-modal-button")
-    .addEventListener("click", handleCloseLoadGameModal);
-
-  document
-    .getElementById("delete-saved-game-button")
-    .addEventListener("click", handleDeleteSavedGameButton);
-
-  document
-    .getElementById("delete-all-saved-games-button")
-    .addEventListener("click", handleDeleteAllSavedGamesButton);
+  newGameButton.addEventListener("click", handleNewGamebutton);
+  highScoresButton.addEventListener("click", handleViewHighScoresbutton);
+  openSettingsModalButton.addEventListener("click", handleOpenSettingsModal);
+  closeSettingsModalButton.addEventListener("click", handleCloseSettingsModal);
+  openLoadGameModalButton.addEventListener("click", handleOpenLoadGameModal);
+  closeLoadGameModalButton.addEventListener("click", handleCloseLoadGameModal);
+  deleteSavedGameButton.addEventListener("click", handleDeleteSavedGameButton);
+  deleteAllSavedGamesButton.addEventListener(
+    "click",
+    handleDeleteAllSavedGamesButton
+  );
 
   // Keyboard Event Callbacks
   const handleKeyUp = (e) => {
@@ -307,66 +308,66 @@ const mainMenuPageBuilder = (settingsObj) => {
     // aggregates all elements that have event listeners on them in the form of: [ {"id-of-element", "type-of-event", eventHandlerFunction} ];
     const objsWithEventListeners = [
       {
-        idOfElement: "update-settings-form",
+        referenceToElement: updateSettingsForm,
         typeOfEvent: "submit",
         callBack: handleUpdateSettingsFormSubmit,
       },
       {
-        idOfElement: "load-game-form",
+        referenceToElement: loadGameForm,
         typeOfEvent: "submit",
         callBack: handleLoadGameFormSubmit,
       },
       {
-        idOfElement: "new-game-button",
+        referenceToElement: newGameButton,
         typeOfEvent: "click",
         callBack: handleNewGamebutton,
       },
       {
-        idOfElement: "open-settings-modal-button",
+        referenceToElement: openSettingsModalButton,
         typeOfEvent: "click",
         callBack: handleOpenSettingsModal,
       },
       {
-        idOfElement: "close-settings-modal-button",
+        referenceToElement: closeSettingsModalButton,
         typeOfEvent: "click",
         callBack: handleCloseSettingsModal,
       },
       {
-        idOfElement: "open-load-game-modal-button",
+        referenceToElement: openLoadGameModalButton,
         typeOfEvent: "click",
         callBack: handleOpenLoadGameModal,
       },
       {
-        idOfElement: "close-load-game-modal-button",
+        referenceToElement: closeLoadGameModalButton,
         typeOfEvent: "click",
         callBack: handleCloseLoadGameModal,
       },
       {
-        idOfElement: "delete-saved-game-button",
+        referenceToElement: deleteSavedGameButton,
         typeOfEvent: "click",
         callBack: handleDeleteSavedGameButton,
       },
       {
-        idOfElement: "delete-all-saved-games-button",
+        referenceToElement: deleteAllSavedGamesButton,
         typeOfEvent: "click",
         callBack: handleDeleteAllSavedGamesButton,
       },
 
-      { objOfListener: window, typeOfEvent: "keyup", callBack: handleKeyUp },
+      { typeOfEvent: "keyup", callBack: handleKeyUp },
       {
-        objOfListener: window,
         typeOfEvent: "keydown",
         callBack: handleKeyDown,
       },
     ];
     // loop over the array of elements and for each id-of-element, remove the type-of-event
     objsWithEventListeners.forEach((obj) => {
-      if (obj.idOfElement) {
-        document
-          .getElementById(obj.idOfElement)
-          .removeEventListener(obj.typeOfEvent, obj.callBack);
+      if (obj.referenceToElement) {
+        obj.referenceToElement.removeEventListener(
+          obj.typeOfEvent,
+          obj.callBack
+        );
       } else {
-        obj.objOfListener.removeEventListener(obj.typeOfEvent, obj.callBack);
+        window.removeEventListener(obj.typeOfEvent, obj.callBack);
       }
     });
 
