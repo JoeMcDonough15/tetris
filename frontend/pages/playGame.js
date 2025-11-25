@@ -34,6 +34,8 @@ import {
   handleUpdateSavedGameTextInput,
   closeSaveGameModal,
   removeCommasFromScore,
+  showElementById,
+  updateElementTextById,
 } from "../utils/index.js";
 import Tetris from "../game/tetris.js";
 import mainMenuPageBuilder from "./mainMenu.js";
@@ -184,7 +186,8 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
       score: Number(removeCommasFromScore(playerScore)),
     };
 
-    // TODO insert loading bar here
+    showElementById("loading-bar");
+    updateElementTextById("loading-bar", "Adding Your High Score...");
 
     if (game.idOfScoreToRemove) {
       await highScoresObj.removeHighScore(game.idOfScoreToRemove);
