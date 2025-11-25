@@ -5,7 +5,6 @@ import {
   availableShapes,
   updateElementTextById,
   updateImageSrcById,
-  toggleDisplayById,
   injectValueToInputById,
   blockSound,
   rotateSound,
@@ -16,6 +15,11 @@ import {
   drawPreviousCanvas,
   closeSaveGameModal,
   displayScore,
+  hideElementById,
+  showElementById,
+  addClassToElementById,
+  removeClassToElementById,
+  clearCanvas,
 } from "../utils/index.js";
 import {
   Line,
@@ -31,13 +35,10 @@ import GameGrid from "./gameGrid.js";
 import GameMusic from "./music.js";
 
 class Tetris {
-  constructor(gameSettingsObj, highScoresObj, nameOfGameToLoad) {
-    // APIs for settings and high scores
+  constructor(gameSettingsObj, highScoresObj, nameOfGameToLoad = null) {
     this.gameSettings = gameSettingsObj;
     this.highScoresObj = highScoresObj;
-
-    // Game State
-    this.nameOfGameToLoad = nameOfGameToLoad; // possibly undefined
+    this.nameOfGameToLoad = nameOfGameToLoad;
     this.nameOfGameToSave = null;
     this.indexOfGameToOverwrite = -1;
     this.gameOver = false;
@@ -62,11 +63,11 @@ class Tetris {
 
   checkForSavedGame = (nameOfGameToSave) => {
     this.nameOfGameToSave = nameOfGameToSave;
-    const existingGames = JSON.parse(window.localStorage.getItem("savedGames")); // possibly null
+    const existingGames = JSON.parse(window.localStorage.getItem("savedGames"));
 
     if (existingGames) {
       const indexOfExistingGame = existingGames.findIndex(
-        (savedGame) => savedGame.nameOfGame === nameOfGameToSave // will be index of the existing game or -1
+        (savedGame) => savedGame.nameOfGame === nameOfGameToSave
       );
 
       if (indexOfExistingGame > -1) {
@@ -105,7 +106,7 @@ class Tetris {
 
     let allSavedGames = JSON.parse(window.localStorage.getItem("savedGames"));
     if (!allSavedGames) {
-      allSavedGames = []; // if we are saving the first game
+      allSavedGames = [];
     }
 
     if (this.indexOfGameToOverwrite > -1) {
@@ -165,10 +166,8 @@ class Tetris {
       this.pieceQueue.push(nameOfShape);
     });
 
-    // now set the preview-img to be the first shape in the queue
     updateImageSrcById("preview-img", this.pieceQueue[0]);
 
-    // now, set up the currentPiece.  Grab its x and y coordinates and instantiate the shape that it is with those coordinates in the rotation it was in when game was saved.
     const previousXCoordinate =
       loadedGame.gameObj.currentPiece.anchorBlock.xCoordinate;
     const previousYCoordinate =
@@ -219,25 +218,20 @@ class Tetris {
       );
     }
 
-    // now, draw that shape to the board to replace the existing one
     this.currentPiece.drawShape();
-
     this.currentPiecePlaced = loadedGame.gameObj.currentPiecePlaced;
     this.numRotations = loadedGame.gameObj.numRotations;
-
     drawPreviousCanvas(loadedGame.gameBoardString);
+    this.nameOfGameToLoad = null;
   };
 
   startGame = () => {
     if (this.nameOfGameToLoad) {
-      // load a previous game and continue with gravityDrop if nameOfGameToLoad is truthy
       this.loadGame();
       this.gravityDrop();
     } else {
-      // or start the new game by dequeueing the first piece
       this.dequeuePiece();
     }
-    // play music if user has not turned it off
     if (this.gameSettings.music === "on") {
       this.gameMusic.player.play();
     }
@@ -246,10 +240,47 @@ class Tetris {
   endGame = () => {
     this.gameOver = true;
     this.gameMusic.endMusic();
-    gameOverSound.play();
-    toggleDisplayById("game-grid-container", "game-details-container");
+    if (this.gameSettings.soundFx === "on") {
+      gameOverSound.play();
+    }
     updateElementTextById("main-heading", "Game Over");
+    hideElementById("game-grid-container", "game-details-container");
+    showElementById("loading-bar");
+    updateElementTextById(
+      "loading-bar",
+      "Checking to see if you got a high score..."
+    );
     this.checkForHighScore();
+  };
+
+  restartGame = () => {
+    this.gameOver = false;
+    this.gamePaused = false;
+    this.gameSpeed = 400;
+    this.level = 0;
+    this.totalRowsCleared = 0;
+    this.softDropPoints = 0;
+    this.rowsCleared = 0;
+    this.playerTotalScore = 0;
+    this.idOfScoreToRemove = "";
+    this.game = new GameGrid(NUM_ROWS, NUM_COLS);
+    this.pieceQueue = [];
+    this.currentPiece = null;
+    this.currentPieceInPlay = false;
+    this.currentPiecePlaced = false;
+    this.numRotations = 0;
+    clearCanvas();
+    showElementById("game-grid-container", "game-details-container");
+    hideElementById("no-high-score-heading", "post-game-menu-buttons");
+    removeClassToElementById("flex-col", "play-game-container");
+    updateElementTextById("main-heading", "Tetris");
+    updateElementTextById("level-heading", this.level);
+    updateElementTextById(
+      "total-score-heading",
+      displayScore(this.playerTotalScore)
+    );
+    updateElementTextById("rows-cleared-heading", this.totalRowsCleared);
+    this.startGame();
   };
 
   checkForHighScore = async () => {
@@ -260,18 +291,20 @@ class Tetris {
       (existingHighScores.length < 10 ||
         (lastPlaceScoreObj && this.playerTotalScore > lastPlaceScoreObj.score));
 
+    hideElementById("loading-bar");
     if (highScoreAchieved) {
-      toggleDisplayById("player-name-form");
+      showElementById("player-name-form");
       injectValueToInputById(
         "player-score",
         displayScore(this.playerTotalScore)
       );
 
       if (existingHighScores.length === 10) {
-        this.idOfScoreToRemove = lastPlaceScoreObj.id; // never keep more than 10 high scores in the database
+        this.idOfScoreToRemove = lastPlaceScoreObj.id;
       }
     } else {
-      toggleDisplayById("post-game-menu-buttons");
+      showElementById("no-high-score-heading", "post-game-menu-buttons");
+      addClassToElementById("flex-col", "play-game-container");
     }
   };
 
@@ -475,10 +508,8 @@ class Tetris {
       return;
     }
 
-    // clear the shape
     this.currentPiece.clearShape();
 
-    // move the shape
     if (direction === "left") {
       this.currentPiece.anchorBlock.xCoordinate -= GRID_SPACE;
     } else if (direction === "right") {
@@ -487,10 +518,8 @@ class Tetris {
       this.currentPiece.anchorBlock.yCoordinate += GRID_SPACE;
     }
 
-    // redraw the shape in its new position
     this.currentPiece.drawShape();
 
-    // check to see if the piece is now in view so event listeners can fire
     if (!this.currentPieceInPlay) {
       this.currentPieceInPlay = this.currentPieceEnteredGrid();
     }

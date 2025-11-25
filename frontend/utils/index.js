@@ -304,6 +304,11 @@ export const pauseMenuButtonsContainerObj = mainMenuButtonsContainerObj;
 // * Menu Buttons
 const allMenuButtonObjs = {
   newGame: { navButton: true, buttonText: "New Game", id: "new-game-button" },
+  playAgain: {
+    navButton: false,
+    buttonText: "Play Again",
+    id: "play-again-button",
+  },
   viewHighScores: {
     buttonText: "View High Scores",
     navButton: true,
@@ -348,6 +353,7 @@ export const highScoresMenuButtonObjs = [
 ];
 
 export const postGameMenuButtonObjs = [
+  allMenuButtonObjs.playAgain,
   { ...allMenuButtonObjs.mainMenu, buttonText: "Return to Main Menu" },
   allMenuButtonObjs.viewHighScores,
 ];
@@ -495,6 +501,16 @@ export const verifyUniqueStrings = (strArray) => {
   return true;
 };
 
+export const addClassToElementById = (className, id) => {
+  const element = document.getElementById(id);
+  element.classList.add(className);
+};
+
+export const removeClassToElementById = (className, id) => {
+  const element = document.getElementById(id);
+  element.classList.remove(className);
+};
+
 export const showElementById = (...ids) => {
   ids.forEach((id) => {
     const element = document.getElementById(id);
@@ -524,11 +540,6 @@ export const showErrorById = (errorId) => {
 export const removeErrorById = (errorId) => {
   const errorMessage = document.getElementById(errorId);
   errorMessage.classList.add("hidden");
-};
-
-export const changeTextOfErrorById = (errorId, message) => {
-  const errorMessage = document.getElementById(errorId);
-  errorMessage.innerText = message;
 };
 
 export const openSettingsModal = (settingsObj, settingsModal) => {
@@ -651,6 +662,12 @@ export const drawPreviousCanvas = (canvasURL) => {
   function drawSavedCanvas() {
     ctx.drawImage(this, 0, 0); // "this" is the img on which drawSavedCanvas is called.
   }
+};
+
+export const clearCanvas = () => {
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 };
 
 export const closeConfirmationModal = () => {
