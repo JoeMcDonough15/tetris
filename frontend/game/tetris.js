@@ -282,6 +282,12 @@ class Tetris {
     hideElementById("no-high-score-heading", "post-game-menu-buttons");
     removeClassToElementById("flex-col", "play-game-container");
     updateElementTextById("main-heading", "Tetris");
+    updateElementTextById("level-heading", this.level);
+    updateElementTextById(
+      "total-score-heading",
+      displayScore(this.playerTotalScore)
+    );
+    updateElementTextById("rows-cleared-heading", this.totalRowsCleared);
     this.startGame();
   };
 
