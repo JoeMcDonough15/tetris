@@ -49,8 +49,6 @@ body {
   color: var(--accent-color-three);
 }
 
-/* TODO theme-three */
-
 h2 {
   font-size: clamp(25px, 8vw, 60px);
 }
@@ -332,6 +330,10 @@ select::picker(select) {
   margin-top: 20px;
 }
 
+.no-high-score-heading {
+  margin-bottom: 1em;
+}
+
 .update-settings-form {
   margin-top: 10px;
 }
@@ -500,9 +502,14 @@ select::picker(select) {
 }
 
 .main-menu-container,
+.high-scores-container,
+.main-container.play-game-container.flex-col {
+  flex-direction: column;
+}
+
+.main-menu-container,
 .high-scores-container {
   align-items: center;
-  flex-direction: column;
 }
 
 .main-menu-image-container {

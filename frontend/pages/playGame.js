@@ -13,6 +13,7 @@ import {
   createConfirmationModal,
   createConfirmationModalContent,
   createCanvas,
+  createLoadingBar,
 } from "../components/index.js";
 import HighScores from "../utils/highScoresHelpers.js";
 import {
@@ -33,6 +34,8 @@ import {
   handleUpdateSavedGameTextInput,
   closeSaveGameModal,
   removeCommasFromScore,
+  showElementById,
+  updateElementTextById,
 } from "../utils/index.js";
 import Tetris from "../game/tetris.js";
 import mainMenuPageBuilder from "./mainMenu.js";
@@ -105,15 +108,24 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
 
   // post game options
   const playerNameForm = createPlayerNameForm();
+  const noHighScoreHeading = createCustomHeading(
+    "h2",
+    "No High Score This Time",
+    ["high-score-heading", "no-high-score-heading", "no-display"],
+    "no-high-score-heading"
+  );
   const postGameMenuButtons = createMenuButtons(
     postGameMenuButtonsContainerObj,
     postGameMenuButtonObjs
   );
+  const loadingBar = createLoadingBar("", ["no-display"]);
 
   mainContainer.append(
+    loadingBar,
     gameGridContainer,
     gameDetailsContainer,
     playerNameForm,
+    noHighScoreHeading,
     postGameMenuButtons
   );
 
@@ -160,11 +172,11 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
   const savedGamesDropdownMenu = document.getElementById("load-game-select");
   const mainMenuButton = document.getElementById("main-menu-button");
   const highScoresButton = document.getElementById("view-high-scores-button");
+  const restartGameButton = document.getElementById("play-again-button");
 
   // * Event Listeners
 
   // Event Callbacks
-
   const handlePlayerNameFormSubmit = async (e) => {
     e.preventDefault();
     const playerName = playerNameForm.elements.playerName.value;
@@ -173,6 +185,9 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
       name: playerName,
       score: Number(removeCommasFromScore(playerScore)),
     };
+
+    showElementById("loading-bar");
+    updateElementTextById("loading-bar", "Adding Your High Score...");
 
     if (game.idOfScoreToRemove) {
       await highScoresObj.removeHighScore(game.idOfScoreToRemove);
@@ -289,6 +304,10 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     highScoresPageBuilder(settingsObj);
   };
 
+  const handleRestartGame = () => {
+    game.restartGame();
+  };
+
   const handleKeyUp = (e) => {
     if (game.gameOver) return;
     const keyName = e.key;
@@ -366,6 +385,7 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
   softDropButton.addEventListener("click", handleSoftDropButton);
   mainMenuButton.addEventListener("click", handleMainMenuButton);
   highScoresButton.addEventListener("click", handleViewHighScoresButton);
+  restartGameButton.addEventListener("click", handleRestartGame);
 
   // Key Events
   window.addEventListener("keyup", handleKeyUp);
@@ -376,118 +396,123 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
   const cleanupFunction = () => {
     const objsWithEventListeners = [
       {
-        idOfElement: "player-name-form",
+        referenceToElement: playerNameForm,
         typeOfEvent: "submit",
         callBack: handlePlayerNameFormSubmit,
       },
       {
-        idOfElement: "update-settings-form",
+        referenceToElement: updateSettingsForm,
         typeOfEvent: "submit",
         callBack: handleUpdateSettingsFormSubmit,
       },
       {
-        idOfElement: "save-game-form",
+        referenceToElement: saveGameForm,
         typeOfEvent: "submit",
         callBack: handleSaveGameFormSubmit,
       },
       {
-        idOfElement: "btn-pause",
+        referenceToElement: pauseButton,
         typeOfEvent: "click",
         callBack: handlePauseGame,
       },
       {
-        idOfElement: "close-pause-modal-button",
+        referenceToElement: closePauseModalButton,
         typeOfEvent: "click",
         callBack: handleUnpauseGame,
       },
       {
-        idOfElement: "open-settings-modal-button",
+        referenceToElement: openSettingsModalButton,
         typeOfEvent: "click",
         callBack: handleOpenSettingsModal,
       },
       {
-        idOfElement: "close-settings-modal-button",
+        referenceToElement: closeSettingsModalButton,
         typeOfEvent: "click",
         callBack: handleCloseSettingsModal,
       },
       {
-        idOfElement: "open-save-game-modal-button",
+        referenceToElement: openSaveGameModalButton,
         typeOfEvent: "click",
         callBack: handleOpenSaveGameModal,
       },
       {
-        idOfElement: "load-game-select",
+        referenceToElement: savedGamesDropdownMenu,
         typeOfEvent: "change",
         callBack: handleUpdateSavedGameTextInput,
       },
       {
-        idOfElement: "close-save-game-modal-button",
+        referenceToElement: closeSaveGameModalButton,
         typeOfEvent: "click",
         callBack: handleCloseSaveGameModal,
       },
       {
-        idOfElement: "open-confirm-quit-game-modal-button",
+        referenceToElement: quitGameButton,
         typeOfEvent: "click",
         callBack: handleQuitGameButton,
       },
       {
-        idOfElement: "btn-up",
+        referenceToElement: rotateButton,
         typeOfEvent: "click",
         callBack: handleRotateButton,
       },
       {
-        idOfElement: "btn-left",
+        referenceToElement: moveLeftButton,
         typeOfEvent: "click",
         callBack: handleMoveLeftButton,
       },
       {
-        idOfElement: "btn-right",
+        referenceToElement: moveRightButton,
         typeOfEvent: "click",
         callBack: handleMoveRightButton,
       },
       {
-        idOfElement: "btn-down",
+        referenceToElement: softDropButton,
         typeOfEvent: "click",
         callBack: handleSoftDropButton,
       },
       {
-        idOfElement: "main-menu-button",
+        referenceToElement: mainMenuButton,
         typeOfEvent: "click",
         callBack: handleMainMenuButton,
       },
       {
-        idOfElement: "view-high-scores-button",
+        referenceToElement: highScoresButton,
         typeOfEvent: "click",
         callBack: handleViewHighScoresButton,
       },
-      { objOfListener: window, typeOfEvent: "keyup", callBack: handleKeyUp },
       {
-        objOfListener: window,
+        referenceToElement: restartGameButton,
+        typeOfEvent: "click",
+        callBack: handleRestartGame,
+      },
+      { typeOfEvent: "keyup", callBack: handleKeyUp },
+      {
         typeOfEvent: "keydown",
         callBack: handleKeyDown,
       },
     ];
 
     objsWithEventListeners.forEach((obj) => {
-      if (obj.idOfElement) {
-        document
-          .getElementById(obj.idOfElement)
-          .removeEventListener(obj.typeOfEvent, obj.callBack);
+      if (obj.referenceToElement) {
+        obj.referenceToElement.removeEventListener(
+          obj.typeOfEvent,
+          obj.callBack
+        );
       } else {
-        obj.objOfListener.removeEventListener(obj.typeOfEvent, obj.callBack);
+        window.removeEventListener(obj.typeOfEvent, obj.callBack);
       }
     });
 
-    const idsOfElementsToRemove = [
-      "main-heading",
-      "play-game-container",
-      "pause-modal",
-      "settings-modal",
-      "save-game-modal",
-      "confirmation-modal",
+    const elementsToRemove = [
+      mainHeading,
+      mainContainer,
+      pauseModal,
+      settingsModal,
+      saveGameModal,
+      confirmationModal,
     ];
-    idsOfElementsToRemove.forEach((id) => {
-      document.getElementById(id).remove();
+    elementsToRemove.forEach((element) => {
+      element.remove();
     });
   };
 

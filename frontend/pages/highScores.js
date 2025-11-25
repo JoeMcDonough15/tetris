@@ -4,6 +4,7 @@ import {
   createMenuButtons,
   createHighScoresTable,
   createCustomHeading,
+  createLoadingBar,
 } from "../components/index.js";
 import {
   mainMenuButtonsContainerObj,
@@ -16,7 +17,6 @@ import mainMenuPageBuilder from "./mainMenu.js";
 // * Build the UI
 
 const highScoresPageBuilder = async (settingsObj) => {
-  // settingsObj will be used to add classes to the elements once the UI options are in place
   const mainHeading = createCustomHeading(
     "h1",
     "High Scores",
@@ -29,12 +29,21 @@ const highScoresPageBuilder = async (settingsObj) => {
     "high-scores-container"
   );
 
-  highScoresContainer.appendChild(
-    createMenuButtons(mainMenuButtonsContainerObj, highScoresMenuButtonObjs)
+  const menuButtons = createMenuButtons(
+    mainMenuButtonsContainerObj,
+    highScoresMenuButtonObjs
   );
+
+  const loadingBar = createLoadingBar("Fetching High Scores...");
+
+  highScoresContainer.append(loadingBar, menuButtons);
+
+  const body = returnBody();
+  body.prepend(mainHeading, highScoresContainer);
 
   const highScoresObj = new HighScores();
   const highScores = await highScoresObj.getHighScores();
+  loadingBar.remove();
 
   if (highScores.length) {
     highScoresContainer.prepend(createHighScoresTable(highScores));
@@ -43,9 +52,6 @@ const highScoresPageBuilder = async (settingsObj) => {
       createCustomHeading("h2", "No High Scores Yet", ["no-high-scores-header"])
     );
   }
-
-  const body = returnBody();
-  body.prepend(mainHeading, highScoresContainer);
 
   // * Event Listeners
 
@@ -60,41 +66,38 @@ const highScoresPageBuilder = async (settingsObj) => {
     mainMenuPageBuilder(settingsObj);
   };
 
-  // Mouse Events
-  document
-    .getElementById("new-game-button")
-    .addEventListener("click", handleNewGameButton);
+  // Target Elements for Event Listeners
+  const newGameButton = document.getElementById("new-game-button");
+  const mainMenuButton = document.getElementById("main-menu-button");
 
-  document
-    .getElementById("main-menu-button")
-    .addEventListener("click", handleMainMenuButton);
+  // Mouse Events
+  newGameButton.addEventListener("click", handleNewGameButton);
+  mainMenuButton.addEventListener("click", handleMainMenuButton);
 
   // * Cleanup Function
 
   const cleanupFunction = () => {
-    const elementsWithEventListeners = [
+    const objsWithEventListeners = [
       {
-        idOfElement: "new-game-button",
+        referenceToElement: newGameButton,
         typeOfEvent: "click",
         callBack: handleNewGameButton,
       },
       {
-        idOfElement: "main-menu-button",
+        referenceToElement: mainMenuButton,
         typeOfEvent: "click",
         callBack: handleMainMenuButton,
       },
     ];
 
-    elementsWithEventListeners.forEach((element) => {
-      document
-        .getElementById(element.idOfElement)
-        .removeEventListener(element.typeOfEvent, element.callBack);
+    objsWithEventListeners.forEach((obj) => {
+      obj.referenceToElement.removeEventListener(obj.typeOfEvent, obj.callBack);
     });
 
-    const idsOfElementsToRemove = ["main-heading", "high-scores-container"];
+    const elementsToRemove = [mainHeading, highScoresContainer];
 
-    idsOfElementsToRemove.forEach((id) => {
-      document.getElementById(id).remove();
+    elementsToRemove.forEach((element) => {
+      element.remove();
     });
   };
 };
