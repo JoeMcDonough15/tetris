@@ -17,7 +17,6 @@ import mainMenuPageBuilder from "./mainMenu.js";
 // * Build the UI
 
 const highScoresPageBuilder = async (settingsObj) => {
-  // settingsObj will be used to add classes to the elements once the UI options are in place
   const mainHeading = createCustomHeading(
     "h1",
     "High Scores",

@@ -36,11 +36,8 @@ import GameMusic from "./music.js";
 
 class Tetris {
   constructor(gameSettingsObj, highScoresObj, nameOfGameToLoad = null) {
-    // APIs for settings and high scores
     this.gameSettings = gameSettingsObj;
     this.highScoresObj = highScoresObj;
-
-    // Game State
     this.nameOfGameToLoad = nameOfGameToLoad;
     this.nameOfGameToSave = null;
     this.indexOfGameToOverwrite = -1;
@@ -66,11 +63,11 @@ class Tetris {
 
   checkForSavedGame = (nameOfGameToSave) => {
     this.nameOfGameToSave = nameOfGameToSave;
-    const existingGames = JSON.parse(window.localStorage.getItem("savedGames")); // possibly null
+    const existingGames = JSON.parse(window.localStorage.getItem("savedGames"));
 
     if (existingGames) {
       const indexOfExistingGame = existingGames.findIndex(
-        (savedGame) => savedGame.nameOfGame === nameOfGameToSave // will be index of the existing game or -1
+        (savedGame) => savedGame.nameOfGame === nameOfGameToSave
       );
 
       if (indexOfExistingGame > -1) {
@@ -109,7 +106,7 @@ class Tetris {
 
     let allSavedGames = JSON.parse(window.localStorage.getItem("savedGames"));
     if (!allSavedGames) {
-      allSavedGames = []; // if we are saving the first game
+      allSavedGames = [];
     }
 
     if (this.indexOfGameToOverwrite > -1) {
@@ -169,10 +166,8 @@ class Tetris {
       this.pieceQueue.push(nameOfShape);
     });
 
-    // now set the preview-img to be the first shape in the queue
     updateImageSrcById("preview-img", this.pieceQueue[0]);
 
-    // now, set up the currentPiece.  Grab its x and y coordinates and instantiate the shape that it is with those coordinates in the rotation it was in when game was saved.
     const previousXCoordinate =
       loadedGame.gameObj.currentPiece.anchorBlock.xCoordinate;
     const previousYCoordinate =
@@ -223,12 +218,9 @@ class Tetris {
       );
     }
 
-    // now, draw that shape to the board to replace the existing one
     this.currentPiece.drawShape();
-
     this.currentPiecePlaced = loadedGame.gameObj.currentPiecePlaced;
     this.numRotations = loadedGame.gameObj.numRotations;
-
     drawPreviousCanvas(loadedGame.gameBoardString);
     this.nameOfGameToLoad = null;
   };
@@ -308,7 +300,7 @@ class Tetris {
       );
 
       if (existingHighScores.length === 10) {
-        this.idOfScoreToRemove = lastPlaceScoreObj.id; // never keep more than 10 high scores in the database
+        this.idOfScoreToRemove = lastPlaceScoreObj.id;
       }
     } else {
       showElementById("no-high-score-heading", "post-game-menu-buttons");
@@ -516,10 +508,8 @@ class Tetris {
       return;
     }
 
-    // clear the shape
     this.currentPiece.clearShape();
 
-    // move the shape
     if (direction === "left") {
       this.currentPiece.anchorBlock.xCoordinate -= GRID_SPACE;
     } else if (direction === "right") {
@@ -528,10 +518,8 @@ class Tetris {
       this.currentPiece.anchorBlock.yCoordinate += GRID_SPACE;
     }
 
-    // redraw the shape in its new position
     this.currentPiece.drawShape();
 
-    // check to see if the piece is now in view so event listeners can fire
     if (!this.currentPieceInPlay) {
       this.currentPieceInPlay = this.currentPieceEnteredGrid();
     }

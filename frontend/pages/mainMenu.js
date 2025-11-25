@@ -305,7 +305,6 @@ const mainMenuPageBuilder = (settingsObj) => {
   // * Cleanup Function
 
   const cleanupFunction = () => {
-    // aggregates all elements that have event listeners on them in the form of: [ {"id-of-element", "type-of-event", eventHandlerFunction} ];
     const objsWithEventListeners = [
       {
         referenceToElement: updateSettingsForm,
@@ -359,7 +358,6 @@ const mainMenuPageBuilder = (settingsObj) => {
         callBack: handleKeyDown,
       },
     ];
-    // loop over the array of elements and for each id-of-element, remove the type-of-event
     objsWithEventListeners.forEach((obj) => {
       if (obj.referenceToElement) {
         obj.referenceToElement.removeEventListener(
@@ -371,7 +369,6 @@ const mainMenuPageBuilder = (settingsObj) => {
       }
     });
 
-    // remove the main header and the main element of MainMenu
     const elementsToRemove = [
       mainPageHeading,
       mainMenuContainer,

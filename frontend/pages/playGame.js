@@ -177,7 +177,6 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
   // * Event Listeners
 
   // Event Callbacks
-
   const handlePlayerNameFormSubmit = async (e) => {
     e.preventDefault();
     const playerName = playerNameForm.elements.playerName.value;
