@@ -371,15 +371,15 @@ const mainMenuPageBuilder = (settingsObj) => {
     });
 
     // remove the main header and the main element of MainMenu
-    const idsOfElementsToRemove = [
-      "main-heading",
-      "main-menu-container",
-      "settings-modal",
-      "load-game-modal",
-      "confirmation-modal",
+    const elementsToRemove = [
+      mainPageHeading,
+      mainMenuContainer,
+      settingsModal,
+      loadGameModal,
+      confirmationModal,
     ];
-    idsOfElementsToRemove.forEach((id) => {
-      document.getElementById(id).remove();
+    elementsToRemove.forEach((element) => {
+      element.remove();
     });
   };
 };

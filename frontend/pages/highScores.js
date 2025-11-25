@@ -98,10 +98,10 @@ const highScoresPageBuilder = async (settingsObj) => {
         .removeEventListener(element.typeOfEvent, element.callBack);
     });
 
-    const idsOfElementsToRemove = ["main-heading", "high-scores-container"];
+    const elementsToRemove = [mainHeading, highScoresContainer];
 
-    idsOfElementsToRemove.forEach((id) => {
-      document.getElementById(id).remove();
+    elementsToRemove.forEach((element) => {
+      element.remove();
     });
   };
 };

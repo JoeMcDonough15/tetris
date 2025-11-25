@@ -185,6 +185,7 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
     };
 
     // TODO insert loading bar here
+
     if (game.idOfScoreToRemove) {
       await highScoresObj.removeHighScore(game.idOfScoreToRemove);
     }
@@ -489,16 +490,16 @@ const playGamePageBuilder = (settingsObj, gameToLoad) => {
       }
     });
 
-    const idsOfElementsToRemove = [
-      "main-heading",
-      "play-game-container",
-      "pause-modal",
-      "settings-modal",
-      "save-game-modal",
-      "confirmation-modal",
+    const elementsToRemove = [
+      mainHeading,
+      mainContainer,
+      pauseModal,
+      settingsModal,
+      saveGameModal,
+      confirmationModal,
     ];
-    idsOfElementsToRemove.forEach((id) => {
-      document.getElementById(id).remove();
+    elementsToRemove.forEach((element) => {
+      element.remove();
     });
   };
 

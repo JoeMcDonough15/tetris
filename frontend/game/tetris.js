@@ -49,7 +49,7 @@ class Tetris {
     this.totalRowsCleared = 0;
     this.softDropPoints = 0;
     this.rowsCleared = 0;
-    this.playerTotalScore = 0;
+    this.playerTotalScore = 4000;
     this.idOfScoreToRemove = "";
     this.game = new GameGrid(NUM_ROWS, NUM_COLS);
     this.pieceQueue = [];
